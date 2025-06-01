@@ -1,0 +1,18 @@
+{
+  "id": "order_20250601115558_9117",
+  "timestamp": "2025-06-01 11:55:58 -0400",
+  "items": [
+    {
+      "type": "service",
+      "service_id": "artist_consultation",
+      "service_name": "Artist Consultation",
+      "price": 30,
+      "category": "other"
+    }
+  ],
+  "customer_info": null,
+  "status": "pending",
+  "has_studio_session": false,
+  "has_consultation": true,
+  "stripe_session_id": "cs_test_a1orwlxlnTjgcOou8zzsLYWgYl3AyPoBYo6kUEnkUKq1QCJXaTJAemrBNG"
+}

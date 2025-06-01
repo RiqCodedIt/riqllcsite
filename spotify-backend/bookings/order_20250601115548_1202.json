@@ -1,0 +1,18 @@
+{
+  "id": "order_20250601115548_1202",
+  "timestamp": "2025-06-01 11:55:48 -0400",
+  "items": [
+    {
+      "type": "service",
+      "service_id": "mixing_only",
+      "service_name": "Mixing",
+      "price": 75,
+      "category": "mixing"
+    }
+  ],
+  "customer_info": null,
+  "status": "pending",
+  "has_studio_session": false,
+  "has_consultation": false,
+  "stripe_session_id": "cs_test_a1lvMoKibJk4tUXCJMlN3NtiaqF57Ngrpkor0Wmu4y0Z7ISU0o7DGLCZbY"
+}

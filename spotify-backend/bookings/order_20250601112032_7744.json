@@ -1,0 +1,21 @@
+{
+  "id": "order_20250601112032_7744",
+  "timestamp": "2025-06-01 11:20:32 -0400",
+  "items": [
+    {
+      "type": "service",
+      "service_id": "mixing_only",
+      "service_name": "Mixing",
+      "price": 75,
+      "category": "mixing"
+    }
+  ],
+  "customer_info": {
+    "name": "john doe",
+    "email": "johndoe@email.com",
+    "phone": "1234567890"
+  },
+  "status": "pending",
+  "has_studio_session": false,
+  "has_consultation": false
+}

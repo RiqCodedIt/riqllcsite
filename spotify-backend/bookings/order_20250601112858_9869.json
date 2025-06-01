@@ -1,0 +1,20 @@
+{
+  "id": "order_20250601112858_9869",
+  "timestamp": "2025-06-01 11:28:58 -0400",
+  "items": [
+    {
+      "type": "studio_session",
+      "session_id": "REC-6946802MHCOG",
+      "studio_name": "Studio C",
+      "date": "2025-06-17",
+      "time_slot": "3:00 PM - 7:00 PM",
+      "session_type": "Recording",
+      "duration": 4,
+      "price": 140
+    }
+  ],
+  "customer_info": null,
+  "status": "pending",
+  "has_studio_session": true,
+  "has_consultation": false
+}
