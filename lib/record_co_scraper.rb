@@ -137,52 +137,318 @@ class RecordCoScraper
   end
   
   def navigate_to_date(date)
-    # This method will need to be customized based on Record Co's calendar interface
-    # For now, we'll implement a basic approach
-    
+    # Record Co shows one date per page, need to navigate to specific date
     wait = Selenium::WebDriver::Wait.new(timeout: 10)
     
-    # Look for date navigation elements
-    # This is a placeholder - will need to be updated based on actual calendar structure
     begin
-      # Try to find and click on the specific date
-      date_element = @driver.find_element(xpath: "//td[@data-date='#{date}'] | //div[@data-date='#{date}'] | //*[contains(text(), '#{date.strftime('%d')}')]")
-      date_element.click if date_element
-    rescue Selenium::WebDriver::Error::NoSuchElementError
-      puts "Could not find date element for #{date}, using current view"
+      # Get current date shown on page
+      current_date_element = wait.until { @driver.find_element(css: '.calendar-date, .date-header, h2, h3') }
+      current_date_text = current_date_element.text
+      
+      # Parse current date from text like "Sun, 1 June 2025"
+      current_date = parse_date_from_text(current_date_text)
+      
+      # Navigate to target date if different from current
+      if current_date != date
+        navigate_to_target_date(current_date, date)
+      end
+      
+      puts "Successfully navigated to #{date}"
+    rescue => e
+      puts "Error navigating to date #{date}: #{e.message}"
+      # Try alternative navigation methods
+      try_alternative_navigation(date)
+    end
+  end
+  
+  def parse_date_from_text(date_text)
+    # Parse dates like "Sun, 1 June 2025" or "June 1, 2025"
+    begin
+      # Try different date formats
+      if date_text.match?(/\w+,\s*\d+\s+\w+\s+\d{4}/)
+        # Format: "Sun, 1 June 2025"
+        Date.parse(date_text.gsub(/^\w+,\s*/, ''))
+      elsif date_text.match?(/\w+\s+\d+,\s*\d{4}/)
+        # Format: "June 1, 2025"
+        Date.parse(date_text)
+      else
+        # Try direct parsing
+        Date.parse(date_text)
+      end
+    rescue
+      Date.today # Fallback to today if parsing fails
+    end
+  end
+  
+  def navigate_to_target_date(current_date, target_date)
+    # Calculate days difference
+    days_diff = (target_date - current_date).to_i
+    
+    if days_diff > 0
+      # Navigate forward
+      days_diff.times do
+        click_next_day
+        sleep(1) # Wait for page to load
+      end
+    elsif days_diff < 0
+      # Navigate backward
+      days_diff.abs.times do
+        click_previous_day
+        sleep(1) # Wait for page to load
+      end
+    end
+  end
+  
+  def click_next_day
+    begin
+      # Try different selectors for next button
+      next_selectors = [
+        "//button[contains(text(), 'next')]",
+        "//a[contains(text(), 'next')]",
+        "//button[contains(@class, 'next')]",
+        "//a[contains(@class, 'next')]",
+        "//button[@title='Next day']",
+        "//a[@title='Next day']",
+        "//button[contains(@aria-label, 'next')]"
+      ]
+      
+      next_selectors.each do |selector|
+        begin
+          element = @driver.find_element(xpath: selector)
+          element.click
+          return
+        rescue Selenium::WebDriver::Error::NoSuchElementError
+          next
+        end
+      end
+      
+      puts "Could not find next day button"
+    rescue => e
+      puts "Error clicking next day: #{e.message}"
+    end
+  end
+  
+  def click_previous_day
+    begin
+      # Try different selectors for previous button
+      prev_selectors = [
+        "//button[contains(text(), 'previous')]",
+        "//a[contains(text(), 'previous')]",
+        "//button[contains(@class, 'prev')]",
+        "//a[contains(@class, 'prev')]",
+        "//button[@title='Previous day']",
+        "//a[@title='Previous day']",
+        "//button[contains(@aria-label, 'previous')]"
+      ]
+      
+      prev_selectors.each do |selector|
+        begin
+          element = @driver.find_element(xpath: selector)
+          element.click
+          return
+        rescue Selenium::WebDriver::Error::NoSuchElementError
+          next
+        end
+      end
+      
+      puts "Could not find previous day button"
+    rescue => e
+      puts "Error clicking previous day: #{e.message}"
+    end
+  end
+  
+  def try_alternative_navigation(date)
+    # Try to use URL manipulation if buttons don't work
+    begin
+      current_url = @driver.current_url
+      # Try to modify URL with date parameter
+      date_param = date.strftime('%Y-%m-%d')
+      
+      if current_url.include?('?')
+        new_url = "#{current_url}&date=#{date_param}"
+      else
+        new_url = "#{current_url}?date=#{date_param}"
+      end
+      
+      @driver.navigate.to(new_url)
+      sleep(2) # Wait for page to load
+    rescue => e
+      puts "Alternative navigation failed: #{e.message}"
     end
   end
   
   def check_slot_availability(studio_name, time_slot, date)
-    # This method checks if a specific studio/time slot is available
-    # Implementation will depend on Record Co's calendar structure
+    # Check availability based on Record Co's grid calendar structure
+    # Green cells = available, Gray cells = unavailable
     
     begin
-      # Look for booking elements that indicate unavailability
-      # This is a placeholder implementation
+      # Find the studio row
+      studio_row = find_studio_row(studio_name)
+      return false unless studio_row
       
-      # Try multiple selectors that might indicate a booked slot
-      booked_selectors = [
-        "//div[contains(@class, 'booked') and contains(text(), '#{studio_name}') and contains(text(), '#{time_slot}')]",
-        "//td[contains(@class, 'unavailable') and @data-studio='#{studio_name}' and @data-time='#{time_slot}']",
-        "//*[contains(@class, 'reserved') and contains(text(), '#{studio_name}')]"
-      ]
+      # Find the time slot column for our target time
+      time_column_index = find_time_column_index(time_slot)
+      return false unless time_column_index
       
-      booked_selectors.each do |selector|
-        begin
-          element = @driver.find_element(xpath: selector)
-          return false if element # Found a booked indicator
-        rescue Selenium::WebDriver::Error::NoSuchElementError
-          # Continue checking other selectors
-        end
-      end
+      # Get the cell at the intersection of studio row and time column
+      cell = find_availability_cell(studio_row, time_column_index)
+      return false unless cell
       
-      # If no booked indicators found, assume available
-      true
+      # Check if cell indicates availability (green background)
+      is_available = cell_is_available?(cell)
+      
+      puts "#{studio_name} at #{time_slot}: #{is_available ? 'Available' : 'Unavailable'}"
+      is_available
       
     rescue => e
       puts "Error checking availability for #{studio_name} at #{time_slot}: #{e.message}"
       # Default to unavailable if we can't determine status
+      false
+    end
+  end
+  
+  def find_studio_row(studio_name)
+    # Find the row containing the studio name
+    studio_selectors = [
+      "//tr[td[contains(text(), '#{studio_name}')]]",
+      "//div[contains(@class, 'studio-row') and contains(text(), '#{studio_name}')]",
+      "//*[contains(text(), '#{studio_name}')]/ancestor::tr",
+      "//*[contains(text(), '#{studio_name}')]/parent::*"
+    ]
+    
+    studio_selectors.each do |selector|
+      begin
+        element = @driver.find_element(xpath: selector)
+        return element if element
+      rescue Selenium::WebDriver::Error::NoSuchElementError
+        next
+      end
+    end
+    
+    puts "Could not find studio row for #{studio_name}"
+    nil
+  end
+  
+  def find_time_column_index(target_time)
+    # Find the column index for the target time slot
+    # Convert our time format to match Record Co's format
+    record_co_time = convert_to_record_co_time(target_time)
+    
+    begin
+      # Look for time headers in the calendar
+      time_headers = @driver.find_elements(xpath: "//th[contains(text(), 'am') or contains(text(), 'pm')] | //td[contains(text(), 'am') or contains(text(), 'pm')]")
+      
+      time_headers.each_with_index do |header, index|
+        header_text = header.text.strip
+        if time_matches?(header_text, record_co_time)
+          return index + 1 # +1 because first column is studio names
+        end
+      end
+      
+      puts "Could not find time column for #{target_time} (#{record_co_time})"
+      nil
+    rescue => e
+      puts "Error finding time column: #{e.message}"
+      nil
+    end
+  end
+  
+  def convert_to_record_co_time(our_time)
+    # Convert our time format to Record Co's format
+    case our_time
+    when '10:30'
+      ['10 am', '10:30', '10:30 am']
+    when '15:00'
+      ['3 pm', '15:00', '3:00 pm']
+    when '19:30'
+      ['7 pm', '19:30', '7:30 pm']
+    else
+      [our_time]
+    end
+  end
+  
+  def time_matches?(header_text, target_times)
+    # Check if header text matches any of our target time formats
+    target_times = [target_times] unless target_times.is_a?(Array)
+    
+    target_times.any? do |target_time|
+      header_text.include?(target_time) || 
+      header_text.gsub(/\s+/, '').include?(target_time.gsub(/\s+/, ''))
+    end
+  end
+  
+  def find_availability_cell(studio_row, column_index)
+    # Find the specific cell in the studio row at the given column
+    begin
+      # Try different cell selectors
+      cell_selectors = [
+        ".//td[#{column_index}]",
+        ".//div[#{column_index}]",
+        "(.//td | .//div)[#{column_index}]"
+      ]
+      
+      cell_selectors.each do |selector|
+        begin
+          cell = studio_row.find_element(xpath: selector)
+          return cell if cell
+        rescue Selenium::WebDriver::Error::NoSuchElementError
+          next
+        end
+      end
+      
+      puts "Could not find cell at column #{column_index}"
+      nil
+    rescue => e
+      puts "Error finding availability cell: #{e.message}"
+      nil
+    end
+  end
+  
+  def cell_is_available?(cell)
+    # Check if the cell indicates availability
+    # Available cells typically have green background, unavailable are gray
+    
+    begin
+      # Get cell styling and classes
+      cell_class = cell.attribute('class') || ''
+      cell_style = cell.attribute('style') || ''
+      background_color = cell.css_value('background-color')
+      
+      # Check for availability indicators
+      available_indicators = [
+        cell_class.include?('available'),
+        cell_class.include?('free'),
+        cell_class.include?('open'),
+        !cell_class.include?('unavailable'),
+        !cell_class.include?('booked'),
+        !cell_class.include?('reserved'),
+        background_color.include?('green') || background_color.include?('rgb(144, 238, 144)'), # Light green
+        cell_style.include?('green')
+      ]
+      
+      # Check for unavailability indicators
+      unavailable_indicators = [
+        cell_class.include?('unavailable'),
+        cell_class.include?('booked'),
+        cell_class.include?('reserved'),
+        cell_class.include?('disabled'),
+        background_color.include?('gray') || background_color.include?('grey'),
+        background_color.include?('rgb(128, 128, 128)'), # Gray
+        cell_style.include?('gray') || cell_style.include?('grey')
+      ]
+      
+      # If we have explicit unavailable indicators, it's unavailable
+      return false if unavailable_indicators.any?
+      
+      # If we have explicit available indicators, it's available
+      return true if available_indicators.any?
+      
+      # Default to available if we can't determine (conservative approach)
+      true
+      
+    rescue => e
+      puts "Error checking cell availability: #{e.message}"
+      # Default to unavailable on error
       false
     end
   end
