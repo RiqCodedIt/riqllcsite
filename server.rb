@@ -5,6 +5,9 @@ require 'sinatra/cross_origin'
 require 'date'
 require 'fileutils'
 require 'dotenv/load' if File.exist?(File.join(__dir__, '.env'))
+require 'google/apis/sheets_v4'
+require 'googleauth'
+require_relative 'lib/availability_manager'
 
 # Configure Stripe API key
 Stripe.api_key = ENV['stripe_test_secret_key'] || 'sk_test_51RUqX5ARuWdY7S8gcq4XRiuKsK1xw5LcAtBr7Z3MS1AtguVzBCWd2zLHQNYt8UYUz0VMCzkaUhtY8lgj8i0dFaRS00KBbm08B0'
@@ -19,7 +22,7 @@ configure do
 end
 
 before do
-  response.headers['Access-Control-Allow-Origin'] = 'http://localhost:5174'
+  response.headers['Access-Control-Allow-Origin'] = 'http://localhost:5173'
   response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
   response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
 end
@@ -32,6 +35,70 @@ end
 # Create a bookings directory if it doesn't exist
 bookings_dir = File.join(Dir.pwd, 'bookings')
 FileUtils.mkdir_p(bookings_dir) unless File.directory?(bookings_dir)
+
+# Google Sheets configuration
+SHEET_ID = '1ZtjDAftjp6eUW4Cv2CfS4FKhQcDXnYDM3jJdrekTJqo'
+CREDENTIALS_PATH = File.join(Dir.pwd, '..', 'client_secret_125505298187-vh9hnuno3uq1gjrojtqo0k63iq4g5i0p.apps.googleusercontent.com.json')
+
+# Initialize Google Sheets service
+def get_sheets_service
+  scope = ['https://www.googleapis.com/auth/spreadsheets']
+  authorizer = Google::Auth::ServiceAccountCredentials.make_creds(
+    json_key_io: File.open(CREDENTIALS_PATH),
+    scope: scope
+  )
+  
+  service = Google::Apis::SheetsV4::SheetsService.new
+  service.authorization = authorizer
+  service
+end
+
+# Function to add studio session data to Google Sheets
+def add_to_google_sheets(order_data)
+  return unless order_data['has_studio_session']
+  
+  begin
+    service = get_sheets_service
+    
+    # Find studio session items
+    studio_sessions = order_data['items'].select { |item| item['type'] == 'studio_session' }
+    
+    studio_sessions.each do |session|
+      # Prepare row data
+      row_data = [
+        Time.now.strftime('%Y-%m-%d %H:%M:%S'),  # Timestamp
+        order_data['id'],                         # Order ID
+        order_data['customer_info']['name'] || 'N/A',     # Client Name
+        order_data['customer_info']['email'] || 'N/A',    # Client Email
+        order_data['customer_info']['phone'] || 'N/A',    # Client Phone
+        session['studio_name'] || 'N/A',         # Studio
+        session['date'] || 'N/A',                # Date
+        session['time_slot'] || 'N/A',           # Time
+        session['duration'] || 1,                # Duration
+        session['project_type'] || 'N/A',        # Project Type
+        session['additional_notes'] || 'N/A',    # Notes
+        order_data['status'] || 'pending'        # Status
+      ]
+      
+      # Append to sheet
+      range = 'Sheet1!A:L'  # Adjust range as needed
+      value_range = Google::Apis::SheetsV4::ValueRange.new(
+        values: [row_data]
+      )
+      
+      service.append_spreadsheet_values(
+        SHEET_ID,
+        range,
+        value_range,
+        value_input_option: 'RAW'
+      )
+    end
+    
+    puts "Successfully added studio session data to Google Sheets"
+  rescue StandardError => e
+    puts "Error adding to Google Sheets: #{e.message}"
+  end
+end
 
 # Price ID mapping for all products
 PRICE_MAPPING = {
@@ -136,8 +203,8 @@ post '/create-checkout-session' do
         has_consultation: has_consultation.to_s
       },
       mode: 'payment',
-      success_url: "http://localhost:5174/success?session_id={CHECKOUT_SESSION_ID}&order_id=#{order_id}",
-      cancel_url: "http://localhost:5174/cart?canceled=true",
+      success_url: "http://localhost:5173/success?session_id={CHECKOUT_SESSION_ID}&order_id=#{order_id}",
+      cancel_url: "http://localhost:5173/cart?canceled=true",
     })
     
     # Update order data with Stripe session ID
@@ -202,8 +269,8 @@ post '/create-studio-checkout-session' do
         has_studio_session: 'true'
       },
       mode: 'payment',
-      success_url: "http://localhost:5174/success?session_id={CHECKOUT_SESSION_ID}&booking_id=#{booking_id}",
-      cancel_url: "http://localhost:5174/booking?canceled=true",
+      success_url: "http://localhost:5173/success?session_id={CHECKOUT_SESSION_ID}&booking_id=#{booking_id}",
+      cancel_url: "http://localhost:5173/booking?canceled=true",
     })
     
     # Update booking data with Stripe session ID
@@ -249,6 +316,9 @@ post '/webhook' do
           File.open(order_file, 'w') do |file|
             file.write(JSON.pretty_generate(order_data))
           end
+          
+          # Add to Google Sheets if it contains studio sessions
+          add_to_google_sheets(order_data)
         end
       end
       
@@ -296,4 +366,71 @@ get '/bookings' do
   end
   
   bookings.to_json
+end
+
+# Initialize availability manager
+availability_manager = AvailabilityManager.new
+
+# Availability API endpoints
+get '/api/availability/:date' do
+  content_type :json
+  
+  begin
+    date = params[:date]
+    availability = availability_manager.get_availability(date)
+    availability.to_json
+  rescue => e
+    status 500
+    { error: "Failed to get availability: #{e.message}" }.to_json
+  end
+end
+
+# Trigger manual sync
+post '/api/sync-calendar' do
+  content_type :json
+  
+  begin
+    request_body = JSON.parse(request.body.read) rescue {}
+    start_date = request_body['start_date'] ? Date.parse(request_body['start_date']) : Date.today
+    days = request_body['days'] || 30
+    
+    result = availability_manager.sync_availability(start_date, days)
+    result.to_json
+  rescue => e
+    status 500
+    { success: false, message: "Sync failed: #{e.message}" }.to_json
+  end
+end
+
+# Get sync status
+get '/api/sync-status' do
+  content_type :json
+  
+  begin
+    status_info = availability_manager.get_sync_status
+    status_info.to_json
+  rescue => e
+    status 500
+    { error: "Failed to get sync status: #{e.message}" }.to_json
+  end
+end
+
+# Manual availability override (for admin use)
+post '/api/availability/override' do
+  content_type :json
+  
+  begin
+    request_body = JSON.parse(request.body.read)
+    date = request_body['date']
+    studio_id = request_body['studio_id']
+    time_slot_id = request_body['time_slot_id']
+    available = request_body['available']
+    
+    availability_manager.manual_override(date, studio_id, time_slot_id, available)
+    
+    { success: true, message: 'Availability override applied' }.to_json
+  rescue => e
+    status 500
+    { success: false, message: "Override failed: #{e.message}" }.to_json
+  end
 end

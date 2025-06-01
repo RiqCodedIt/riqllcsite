@@ -1,0 +1,18 @@
+{
+  "id": "order_20250601123148_3932",
+  "timestamp": "2025-06-01 12:31:48 -0400",
+  "items": [
+    {
+      "type": "service",
+      "service_id": "mastering_only",
+      "service_name": "Mastering",
+      "price": 50,
+      "category": "mastering"
+    }
+  ],
+  "customer_info": null,
+  "status": "pending",
+  "has_studio_session": false,
+  "has_consultation": false,
+  "stripe_session_id": "cs_test_a1NbD1LAilnAnF9dEr4fO94VeRIIuj5SJxRTvXRg7myY0XeDiprUuYFotm"
+}

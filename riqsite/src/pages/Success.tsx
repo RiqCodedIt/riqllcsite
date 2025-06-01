@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { googleSheetsService } from '../services/googleSheets';
-import type { StudioBookingData } from '../services/googleSheets';
 import '../styles/PageContent.css';
 import '../styles/Success.css';
 
@@ -38,10 +36,8 @@ const Success = () => {
                             setHasConsultation(order.has_consultation || false);
                             setHasStudioSession(order.has_studio_session || false);
                             
-                            // If there's a studio session, send data to Google Sheets
-                            if (order.has_studio_session) {
-                                await sendStudioDataToSheets(order);
-                            }
+                            // Studio session data is automatically sent to Google Sheets by the backend
+                            // when payment is completed via webhook - no frontend action needed
                         }
                     }
                 }
@@ -56,34 +52,7 @@ const Success = () => {
         processSuccessfulPayment();
     }, [location]);
 
-    const sendStudioDataToSheets = async (order: any) => {
-        try {
-            // Find studio session in the order
-            const studioSession = order.items.find((item: any) => item.type === 'studio_session');
-            if (!studioSession) return;
 
-            const bookingData: StudioBookingData = {
-                timestamp: new Date().toISOString(),
-                booking_id: order.id,
-                customer_name: order.customer_info?.name || 'N/A',
-                email: order.customer_info?.email || 'N/A',
-                phone: order.customer_info?.phone || 'N/A',
-                studio_name: studioSession.studio_name,
-                session_date: studioSession.date,
-                session_time: studioSession.time_slot,
-                session_type: studioSession.session_type,
-                duration: studioSession.duration,
-                total_cost: studioSession.price,
-                special_requests: 'N/A',
-                payment_status: 'paid'
-            };
-
-            await googleSheetsService.sendStudioBookingToSheets(bookingData);
-        } catch (err) {
-            console.error('Error sending data to Google Sheets:', err);
-            // Don't show error to user, just log it
-        }
-    };
 
     if (loading) {
         return (
