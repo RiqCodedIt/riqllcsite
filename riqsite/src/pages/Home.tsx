@@ -3,6 +3,7 @@ import SpotifyTrack from '../components/SpotifyTrack';
 import '../styles/PageContent.css';
 import '../styles/Home.css';
 
+
 const Home = () => {
     const featuredTracks = [
         {

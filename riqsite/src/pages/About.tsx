@@ -15,14 +15,11 @@ const About = () => {
                 <div className="about-section">
                     <h2>My Story</h2>
                     <p>
-                        With years of experience in music production and audio engineering, I've dedicated my career 
-                        to helping artists bring their musical visions to life. From hip-hop to R&B, pop to electronic, 
-                        I work across genres to create professional, industry-standard productions.
-                    </p>
-                    <p>
-                        My passion for music started early, and through continuous learning and collaboration with 
-                        talented artists, I've developed a unique approach that combines technical expertise with 
-                        creative innovation.
+                        Tariq Georges is a multi-faceted Musician that has been trained in classical music. 
+                        He has been playing the piano since the age of 4 and is a self taught producer and audio engineer.
+                        He has been making beats since 2020 when COVID-19 hit. He used that time to develop his skills 
+                        as a producer and engineer. He now works with a variety of artists from Boston, London, 
+                        and more to make beautiful tracks.
                     </p>
                 </div>
 
@@ -31,19 +28,19 @@ const About = () => {
                     <div className="services-list">
                         <div className="service-item">
                             <h3>Music Production</h3>
-                            <p>Complete song production from initial concept to final arrangement, including instrumentation, programming, and creative direction.</p>
+                            <p>Complete song production from initial concept to final arrangement</p>
                         </div>
                         <div className="service-item">
                             <h3>Beat Making</h3>
-                            <p>Custom beat creation across multiple genres, tailored to your style and artistic vision.</p>
+                            <p>Custom beat creation for any genre!</p>
                         </div>
                         <div className="service-item">
                             <h3>Mixing</h3>
-                            <p>Professional mixing services to balance, enhance, and polish your recordings to industry standards.</p>
+                            <p>Professional mixing services to polish your recordings to industry standards.</p>
                         </div>
                         <div className="service-item">
                             <h3>Mastering</h3>
-                            <p>Final mastering to ensure your tracks sound great across all playback systems and streaming platforms.</p>
+                            <p>Final mastering to ensure your tracks are leveled across all streaming services.</p>
                         </div>
                     </div>
                 </div>
@@ -55,13 +52,9 @@ const About = () => {
                         their vision and goals. Whether you're looking for a specific sound or want to explore 
                         new creative territories, I'm here to guide you through the process.
                     </p>
-                    <p>
-                        I use industry-standard equipment and software, combined with years of experience and 
-                        a keen ear for detail, to deliver professional results that meet today's music industry standards.
-                    </p>
                 </div>
 
-                <div className="about-section">
+                {/* <div className="about-section">
                     <h2>Let's Work Together</h2>
                     <p>
                         Ready to take your music to the next level? I'm always excited to work with new artists 
@@ -71,7 +64,7 @@ const About = () => {
                     <div className="contact-info">
                         <p>Get in touch to discuss your next project and see how we can create something amazing together.</p>
                     </div>
-                </div>
+                </div> */}
             </div>
         </div>
     );
