@@ -173,7 +173,7 @@
 }
 
 .error-message {
-  background-color: #2d1b1b;
+  /* background-color: #2d1b1b; */
   border: 1px solid #5a2d2d;
   border-radius: 8px;
 }

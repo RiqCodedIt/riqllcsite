@@ -1,5 +1,22 @@
 /* Studio Booking System Styles */
 
+/* Ensure no text decoration issues */
+.studio-card,
+.date-card,
+.time-slot,
+.session-type-option,
+.equipment-option,
+.form-section,
+.selection-summary,
+.session-summary,
+.booking-summary,
+.step-content,
+.datetime-picker,
+.contact-form,
+.session-details-form {
+  text-decoration: none !important;
+}
+
 /* Studio Selector Styles */
 .step-description {
   color: var(--text-medium);

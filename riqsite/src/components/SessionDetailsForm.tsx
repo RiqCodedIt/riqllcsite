@@ -137,11 +137,10 @@ const SessionDetailsForm: React.FC<SessionDetailsFormProps> = ({
             <h5>Common requests include:</h5>
             <ul>
               <li>Specific microphone preferences</li>
-              <li>Dietary restrictions or food allergies</li>
-              <li>Accessibility accommodations</li>
+              <li>Auto-Tune/Melodyne</li>
               <li>Preferred studio setup or layout</li>
-              <li>Temperature preferences</li>
-              <li>Parking or loading requirements</li>
+              <li>Specific DAW usage</li>
+              <li>Artist consultations</li>
             </ul>
           </div>
         </div>

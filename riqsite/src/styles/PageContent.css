@@ -44,22 +44,27 @@
 }
 
 .cta-button.primary {
-  background-color: #238636;
-  color: white;
+  background: var(--color-accent-3);
+  color: var(--text-dark);
+  border: 2px solid var(--color-accent-3);
+  box-shadow: 0 4px 12px rgba(254, 200, 154, 0.3);
 }
 
 .cta-button.primary:hover {
-  background-color: #2ea043;
+  background: var(--color-lightest);
+  border-color: var(--color-lightest);
   transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(254, 197, 187, 0.4);
 }
 
 .cta-button.secondary {
   background-color: transparent;
-  color: #58a6ff;
-  border: 2px solid #58a6ff;
+  color: var(--text-dark);
+  border: 2px solid var(--color-neutral-3);
 }
 
 .cta-button.secondary:hover {
-  background-color: #58a6ff;
-  color: #0d1117;
+  background: var(--color-light);
+  border-color: var(--color-accent-3);
+  color: var(--text-dark);
 }

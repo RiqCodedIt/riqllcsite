@@ -68,7 +68,7 @@ const Home = () => {
                     <div className="service-card">
                         <h3>Mixing & Mastering</h3>
                         <p>Professional mixing and mastering to industry standards</p>
-                        <Link to="/mixing" className="service-link">View Services →</Link>
+                        <Link to="/services" className="service-link">View Services →</Link>
                     </div>
                     <div className="service-card">
                         <h3>Full Production</h3>

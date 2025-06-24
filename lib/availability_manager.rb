@@ -1,47 +1,66 @@
 require 'sequel'
-require_relative 'record_co_scraper'
 
 class AvailabilityManager
   def initialize
     @db = setup_database
-    @scraper = RecordCoScraper.new
   end
   
   def get_availability(date)
     date_str = date.is_a?(String) ? date : date.to_s
     
-    # Check if we have recent data for this date
+    # Check if we have cached data for this date
     cached_data = get_cached_availability(date_str)
     
-    if cached_data.empty? || data_is_stale?(cached_data.first[:last_updated])
-      # Scrape fresh data
-      sync_date_availability(Date.parse(date_str))
+    if cached_data.empty?
+      # Generate default availability based on rules
+      default_availability = generate_default_availability(Date.parse(date_str))
+      update_availability_data(default_availability)
       cached_data = get_cached_availability(date_str)
     end
     
     format_availability_response(date_str, cached_data)
   end
   
-  def sync_availability(start_date = Date.today, days = 30)
-    puts "Starting availability sync for #{days} days from #{start_date}"
+  def sync_calendar_availability(calendar_events)
+    # This will be called by the frontend with Google Calendar events
+    puts "Syncing calendar availability with #{calendar_events.length} events"
     
     begin
-      # Scrape data from Record Co
-      scraped_data = @scraper.scrape_availability(start_date, days)
+      records_updated = 0
       
-      if scraped_data.empty?
-        log_sync('error', 0, 'No data returned from scraper')
-        return { success: false, message: 'Failed to scrape data' }
+      calendar_events.each do |event|
+        date = event['date']
+        studio_id = event['studio_id']
+        time_slot_id = event['time_slot_id']
+        available = event['available']
+        
+        # Update or insert availability record
+        @db[:availability].insert_conflict(
+          target: [:date, :studio_id, :time_slot_id],
+          update: {
+            available: available,
+            source: 'calendar',
+            last_updated: Time.now,
+            sync_status: 'synced'
+          }
+        ).insert(
+          date: date,
+          studio_id: studio_id,
+          time_slot_id: time_slot_id,
+          available: available,
+          source: 'calendar',
+          last_updated: Time.now,
+          sync_status: 'synced'
+        )
+        
+        records_updated += 1
       end
-      
-      # Update database with scraped data
-      records_updated = update_availability_data(scraped_data)
       
       log_sync('success', records_updated)
       
       {
         success: true,
-        message: "Successfully synced #{records_updated} availability records",
+        message: "Successfully synced #{records_updated} availability records from calendar",
         records_updated: records_updated
       }
       
@@ -49,14 +68,9 @@ class AvailabilityManager
       log_sync('error', 0, e.message)
       {
         success: false,
-        message: "Sync failed: #{e.message}"
+        message: "Calendar sync failed: #{e.message}"
       }
     end
-  end
-  
-  def sync_date_availability(date)
-    scraped_data = @scraper.scrape_availability(date, 1)
-    update_availability_data(scraped_data) unless scraped_data.empty?
   end
   
   def get_sync_status
@@ -94,6 +108,12 @@ class AvailabilityManager
     puts "Manual override set: #{date_str} #{studio_id} #{time_slot_id} = #{available}"
   end
   
+  def clear_date_availability(date)
+    # Clear all availability for a specific date (useful for calendar sync)
+    date_str = date.is_a?(String) ? date : date.to_s
+    @db[:availability].where(date: date_str).delete
+  end
+  
   private
   
   def setup_database
@@ -114,9 +134,29 @@ class AvailabilityManager
     @db[:availability].where(date: date_str).all
   end
   
-  def data_is_stale?(last_updated, max_age_hours = 1)
-    return true unless last_updated
-    Time.now - last_updated > (max_age_hours * 3600)
+  def generate_default_availability(date)
+    # Default availability rules
+    # Closed on Mondays, open other days
+    is_available = !date.monday?
+    
+    availability_records = []
+    
+    # Generate records for both studios and all time slots
+    ['C', 'D'].each do |studio_id|
+      ['morning', 'afternoon', 'evening'].each do |time_slot_id|
+        availability_records << {
+          date: date.to_s,
+          studio_id: studio_id,
+          time_slot_id: time_slot_id,
+          available: is_available,
+          source: 'default',
+          last_updated: Time.now,
+          sync_status: 'default'
+        }
+      end
+    end
+    
+    availability_records
   end
   
   def format_availability_response(date, cached_data)
@@ -142,18 +182,18 @@ class AvailabilityManager
     response
   end
   
-  def update_availability_data(scraped_data)
+  def update_availability_data(availability_records)
     records_updated = 0
     
     @db.transaction do
-      scraped_data.each do |record|
+      availability_records.each do |record|
         @db[:availability].insert_conflict(
           target: [:date, :studio_id, :time_slot_id],
           update: {
             available: record[:available],
             source: record[:source],
             last_updated: record[:last_updated],
-            sync_status: 'synced'
+            sync_status: record[:sync_status] || 'synced'
           }
         ).insert(record)
         

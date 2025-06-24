@@ -302,10 +302,6 @@ const StudioBookingForm: React.FC = () => {
       </div>
 
       <div className="booking-container">
-        <div className="progress-bar">
-          <div className="step-title">{stepTitles[currentStep - 1]}</div>
-        </div>
-
         <div className="booking-form">
           {renderStep()}
 

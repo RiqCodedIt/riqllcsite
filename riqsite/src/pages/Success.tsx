@@ -121,10 +121,9 @@ const Success = () => {
                         <div className="next-steps">
                             <h4>Next Steps for Your Studio Session</h4>
                             <ol>
-                                <li>Your booking details have been sent to our team</li>
+                                <li>Your booking details have been received!</li>
                                 <li>RIQ will reach out to confirm your session time</li>
-                                <li>You'll receive a text message with final details</li>
-                                <li>Prepare any reference tracks or materials before your session</li>
+                                <li>Prepare any reference tracks or materials before your session!</li>
                             </ol>
                         </div>
                     )}

@@ -8,6 +8,7 @@ require 'dotenv/load' if File.exist?(File.join(__dir__, '.env'))
 require 'google/apis/sheets_v4'
 require 'googleauth'
 require_relative 'lib/availability_manager'
+require_relative 'lib/calendar_sync_service'
 
 # Configure Stripe API key
 Stripe.api_key = ENV['stripe_test_secret_key'] || 'sk_test_51RUqX5ARuWdY7S8gcq4XRiuKsK1xw5LcAtBr7Z3MS1AtguVzBCWd2zLHQNYt8UYUz0VMCzkaUhtY8lgj8i0dFaRS00KBbm08B0'
@@ -100,16 +101,15 @@ def add_to_google_sheets(order_data)
   end
 end
 
-# Price ID mapping for all products
-PRICE_MAPPING = {
-  'artist_consultation' => 'price_1RUufaPT7xiQn50n6qMwS470',
-  'clean_version' => 'price_1RUufDPT7xiQn50nil1W3kPo',
-  'performance_version' => 'price_1RUuf1PT7xiQn50n7gRY0S9p',
-  'mixing_only' => 'price_1RUueSPT7xiQn50nAXO37m08',
-  'mixing_mastering' => 'price_1RUudyPT7xiQn50nIOcBv9TE',
-  'beat_exclusive' => 'price_1RUtuvPT7xiQn50nHqNwQs8J',
-  'beat_lease' => 'price_1RUtu8PT7xiQn50nUwt2XPJv',
-  'studio_session' => 'price_1RVE2oPT7xiQn50nzP0c9C7W'
+# Product ID mapping for all products
+PRODUCT_MAPPING = {
+  'artist_consultation' => 'price_1RdfUTCIy4pumtGlddDMgml3',
+  'clean_version' => 'price_1RdfUCCIy4pumtGllq1NV0iV',
+  'performance_version' => 'price_1RdfTLCIy4pumtGltYvG2RoH',
+  'mastering' => 'price_1RdfSlCIy4pumtGlD7ywOVG1',
+  'mixing_only' => 'price_1RdfRyCIy4pumtGlyQEXKIfL',
+  'mixing_mastering' => 'price_1RdfR9CIy4pumtGleJ3B5yBj',
+  'studio_session' => 'price_1RdfYACIy4pumtGl2zcGu7Hg'
 }
 
 # Create checkout session with price IDs
@@ -169,7 +169,7 @@ post '/create-checkout-session' do
               name: 'Studio Session',
               description: "#{item['studio_name']} • #{item['date']} • #{item['time_slot']}"
             },
-            unit_amount: (70 * 100).to_i  # $70 per hour
+            unit_amount: (35 * 100).to_i  # $35.00 per hour
           },
           quantity: item['duration'] || 1
         }
@@ -368,8 +368,30 @@ get '/bookings' do
   bookings.to_json
 end
 
-# Initialize availability manager
+# Initialize availability manager and calendar sync service
 availability_manager = AvailabilityManager.new
+calendar_sync_service = CalendarSyncService.new(availability_manager)
+
+# Start background calendar sync when server starts
+if ENV['RACK_ENV'] == 'production' || ENV['ENABLE_CALENDAR_SYNC'] == 'true'
+  puts "Starting automatic calendar sync service..."
+  calendar_sync_service.start_background_sync
+  
+  # Perform initial sync
+  Thread.new do
+    sleep(10) # Wait 10 seconds for server to fully start
+    puts "Performing initial calendar sync..."
+    calendar_sync_service.sync_calendars
+  end
+else
+  puts "Calendar sync service disabled (set ENABLE_CALENDAR_SYNC=true to enable)"
+end
+
+# Graceful shutdown
+at_exit do
+  puts "Shutting down calendar sync service..."
+  calendar_sync_service.stop_background_sync if calendar_sync_service
+end
 
 # Availability API endpoints
 get '/api/availability/:date' do
@@ -385,20 +407,19 @@ get '/api/availability/:date' do
   end
 end
 
-# Trigger manual sync
+# Sync calendar availability from frontend
 post '/api/sync-calendar' do
   content_type :json
   
   begin
-    request_body = JSON.parse(request.body.read) rescue {}
-    start_date = request_body['start_date'] ? Date.parse(request_body['start_date']) : Date.today
-    days = request_body['days'] || 30
+    request_body = JSON.parse(request.body.read)
+    calendar_events = request_body['events'] || []
     
-    result = availability_manager.sync_availability(start_date, days)
+    result = availability_manager.sync_calendar_availability(calendar_events)
     result.to_json
   rescue => e
     status 500
-    { success: false, message: "Sync failed: #{e.message}" }.to_json
+    { success: false, message: "Calendar sync failed: #{e.message}" }.to_json
   end
 end
 
@@ -432,5 +453,34 @@ post '/api/availability/override' do
   rescue => e
     status 500
     { success: false, message: "Override failed: #{e.message}" }.to_json
+  end
+end
+
+# Manual calendar sync trigger (for admin use)
+post '/api/sync-calendar-now' do
+  content_type :json
+  
+  begin
+    result = calendar_sync_service.sync_calendars
+    result.to_json
+  rescue => e
+    status 500
+    { success: false, message: "Manual sync failed: #{e.message}" }.to_json
+  end
+end
+
+# Get calendar sync service status
+get '/api/calendar-sync-status' do
+  content_type :json
+  
+  begin
+    {
+      running: calendar_sync_service.instance_variable_get(:@running),
+      sync_interval: calendar_sync_service.instance_variable_get(:@sync_interval),
+      next_sync_in: calendar_sync_service.instance_variable_get(:@sync_interval)
+    }.to_json
+  rescue => e
+    status 500
+    { error: "Failed to get sync service status: #{e.message}" }.to_json
   end
 end

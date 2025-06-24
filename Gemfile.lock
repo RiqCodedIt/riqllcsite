@@ -4,6 +4,8 @@ GEM
     addressable (2.8.7)
       public_suffix (>= 2.0.2, < 7.0)
     base64 (0.3.0)
+    bigdecimal (3.2.1)
+    chronic (0.10.2)
     declarative (0.0.20)
     dotenv (2.8.1)
     faraday (2.8.1)
@@ -11,6 +13,8 @@ GEM
       faraday-net_http (>= 2.0, < 3.1)
       ruby2_keywords (>= 0.0.4)
     faraday-net_http (3.0.2)
+    google-apis-calendar_v3 (0.36.0)
+      google-apis-core (>= 0.11.0, < 2.a)
     google-apis-core (0.11.3)
       addressable (~> 2.5, >= 2.5.1)
       googleauth (>= 0.16.2, < 2.a)
@@ -33,6 +37,7 @@ GEM
     jwt (2.10.1)
       base64
     mini_mime (1.1.5)
+    mini_portile2 (2.8.9)
     multi_json (1.15.0)
     mustermann (3.0.3)
       ruby2_keywords (~> 0.0.1)
@@ -53,6 +58,8 @@ GEM
     retriable (3.1.2)
     rexml (3.4.1)
     ruby2_keywords (0.0.5)
+    sequel (5.93.0)
+      bigdecimal
     signet (0.18.0)
       addressable (~> 2.8)
       faraday (>= 0.17.5, < 3.a)
@@ -64,23 +71,31 @@ GEM
       rack-protection (= 3.2.0)
       tilt (~> 2.0)
     sinatra-cross_origin (0.4.0)
+    sqlite3 (1.5.4)
+      mini_portile2 (~> 2.8.0)
     stripe (15.2.0)
     tilt (2.6.0)
     trailblazer-option (0.1.2)
     uber (0.1.0)
+    whenever (1.0.0)
+      chronic (>= 0.6.3)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   dotenv
+  google-apis-calendar_v3
   google-apis-sheets_v4
   googleauth
   json
   puma
+  sequel
   sinatra
   sinatra-cross_origin
+  sqlite3 (~> 1.5.0)
   stripe
+  whenever
 
 BUNDLED WITH
    1.17.2

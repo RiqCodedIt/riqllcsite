@@ -9,11 +9,10 @@ gem 'dotenv'
 gem 'google-apis-sheets_v4'
 gem 'googleauth'
 
-# Web scraping and automation
-gem 'selenium-webdriver'
-gem 'nokogiri'
+# Calendar integration
+gem 'google-apis-calendar_v3'
 gem 'whenever'
 
 # Database
-gem 'sqlite3'
+gem 'sqlite3', '~> 1.5.0'
 gem 'sequel'

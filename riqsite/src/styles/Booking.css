@@ -1,3 +1,18 @@
+/* Ensure no text decoration issues */
+.booking-header,
+.booking-form,
+.studio-card,
+.date-card,
+.time-slot,
+.service-option,
+.form-group,
+.summary-section,
+.booking-summary,
+.step-content,
+.booking-container {
+  text-decoration: none !important;
+}
+
 .booking-header {
   text-align: center;
   padding: 3rem 0;
@@ -30,10 +45,6 @@
 .progress-bar {
   margin-bottom: 3rem;
 }
-
-
-
-
 
 .booking-form {
   background: var(--color-neutral-1);

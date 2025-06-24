@@ -1,9 +1,10 @@
 .footer {
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-  color: #ffffff;
+  background: linear-gradient(135deg, var(--color-medium) 0%, var(--color-neutral-2) 100%);
+  color: var(--text-dark);
   padding: 3rem 0 1rem 0;
   margin-top: auto;
-  border-top: 2px solid #ff6b35;
+  border-top: 3px solid var(--color-accent-3);
+  box-shadow: 0 -4px 12px rgba(45, 45, 45, 0.1);
 }
 
 .footer-content {
@@ -16,12 +17,15 @@
 }
 
 .footer-section h3 {
-  color: #ff6b35;
+  color: var(--text-dark);
   font-size: 1.2rem;
   margin-bottom: 1rem;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
+  border-bottom: 2px solid var(--color-accent-3);
+  padding-bottom: 0.5rem;
+  display: inline-block;
 }
 
 .contact-info p,
@@ -31,14 +35,16 @@
 }
 
 .footer-link {
-  color: #ffffff;
+  color: var(--text-medium);
   text-decoration: none;
-  transition: color 0.3s ease;
+  transition: all 0.3s ease;
+  font-weight: 500;
 }
 
 .footer-link:hover {
-  color: #ff6b35;
+  color: var(--text-dark);
   text-decoration: underline;
+  text-decoration-color: var(--color-accent-3);
 }
 
 .social-links {
@@ -48,27 +54,34 @@
 }
 
 .social-link {
-  color: #ffffff;
+  color: var(--text-medium);
   text-decoration: none;
   padding: 0.5rem 0;
   transition: all 0.3s ease;
   border-left: 3px solid transparent;
   padding-left: 0.5rem;
+  font-weight: 500;
 }
 
 .social-link:hover {
-  color: #ff6b35;
-  border-left-color: #ff6b35;
+  color: var(--text-dark);
+  border-left-color: var(--color-accent-3);
   padding-left: 1rem;
+  background: var(--color-light);
+  border-radius: 4px;
 }
 
 .footer-bottom {
-  border-top: 1px solid #444;
+  border-top: 2px solid var(--color-neutral-3);
   margin-top: 2rem;
   padding-top: 1rem;
   text-align: center;
-  color: #cccccc;
+  color: var(--text-medium);
   font-size: 0.9rem;
+  background: var(--color-light);
+  border-radius: 8px;
+  margin: 2rem 1rem 0 1rem;
+  padding: 1rem;
 }
 
 /* Mobile responsiveness */
@@ -102,8 +115,9 @@
   
   .social-link:hover {
     border-left: none;
-    border-bottom-color: #ff6b35;
+    border-bottom-color: var(--color-accent-3);
     padding-left: 0.5rem;
+    background: var(--color-light);
   }
 }
 

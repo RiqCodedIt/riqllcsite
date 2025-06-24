@@ -4,7 +4,7 @@
       "service_id": "mixing_mastering",
       "name": "Mixing + Mastering",
       "price": 100,
-      "description": "Professional mixing and mastering service to give your tracks that radio-ready sound. Our experienced engineers will balance your mix and master it to industry standards.",
+      "description": "Professional mixing and mastering service to give your tracks that professional sound. I will mix your stems and master it to industry standards.",
       "category": "combo",
       "features": [
         "HQ Audio File",
@@ -27,18 +27,10 @@
         "delivery_policy": ["Sundays Excluded"]
       },
       "how_to_send": {
-        "instructions": "Send your song tracked out here",
+        "instructions": "Send your song tracked out to riq@prodbyriq.com",
         "supported_daws": [
           "Pro Tools",
           "FL Studio", 
-          "Cubase",
-          "Garageband",
-          "Reaper",
-          "Adobe Audition",
-          "Cake Walk",
-          "Band Lab",
-          "Mix Craft",
-          "Studio One",
           "Logic Pro X",
           "Ableton"
         ]
@@ -71,7 +63,7 @@
         "delivery_policy": ["Sundays Excluded"]
       },
       "how_to_send": {
-        "instructions": "Send your song tracked out here",
+        "instructions": "Send your song tracked out to riq@prodbyriq.com",
         "supported_daws": [
           "Pro Tools",
           "FL Studio",
@@ -115,7 +107,7 @@
         "delivery_policy": ["Sundays Excluded"]
       },
       "how_to_send": {
-        "instructions": "Send your mixed song here (stereo file)",
+        "instructions": "Send your mixed song to riq@prodbyriq.com",
         "supported_daws": [
           "Pro Tools",
           "FL Studio",
@@ -159,7 +151,7 @@
         "delivery_policy": ["Sundays Excluded"]
       },
       "how_to_send": {
-        "instructions": "Send your mixed/mastered song here",
+        "instructions": "Send your stems to riq@prodbyriq.com and I will level them for a stage performance",
         "supported_daws": [
           "Pro Tools",
           "FL Studio",
@@ -203,7 +195,7 @@
         "delivery_policy": ["Sundays Excluded"]
       },
       "how_to_send": {
-        "instructions": "Send your song tracked out here with notes on what needs to be cleaned",
+        "instructions": "Send the stems to your song and I will make a radio-friendly version for you",
         "supported_daws": [
           "Pro Tools",
           "FL Studio",

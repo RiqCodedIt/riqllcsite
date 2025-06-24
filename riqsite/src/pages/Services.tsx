@@ -140,12 +140,12 @@ const Services: React.FC = () => {
                   <h4>How to send?</h4>
                   <p>{service.how_to_send.instructions}</p>
                   
-                  <h5>What DAW can I send you stems from?</h5>
+                  {/* <h5>What DAW can I send you stems from?</h5>
                   <div className="supported-daws">
                     {service.how_to_send.supported_daws.map((daw, index) => (
                       <span key={index} className="daw-tag">{daw}</span>
                     ))}
-                  </div>
+                  </div> */}
                 </div>
               </div>
             )}

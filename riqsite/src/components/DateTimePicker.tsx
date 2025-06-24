@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import type { Studio, TimeSlot } from '../types/booking';
 import { TIME_SLOTS } from '../types/booking';
 import { useAvailability } from '../hooks/useAvailability';
+import { getNextDays, dateToLocalString, formatDateForDisplay, formatDateShort } from '../utils/dateUtils';
 
 interface DateTimePickerProps {
   selectedStudio: Studio;
@@ -24,25 +25,12 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
   const { getAvailability, isSlotAvailable, isDateLoading, getDateAvailability } = useAvailability();
 
   // Get the next 30 days for date selection
-  const getNextDays = (count: number) => {
-    const days = [];
-    const today = new Date();
-    
-    for (let i = 0; i < count; i++) {
-      const date = new Date(today);
-      date.setDate(date.getDate() + i);
-      days.push(date);
-    }
-    
-    return days;
-  };
-
   const availableDays = getNextDays(30);
 
   // Load availability when component mounts or studio changes
   useEffect(() => {
     availableDays.forEach(day => {
-      const dateString = day.toISOString().split('T')[0];
+      const dateString = dateToLocalString(day);
       getAvailability(dateString);
     });
   }, [selectedStudio.id]);
@@ -55,15 +43,12 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
   }, [selectedDate]);
 
   const formatDate = (date: Date) => {
-    return date.toLocaleDateString('en-US', { 
-      weekday: 'short', 
-      month: 'short', 
-      day: 'numeric' 
-    });
+    const dateString = dateToLocalString(date);
+    return formatDateShort(dateString);
   };
 
   const isDateAvailable = (date: Date) => {
-    const dateString = date.toISOString().split('T')[0];
+    const dateString = dateToLocalString(date);
     const availability = getDateAvailability(dateString);
     
     if (!availability) return false;
@@ -77,7 +62,7 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
   };
 
   const getAvailableSlotCount = (date: Date) => {
-    const dateString = date.toISOString().split('T')[0];
+    const dateString = dateToLocalString(date);
     const availability = getDateAvailability(dateString);
     
     if (!availability) return 0;
@@ -101,7 +86,7 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
           <h4>Select Date</h4>
           <div className="date-grid">
             {availableDays.map((day) => {
-              const dateString = day.toISOString().split('T')[0];
+              const dateString = dateToLocalString(day);
               const isLoading = isDateLoading(dateString);
               const hasAvailability = isDateAvailable(day);
               const availableSlots = getAvailableSlotCount(day);
@@ -137,12 +122,7 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
           <div className="time-section">
             <h4>Select Time Slot</h4>
             <p className="time-section-subtitle">
-              Available slots for {new Date(selectedDate).toLocaleDateString('en-US', { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-              })}
+              Available slots for {formatDateForDisplay(selectedDate)}
             </p>
             
             <div className="time-slots-grid">
@@ -183,12 +163,7 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
           <h4>Your Selection</h4>
           <div className="summary-details">
             <p><strong>Studio:</strong> {selectedStudio.name}</p>
-            <p><strong>Date:</strong> {new Date(selectedDate).toLocaleDateString('en-US', { 
-              weekday: 'long', 
-              year: 'numeric', 
-              month: 'long', 
-              day: 'numeric' 
-            })}</p>
+            <p><strong>Date:</strong> {formatDateForDisplay(selectedDate)}</p>
             <p><strong>Time:</strong> {selectedTimeSlot.label}</p>
             <p><strong>Duration:</strong> {selectedTimeSlot.duration} hours</p>
             <p><strong>Total Cost:</strong> ${selectedStudio.hourlyRate * selectedTimeSlot.duration}</p>
