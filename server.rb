@@ -14,7 +14,7 @@ require_relative 'lib/calendar_sync_service'
 Stripe.api_key = ENV['stripe_test_secret_key'] || 'sk_test_51RUqX5ARuWdY7S8gcq4XRiuKsK1xw5LcAtBr7Z3MS1AtguVzBCWd2zLHQNYt8UYUz0VMCzkaUhtY8lgj8i0dFaRS00KBbm08B0'
 
 # Configure Sinatra
-set :port, 4242
+set :port, ENV['PORT'] || 4242
 set :bind, '0.0.0.0'
 
 # Enable CORS
@@ -349,6 +349,17 @@ end
 # Success endpoint
 get '/success' do
   "Payment successful! Your order has been confirmed."
+end
+
+# Railway healthcheck endpoint
+get '/health' do
+  content_type :json
+  {
+    status: 'healthy',
+    timestamp: Time.now.utc.iso8601,
+    service: 'riq-booking-server',
+    port: ENV['PORT'] || 4242
+  }.to_json
 end
 
 # For testing
