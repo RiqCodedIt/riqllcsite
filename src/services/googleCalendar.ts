@@ -142,24 +142,6 @@ class GoogleCalendarService {
     return availabilityEvents;
   }
 
-  private parseStudiosFromTitle(title: string): string[] {
-    const studios: string[] = [];
-    
-    if (title.toLowerCase().includes('studio c')) {
-      studios.push('C');
-    }
-    if (title.toLowerCase().includes('studio d')) {
-      studios.push('D');
-    }
-    
-    // If no specific studio mentioned, assume both
-    if (studios.length === 0) {
-      studios.push('C', 'D');
-    }
-    
-    return studios;
-  }
-
   private parseTimeSlot(event: CalendarEvent): string | null {
     const startTime = event.start.dateTime || event.start.date;
     const endTime = event.end.dateTime || event.end.date;

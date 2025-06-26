@@ -19,7 +19,6 @@ const Success = () => {
                 const params = new URLSearchParams(location.search);
                 const bookingIdParam = params.get('booking_id');
                 const orderIdParam = params.get('order_id');
-                const sessionId = params.get('session_id');
 
                 if (bookingIdParam) {
                     setBookingId(bookingIdParam);

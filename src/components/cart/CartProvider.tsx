@@ -43,7 +43,6 @@ const calculateTotal = (items: CartItem[]): number => {
 const cartReducer = (state: CartState, action: CartAction): CartState => {
   switch (action.type) {
     case 'ADD_BEAT': {
-      const itemId = generateItemId(action.payload);
       // Check if this exact beat license combo already exists
       const existingIndex = state.items.findIndex(item => 
         item.type === 'beat' && 

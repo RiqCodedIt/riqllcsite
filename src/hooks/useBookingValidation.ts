@@ -14,11 +14,6 @@ export const useBookingValidation = () => {
     return phoneRegex.test(phone);
   };
 
-  const validateZipCode = (zipCode: string): boolean => {
-    const zipRegex = /^\d{5}(-\d{4})?$/;
-    return zipRegex.test(zipCode);
-  };
-
   const validateStep1 = useCallback((data: { studio: any }): FormStepValidation => {
     const stepErrors: ValidationErrors = {};
 

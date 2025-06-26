@@ -19,7 +19,6 @@ interface TrackData {
 }
 
 const SpotifyTrack = ({ trackUrl, description }: SpotifyTrackProps) => {
-    const [trackData, setTrackData] = useState<TrackData | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -30,37 +29,15 @@ const SpotifyTrack = ({ trackUrl, description }: SpotifyTrackProps) => {
     };
 
     useEffect(() => {
-        const fetchTrackData = async () => {
-            const trackId = getTrackId(trackUrl);
-            if (!trackId) {
-                setError('Invalid Spotify URL');
-                setLoading(false);
-                return;
-            }
+        const trackId = getTrackId(trackUrl);
+        if (!trackId) {
+            setError('Invalid Spotify URL');
+            setLoading(false);
+            return;
+        }
 
-            try {
-                // For demo purposes, we'll use the embed player
-                // In production, you'd fetch from Spotify API
-                setTrackData({
-                    id: trackId,
-                    name: 'Track Name',
-                    artists: [{ name: 'Artist Name' }],
-                    album: {
-                        name: 'Album Name',
-                        images: [{ url: '' }]
-                    },
-                    external_urls: {
-                        spotify: trackUrl
-                    }
-                });
-                setLoading(false);
-            } catch (err) {
-                setError('Failed to load track data');
-                setLoading(false);
-            }
-        };
-
-        fetchTrackData();
+        // For demo purposes, we'll just set loading to false
+        setLoading(false);
     }, [trackUrl]);
 
     if (loading) {

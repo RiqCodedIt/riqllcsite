@@ -9,7 +9,7 @@ interface CheckoutFormProps {
 }
 
 const CheckoutForm: React.FC<CheckoutFormProps> = ({ onClose }) => {
-  const { cart, clearCart } = useCart();
+  const { cart } = useCart();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   

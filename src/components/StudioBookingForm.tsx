@@ -286,14 +286,6 @@ const StudioBookingForm: React.FC = () => {
     }
   };
 
-  const stepTitles = [
-    'Choose Studio',
-    'Select Date & Time',
-    'Contact Information',
-    'Session Details',
-    'Review & Confirm'
-  ];
-
   return (
     <div className="page-content">
       <div className="booking-header">
