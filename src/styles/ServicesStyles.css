@@ -1,0 +1,451 @@
+/* Services Page Styles */
+
+.services-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding: 2rem 0;
+}
+
+.services-header h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, var(--text-dark), var(--text-medium));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+}
+
+.services-header p {
+  font-size: 1.2rem;
+  color: var(--text-medium);
+  margin-bottom: 1rem;
+}
+
+.services-stats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  font-size: 0.9rem;
+  color: var(--text-dark);
+  font-weight: 600;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Service Card */
+.service-card {
+  background: var(--color-neutral-1);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  border: 2px solid var(--color-neutral-3);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-shadow: 0 2px 8px rgba(45, 45, 45, 0.1);
+}
+
+.service-card.expanded {
+  gap: 1.5rem;
+}
+
+.service-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--color-accent-3);
+  box-shadow: 0 8px 24px rgba(45, 45, 45, 0.15);
+}
+
+.service-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  margin: -0.5rem;
+}
+
+.service-header:hover {
+  background: var(--color-light);
+}
+
+.service-icon {
+  font-size: 2.5rem;
+  flex-shrink: 0;
+}
+
+.service-title-price {
+  flex: 1;
+}
+
+.expand-indicator {
+  color: var(--text-dark);
+  font-size: 1.5rem;
+  font-weight: bold;
+  transition: transform 0.3s ease;
+  user-select: none;
+  min-width: 30px;
+  text-align: center;
+  background: var(--color-accent-3);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.service-card.expanded .expand-indicator {
+  transform: rotate(180deg);
+  background: var(--color-lightest);
+}
+
+.service-title {
+  color: var(--text-dark);
+  margin: 0 0 0.5rem 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.service-price {
+  color: var(--text-dark);
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.service-description {
+  color: var(--text-medium);
+  line-height: 1.6;
+  margin-bottom: 0.5rem;
+}
+
+.service-description p {
+  margin: 0;
+}
+
+/* Expandable Details Section */
+.service-details {
+  animation: expandDetails 0.3s ease;
+  overflow: hidden;
+}
+
+@keyframes expandDetails {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 1000px;
+  }
+}
+
+/* Features Section */
+.service-features h4,
+.service-delivery h4,
+.service-how-to-send h4 {
+  color: var(--text-dark);
+  margin: 0 0 1rem 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.service-details {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding-top: 1rem;
+  border-top: 2px solid var(--color-neutral-3);
+}
+
+.service-features ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.service-features li {
+  color: var(--text-medium);
+  padding: 0.3rem 0;
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.service-features li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--text-dark);
+  font-weight: bold;
+  background: var(--color-accent-3);
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+}
+
+/* Delivery Section */
+.delivery-times {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.delivery-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  background: var(--color-light);
+  border-radius: 0.5rem;
+}
+
+.delivery-label {
+  color: var(--text-dark);
+  font-weight: 600;
+}
+
+.delivery-time {
+  color: var(--text-medium);
+  font-weight: 500;
+}
+
+.delivery-policy {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.policy-item {
+  color: var(--text-medium);
+  font-size: 0.9rem;
+  background: var(--color-light);
+  padding: 0.3rem 0.6rem;
+  border-radius: 1rem;
+}
+
+/* How to Send Section */
+.service-how-to-send p {
+  color: var(--text-medium);
+  margin: 0 0 1rem 0;
+}
+
+.service-how-to-send h5 {
+  color: var(--text-dark);
+  margin: 1rem 0 0.5rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.supported-daws {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.daw-tag {
+  background: var(--color-accent-3);
+  color: var(--text-dark);
+  padding: 0.4rem 0.8rem;
+  border-radius: 1rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: 1px solid var(--color-accent-3);
+}
+
+/* Service Actions */
+.service-actions {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 2px solid var(--color-neutral-3);
+}
+
+.add-to-cart-service-btn {
+  width: 100%;
+  background: var(--color-accent-3);
+  color: var(--text-dark);
+  border: 2px solid var(--color-accent-3);
+  padding: 1rem 2rem;
+  border-radius: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(45, 45, 45, 0.15);
+}
+
+.add-to-cart-service-btn:hover {
+  background: var(--color-lightest);
+  border-color: var(--color-lightest);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(45, 45, 45, 0.2);
+}
+
+.add-to-cart-service-btn:active {
+  transform: translateY(0);
+}
+
+/* Category-specific styling */
+.service-card[data-category="mixing"] {
+  border-left: 4px solid var(--color-accent-3);
+}
+
+.service-card[data-category="mastering"] {
+  border-left: 4px solid var(--color-lightest);
+}
+
+.service-card[data-category="combo"] {
+  border-left: 4px solid var(--color-accent-2);
+}
+
+.service-card[data-category="other"] {
+  border-left: 4px solid var(--color-light-2);
+}
+
+/* Loading */
+.loading-spinner {
+  text-align: center;
+  padding: 4rem;
+  color: var(--text-dark);
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .services-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .services-header h1 {
+    font-size: 2.5rem;
+  }
+  
+  .service-card {
+    padding: 1rem;
+  }
+  
+  .service-header {
+    flex-direction: row;
+    text-align: left;
+    gap: 1rem;
+  }
+  
+  .service-icon {
+    font-size: 2rem;
+  }
+  
+  .delivery-times {
+    gap: 0.3rem;
+  }
+  
+  .delivery-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2rem;
+  }
+  
+  .supported-daws {
+    justify-content: center;
+  }
+  
+  .expand-indicator {
+    font-size: 1.2rem;
+    width: 26px;
+    height: 26px;
+  }
+}
+
+@media (max-width: 480px) {
+  .services-header h1 {
+    font-size: 2rem;
+  }
+  
+  .services-stats {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .service-card {
+    padding: 1rem;
+  }
+  
+  .service-price {
+    font-size: 1.5rem;
+  }
+  
+  .add-to-cart-service-btn {
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+  }
+}
+
+/* Cart integration styles */
+.service-category {
+  color: var(--text-dark);
+  font-size: 0.9rem;
+  margin: 0 0 0.2rem 0;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+/* Animation for service cards */
+@keyframes serviceCardSlide {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.service-card {
+  animation: serviceCardSlide 0.5s ease;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .service-card {
+    border-width: 3px;
+  }
+  
+  .service-features li::before {
+    border: 2px solid var(--text-dark);
+  }
+  
+  .add-to-cart-service-btn {
+    border-width: 3px;
+  }
+  
+  .daw-tag {
+    border-width: 2px;
+  }
+}
+
+/* Focus styles for accessibility */
+.service-header:focus,
+.add-to-cart-service-btn:focus {
+  outline: 3px solid var(--color-accent-3);
+  outline-offset: 2px;
+}

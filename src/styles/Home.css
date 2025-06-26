@@ -1,0 +1,211 @@
+.hero-section {
+  text-align: center;
+  padding: 4rem 0;
+  background: linear-gradient(135deg, var(--color-accent-3) 0%, var(--color-lightest) 100%);
+  color: var(--text-dark);
+  border-radius: 12px;
+  margin-bottom: 3rem;
+  border: 2px solid var(--color-neutral-3);
+  box-shadow: 0 4px 16px rgba(45, 45, 45, 0.1);
+}
+
+.hero-content h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+.hero-subtitle {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--text-dark);
+  font-weight: 600;
+}
+
+.hero-description {
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto 2rem;
+  line-height: 1.6;
+  color: var(--text-medium);
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.featured-section {
+  margin: 4rem 0;
+  text-align: center;
+}
+
+.featured-section h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: var(--text-dark);
+  font-weight: 700;
+}
+
+.featured-section > p {
+  font-size: 1.1rem;
+  color: var(--text-medium);
+  margin-bottom: 3rem;
+}
+
+.tracks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.featured-more {
+  margin-top: 3rem;
+  text-align: center;
+}
+
+.track-item {
+  background: var(--color-neutral-1);
+  border: 2px solid var(--color-neutral-3);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(45, 45, 45, 0.1);
+  transition: all 0.3s ease;
+}
+
+.track-item:hover {
+  transform: translateY(-5px);
+  border-color: var(--color-accent-3);
+  box-shadow: 0 8px 24px rgba(45, 45, 45, 0.15);
+}
+
+.track-description {
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 1rem;
+  text-align: center;
+  background: var(--color-accent-3);
+  padding: 0.5rem 1rem;
+  border-radius: 1rem;
+  display: inline-block;
+}
+
+.spotify-track iframe {
+  border-radius: 8px;
+}
+
+.services-preview {
+  margin: 4rem 0;
+  text-align: center;
+}
+
+.services-preview h2 {
+  font-size: 2.5rem;
+  margin-bottom: 3rem;
+  color: var(--text-dark);
+  font-weight: 700;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.service-card {
+  background: var(--color-neutral-1);
+  border: 2px solid var(--color-neutral-3);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(45, 45, 45, 0.1);
+  transition: all 0.3s ease;
+  text-align: left;
+}
+
+.service-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--color-accent-3);
+  box-shadow: 0 8px 24px rgba(45, 45, 45, 0.15);
+}
+
+.service-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--text-dark);
+  font-weight: 700;
+}
+
+.service-card p {
+  color: var(--text-medium);
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.service-link {
+  color: var(--text-dark);
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  background: var(--color-accent-3);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  display: inline-block;
+  border: 2px solid var(--color-accent-3);
+}
+
+.service-link:hover {
+  background: var(--color-lightest);
+  border-color: var(--color-lightest);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  .hero-content h1 {
+    font-size: 2rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.2rem;
+  }
+  
+  .hero-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .tracks-grid,
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .featured-section h2,
+  .services-preview h2 {
+    font-size: 2rem;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .hero-section {
+    border-width: 3px;
+  }
+  
+  .track-item,
+  .service-card {
+    border-width: 3px;
+  }
+  
+  .service-link {
+    border-width: 3px;
+  }
+}
+
+/* Focus styles for accessibility */
+.service-link:focus {
+  outline: 3px solid var(--color-accent-3);
+  outline-offset: 2px;
+}

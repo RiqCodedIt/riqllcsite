@@ -1,203 +1,35 @@
-# Environment variables and secrets
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# production
+/build
+/dist
+
+# misc
+.DS_Store
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+.env.*
 
-# Google API credentials
-client_secret_*.json
-*.json
-!package.json
-!package-lock.json
-!tsconfig*.json
-!riqsite/src/data/*.json
-
-# Stripe and payment secrets
-stripe-products.txt
-
-# Database files
-*.db
-*.sqlite
-*.sqlite3
-availability.db
-
-# Booking data (contains customer information)
-bookings/
-bookings/*.json
-
-# Node modules
-node_modules/
-riqsite/node_modules/
-
-# Build outputs
-dist/
-build/
-riqsite/dist/
-riqsite/build/
-
-# Logs
-*.log
+# logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-lerna-debug.log*
 
-# Runtime data
-pids
-*.pid
-*.seed
-*.pid.lock
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
 
-# Coverage directory used by tools like istanbul
-coverage/
-*.lcov
-
-# nyc test coverage
-.nyc_output
-
-# Dependency directories
-jspm_packages/
-
-# TypeScript cache
-*.tsbuildinfo
-
-# Optional npm cache directory
-.npm
-
-# Optional eslint cache
-.eslintcache
-
-# Microbundle cache
-.rpt2_cache/
-.rts2_cache_cjs/
-.rts2_cache_es/
-.rts2_cache_umd/
-
-# Optional REPL history
-.node_repl_history
-
-# Output of 'npm pack'
-*.tgz
-
-# Yarn Integrity file
-.yarn-integrity
-
-# parcel-bundler cache (https://parceljs.org/)
-.cache
-.parcel-cache
-
-# Next.js build output
-.next
-
-# Nuxt.js build / generate output
-.nuxt
-dist
-
-# Gatsby files
-.cache/
-public
-
-# Storybook build outputs
-.out
-.storybook-out
-
-# Temporary folders
-tmp/
-temp/
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
-# Ruby specific
-*.gem
-*.rbc
-/.config
-/coverage/
-/InstalledFiles
-/pkg/
-/spec/reports/
-/spec/examples.txt
-/test/tmp/
-/test/version_tmp/
-/tmp/
-
-# Used by dotenv library to load environment variables
-.env
-
-# Ignore Byebug command history file
-.byebug_history
-
-# Ignore bundler config
-/.bundle
-
-# Ignore the default SQLite database
-/db/*.sqlite3
-/db/*.sqlite3-journal
-
-# Ignore all logfiles and tempfiles
-/log/*
-/tmp/*
-!/log/.keep
-!/tmp/.keep
-
-# Ignore uploaded files in development
-/storage/*
-!/storage/.keep
-
-# Ignore master key for decrypting credentials
-/config/master.key
-
-# OS generated files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
-# Audio files (if you have large audio files you don't want to commit)
-*.mp3
-*.wav
-*.flac
-*.aac
-*.ogg
-!riqsite/src/assets/beats/*.mp3
-
-# Video files
-*.mp4
-*.avi
-*.mov
-*.wmv
-
-# Large image files (optional - uncomment if needed)
-# *.psd
-# *.ai
-
-# Backup files
-*.bak
-*.backup
-*.old
-
-# Test files that might contain sensitive data
-test_*.rb
-*_test.rb
-test_*.js
-*_test.js
-
-# Documentation that might contain sensitive info
-COMPLETE_SITE_RECREATION_PROMPT.md
-GOOGLE_SHEETS_DEBUG_PLAN.md
-RAILWAY_DEPLOYMENT_GUIDE.md
-
-# Calendar analysis files that might contain personal data
-calendar_analysis_report.md
+# Spotify backend
+/spotify-backend/.env
+/spotify-backend/node_modules
