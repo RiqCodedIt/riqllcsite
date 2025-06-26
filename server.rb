@@ -23,7 +23,9 @@ configure do
 end
 
 before do
-  response.headers['Access-Control-Allow-Origin'] = 'http://localhost:5173'
+  # Use environment variable for frontend URL, fallback to Railway production URL
+  frontend_url = ENV['FRONTEND_URL'] || 'https://llc-frontend-production.up.railway.app'
+  response.headers['Access-Control-Allow-Origin'] = frontend_url
   response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
   response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
 end
@@ -193,6 +195,9 @@ post '/create-checkout-session' do
       file.write(JSON.pretty_generate(order_data))
     end
     
+    # Get frontend URL for redirects
+    frontend_url = ENV['FRONTEND_URL'] || 'https://llc-frontend-production.up.railway.app'
+    
     # Create a Stripe Checkout Session
     session = Stripe::Checkout::Session.create({
       payment_method_types: ['card'],
@@ -203,8 +208,8 @@ post '/create-checkout-session' do
         has_consultation: has_consultation.to_s
       },
       mode: 'payment',
-      success_url: "http://localhost:5173/success?session_id={CHECKOUT_SESSION_ID}&order_id=#{order_id}",
-      cancel_url: "http://localhost:5173/cart?canceled=true",
+      success_url: "#{frontend_url}/success?session_id={CHECKOUT_SESSION_ID}&order_id=#{order_id}",
+      cancel_url: "#{frontend_url}/cart?canceled=true",
     })
     
     # Update order data with Stripe session ID
@@ -257,11 +262,14 @@ post '/create-studio-checkout-session' do
       file.write(JSON.pretty_generate(booking_data))
     end
     
+    # Get frontend URL for redirects
+    frontend_url = ENV['FRONTEND_URL'] || 'https://llc-frontend-production.up.railway.app'
+    
     # Create a Stripe Checkout Session using studio session price ID
     session = Stripe::Checkout::Session.create({
       payment_method_types: ['card'],
       line_items: [{
-        price: PRICE_MAPPING['studio_session'],
+        price: PRODUCT_MAPPING['studio_session'],
         quantity: service['duration'] || 1,  # Use duration as quantity
       }],
       metadata: {
@@ -269,8 +277,8 @@ post '/create-studio-checkout-session' do
         has_studio_session: 'true'
       },
       mode: 'payment',
-      success_url: "http://localhost:5173/success?session_id={CHECKOUT_SESSION_ID}&booking_id=#{booking_id}",
-      cancel_url: "http://localhost:5173/booking?canceled=true",
+      success_url: "#{frontend_url}/success?session_id={CHECKOUT_SESSION_ID}&booking_id=#{booking_id}",
+      cancel_url: "#{frontend_url}/booking?canceled=true",
     })
     
     # Update booking data with Stripe session ID
