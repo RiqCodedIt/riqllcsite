@@ -5,18 +5,18 @@ interface SpotifyTrackProps {
     description?: string;
 }
 
-interface TrackData {
-    id: string;
-    name: string;
-    artists: { name: string }[];
-    album: {
-        name: string;
-        images: { url: string }[];
-    };
-    external_urls: {
-        spotify: string;
-    };
-}
+// interface TrackData {
+//     id: string;
+//     name: string;
+//     artists: { name: string }[];
+//     album: {
+//         name: string;
+//         images: { url: string }[];
+//     };
+//     external_urls: {
+//         spotify: string;
+//     };
+// }
 
 const SpotifyTrack = ({ trackUrl, description }: SpotifyTrackProps) => {
     const [loading, setLoading] = useState(true);

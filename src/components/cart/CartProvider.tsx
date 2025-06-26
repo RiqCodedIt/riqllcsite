@@ -26,15 +26,15 @@ type CartAction =
   | { type: 'CLOSE_CART' }
   | { type: 'LOAD_CART'; payload: CartState };
 
-const generateItemId = (item: CartItem): string => {
-  if (item.type === 'beat') {
-    return `${item.beat_id}_${item.license_type}`;
-  } else if (item.type === 'studio_session') {
-    return `studio_${item.session_id}`;
-  } else {
-    return `service_${item.service_id}`;
-  }
-};
+// const generateItemId = (item: CartItem): string => {
+//   if (item.type === 'beat') {
+//     return `${item.beat_id}_${item.license_type}`;
+//   } else if (item.type === 'studio_session') {
+//     return `studio_${item.session_id}`;
+//   } else {
+//     return `service_${item.service_id}`;
+//   }
+// };
 
 const calculateTotal = (items: CartItem[]): number => {
   return items.reduce((total, item) => total + item.price, 0);
