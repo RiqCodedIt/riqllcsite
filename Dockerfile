@@ -14,7 +14,7 @@ RUN npm ci
 COPY . .
 
 # Debug: Echo the VITE_API_URL environment variable
-RUN echo "VITE_API_URL during build: $VITE_API_URL"
+RUN echo "BACKEND_URL during build: $BACKEND_URL"
 
 # Build the application
 RUN npm run build
