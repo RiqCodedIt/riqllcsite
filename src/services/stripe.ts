@@ -2,7 +2,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import type { CartItem } from '../types/beats';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.BACKEND_URL;
 
 export interface CheckoutData {
   items: CartItem[];
