@@ -4,17 +4,16 @@ require 'json'
 require 'sinatra/cross_origin'
 require 'date'
 require 'fileutils'
-require 'dotenv/load' if File.exist?(File.join(__dir__, '.env'))
 require 'google/apis/sheets_v4'
 require 'googleauth'
 require_relative 'lib/availability_manager'
 require_relative 'lib/calendar_sync_service'
 
-# Configure Stripe API key
-Stripe.api_key = ENV['stripe_test_secret_key'] || 'sk_test_51RUqX5ARuWdY7S8gcq4XRiuKsK1xw5LcAtBr7Z3MS1AtguVzBCWd2zLHQNYt8UYUz0VMCzkaUhtY8lgj8i0dFaRS00KBbm08B0'
+# Configure Stripe API key - Railway environment variable only
+Stripe.api_key = ENV['STRIPE_SECRET_KEY']
 
 # Configure Sinatra
-set :port, ENV['PORT'] || 4242
+set :port, ENV['PORT']
 set :bind, '0.0.0.0'
 
 # Enable CORS
@@ -23,8 +22,8 @@ configure do
 end
 
 before do
-  # Use environment variable for frontend URL, fallback to Railway production URL
-  frontend_url = ENV['FRONTEND_URL'] || 'https://llc-frontend-production.up.railway.app'
+  # Use environment variable for frontend URL - Railway environment variable only
+  frontend_url = ENV['FRONTEND_URL']
   response.headers['Access-Control-Allow-Origin'] = frontend_url
   response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
   response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
@@ -195,8 +194,8 @@ post '/create-checkout-session' do
       file.write(JSON.pretty_generate(order_data))
     end
     
-    # Get frontend URL for redirects
-    frontend_url = ENV['FRONTEND_URL'] || 'https://llc-frontend-production.up.railway.app'
+    # Get frontend URL for redirects - Railway environment variable only
+    frontend_url = ENV['FRONTEND_URL']
     
     # Create a Stripe Checkout Session
     session = Stripe::Checkout::Session.create({
@@ -263,8 +262,7 @@ post '/create-studio-checkout-session' do
     end
     
     # Get frontend URL for redirects
-    frontend_url = ENV['FRONTEND_URL'] || 'https://llc-frontend-production.up.railway.app'
-    
+    frontend_url = ENV['FRONTEND_URL']
     # Create a Stripe Checkout Session using studio session price ID
     session = Stripe::Checkout::Session.create({
       payment_method_types: ['card'],
@@ -303,7 +301,7 @@ post '/webhook' do
   
   begin
     event = Stripe::Webhook.construct_event(
-      payload, sig_header, ENV['STRIPE_WEBHOOK_SECRET'] || 'whsec_your_webhook_signing_secret'
+      payload, sig_header, ENV['STRIPE_WEBHOOK_SECRET']
     )
     
     case event['type']
@@ -366,7 +364,7 @@ get '/health' do
     status: 'healthy',
     timestamp: Time.now.utc.iso8601,
     service: 'riq-booking-server',
-    port: ENV['PORT'] || 4242
+    port: ENV['PORT']
   }.to_json
 end
 
