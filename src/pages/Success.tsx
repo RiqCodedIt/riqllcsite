@@ -26,7 +26,7 @@ const Success = () => {
                     setOrderId(orderIdParam);
                     
                     // Fetch order details to determine what was purchased
-                    const response = await fetch(`${import.meta.env.VITE_API_URL}/bookings`);
+                    const response = await fetch(`${import.meta.env.REACT_APP_API_URL}/bookings`);
                     if (response.ok) {
                         const bookings = await response.json();
                         const order = bookings.find((b: any) => b.id === orderIdParam);

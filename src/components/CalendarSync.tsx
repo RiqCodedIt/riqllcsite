@@ -21,7 +21,7 @@ const CalendarSync: React.FC = () => {
 
   const fetchSyncStatus = async () => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/sync-status`);
+      const response = await fetch(`${import.meta.env.REACT_APP_API_URL}/api/sync-status`);
       const status = await response.json();
       setSyncStatus(status);
     } catch (error) {

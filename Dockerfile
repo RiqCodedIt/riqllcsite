@@ -13,8 +13,11 @@ RUN npm ci
 # Copy source code
 COPY . .
 
+#Inject Backend URL
+ARG REACT_APP_API_URL
+
 # Debug: Echo the VITE_API_URL environment variable
-RUN echo "BACKEND_URL during build: $BACKEND_URL"
+RUN echo "BACKEND_URL during build: $REACT_APP_API_URL"
 
 # Build the application
 RUN npm run build

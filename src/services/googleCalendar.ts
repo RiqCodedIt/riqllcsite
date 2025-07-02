@@ -26,9 +26,9 @@ class GoogleCalendarService {
   private isInitialized: boolean = false;
 
   constructor() {
-    this.apiKey = import.meta.env.VITE_GOOGLE_API_KEY;
-    this.studioCCalendarId = import.meta.env.VITE_GOOGLE_CALENDAR_STUDIO_C_ID;
-    this.studioDCalendarId = import.meta.env.VITE_GOOGLE_CALENDAR_STUDIO_D_ID;
+    this.apiKey = import.meta.env.REACT_APP_GOOGLE_API_KEY;
+    this.studioCCalendarId = import.meta.env.REACT_APP_GOOGLE_CALENDAR_STUDIO_C_ID;
+    this.studioDCalendarId = import.meta.env.REACT_APP_GOOGLE_CALENDAR_STUDIO_D_ID;
   }
 
   async initialize(): Promise<void> {
@@ -203,7 +203,7 @@ class GoogleCalendarService {
       console.log(`Processed ${availabilityEvents.length} availability events`);
       
       // Send to backend
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/sync-calendar`, {
+      const response = await fetch(`${import.meta.env.REACT_APP_API_URL}/api/sync-calendar`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
