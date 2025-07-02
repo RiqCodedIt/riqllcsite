@@ -2,7 +2,6 @@ import { loadStripe } from '@stripe/stripe-js';
 import type { CartItem } from '../types/beats';
 
 const stripePromise = loadStripe(import.meta.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
-const API_URL = import.meta.env.REACT_APP_API_URL;
 
 export interface CheckoutData {
   items: CartItem[];
@@ -15,7 +14,7 @@ export interface CheckoutData {
 
 export const createCheckoutSession = async (checkoutData: CheckoutData): Promise<string> => {
   try {
-    const response = await fetch(`${API_URL}/create-checkout-session`, {
+    const response = await fetch(`${import.meta.env.REACT_APP_API_URL}/create-checkout-session`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
