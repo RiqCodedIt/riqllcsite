@@ -1,29 +1,31 @@
-# Single-stage build for React/Vite frontend with Node.js server
-FROM node:20-alpine
+FROM node:20-alpine AS build
 
-# Set working directory
+ENV NPM_CONFIG_UPDATE_NOTIFIER=false
+ENV NPM_CONFIG_FUND=false
+ENV NODE_ENV=production
+
 WORKDIR /app
 
-# Copy package files
 COPY package*.json ./
 
-# Install dependencies
-RUN npm ci
+RUN npm install
 
-# Copy source code
-COPY . .
+COPY . ./
 
-#Inject Backend URL
-ARG VITE_APP_API_URL
+# Specify any needed environment variables here
+ARG VITE_API_URL
 
 # Debug: Echo the VITE_API_URL environment variable
-RUN echo "BACKEND_URL during build: $VITE_APP_API_URL"
+RUN echo "BACKEND_URL during build: $VITE_API_URL"
 
-# Build the application
 RUN npm run build
 
-# Expose port (Railway will override this)
-EXPOSE 4000
+FROM caddy
 
-# Start the Express server
-CMD ["npm", "start"]
+WORKDIR /app
+
+COPY Caddyfile ./
+
+COPY --from=build /app/dist ./dist
+
+CMD ["caddy", "run", "--config", "Caddyfile", "--adapter", "caddyfile"]

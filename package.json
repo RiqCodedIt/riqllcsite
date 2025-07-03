@@ -12,7 +12,10 @@
     "preview": "vite preview",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
-    "deploy:custom": "./deploy.sh"
+    "deploy:custom": "./deploy.sh",
+    "caddy:dev": "caddy run --config Caddyfile --adapter caddyfile",
+    "caddy:build": "npm run build && caddy run --config Caddyfile --adapter caddyfile",
+    "caddy:reload": "caddy reload --config Caddyfile --adapter caddyfile"
   },
   "dependencies": {
     "@stripe/react-stripe-js": "^3.7.0",
