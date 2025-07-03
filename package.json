@@ -10,9 +10,6 @@
     "start": "node server.js",
     "lint": "eslint .",
     "preview": "vite preview",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist",
-    "deploy:custom": "./deploy.sh",
     "caddy:dev": "caddy run --config Caddyfile --adapter caddyfile",
     "caddy:build": "npm run build && caddy run --config Caddyfile --adapter caddyfile",
     "caddy:reload": "caddy reload --config Caddyfile --adapter caddyfile"
@@ -23,7 +20,6 @@
     "@types/gapi": "^0.0.47",
     "express": "^4.18.2",
     "gapi-script": "^1.2.0",
-    "gh-pages": "^6.3.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-google-calendar-api": "^2.3.0",
