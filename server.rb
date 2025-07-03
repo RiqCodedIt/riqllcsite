@@ -310,6 +310,8 @@ post '/webhook' do
       order_id = session['metadata']['order_id']
       booking_id = session['metadata']['booking_id']
       
+      puts "Processing checkout.session.completed for order_id: #{order_id}, booking_id: #{booking_id}"
+      
       # Handle cart orders
       if order_id
         order_file = File.join(bookings_dir, "#{order_id}.json")
@@ -325,6 +327,9 @@ post '/webhook' do
           
           # Add to Google Sheets if it contains studio sessions
           add_to_google_sheets(order_data)
+          puts "Order #{order_id} confirmed and updated"
+        else
+          puts "Order file not found: #{order_file}"
         end
       end
       
@@ -340,15 +345,36 @@ post '/webhook' do
           File.open(booking_file, 'w') do |file|
             file.write(JSON.pretty_generate(booking_data))
           end
+          puts "Booking #{booking_id} confirmed and updated"
+        else
+          puts "Booking file not found: #{booking_file}"
         end
       end
+      
+    when 'charge.succeeded'
+      charge = event['data']['object']
+      puts "Charge succeeded: #{charge['id']} for amount: #{charge['amount']}"
+      # Log the charge success but don't process as order data
+      
+    when 'payment_intent.succeeded'
+      payment_intent = event['data']['object']
+      puts "Payment intent succeeded: #{payment_intent['id']}"
+      # Log the payment intent success
+      
+    else
+      puts "Unhandled event type: #{event['type']}"
     end
     
     status 200
     { received: true }.to_json
   rescue JSON::ParserError, Stripe::SignatureVerificationError => e
+    puts "Webhook error: #{e.message}"
     status 400
     { error: e.message }.to_json
+  rescue StandardError => e
+    puts "Unexpected webhook error: #{e.message}"
+    status 500
+    { error: "Internal server error" }.to_json
   end
 end
 
