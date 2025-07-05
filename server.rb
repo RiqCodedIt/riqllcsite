@@ -294,87 +294,129 @@ post '/create-studio-checkout-session' do
   end
 end
 
-# Webhook for Stripe events
+# Webhook for Stripe events - Following Stripe best practices
 post '/webhook' do
   payload = request.body.read
   sig_header = request.env['HTTP_STRIPE_SIGNATURE']
+  event = nil
   
   begin
     event = Stripe::Webhook.construct_event(
       payload, sig_header, ENV['STRIPE_WEBHOOK_SECRET']
     )
-    
-    case event['type']
-    when 'checkout.session.completed'
-      session = event['data']['object']
-      order_id = session['metadata']['order_id']
-      booking_id = session['metadata']['booking_id']
-      
-      puts "Processing checkout.session.completed for order_id: #{order_id}, booking_id: #{booking_id}"
-      
-      # Handle cart orders
-      if order_id
-        order_file = File.join(bookings_dir, "#{order_id}.json")
-        if File.exist?(order_file)
-          order_data = JSON.parse(File.read(order_file))
-          order_data['status'] = 'confirmed'
-          order_data['payment_status'] = session['payment_status']
-          order_data['payment_intent'] = session['payment_intent']
-          
-          File.open(order_file, 'w') do |file|
-            file.write(JSON.pretty_generate(order_data))
-          end
-          
-          # Add to Google Sheets if it contains studio sessions
-          add_to_google_sheets(order_data)
-          puts "Order #{order_id} confirmed and updated"
-        else
-          puts "Order file not found: #{order_file}"
-        end
-      end
-      
-      # Handle legacy studio bookings
-      if booking_id
-        booking_file = File.join(bookings_dir, "#{booking_id}.json")
-        if File.exist?(booking_file)
-          booking_data = JSON.parse(File.read(booking_file))
-          booking_data['status'] = 'confirmed'
-          booking_data['payment_status'] = session['payment_status']
-          booking_data['payment_intent'] = session['payment_intent']
-          
-          File.open(booking_file, 'w') do |file|
-            file.write(JSON.pretty_generate(booking_data))
-          end
-          puts "Booking #{booking_id} confirmed and updated"
-        else
-          puts "Booking file not found: #{booking_file}"
-        end
-      end
-      
-    when 'charge.succeeded'
-      charge = event['data']['object']
-      puts "Charge succeeded: #{charge['id']} for amount: #{charge['amount']}"
-      # Log the charge success but don't process as order data
-      
-    when 'payment_intent.succeeded'
-      payment_intent = event['data']['object']
-      puts "Payment intent succeeded: #{payment_intent['id']}"
-      # Log the payment intent success
-      
-    else
-      puts "Unhandled event type: #{event['type']}"
-    end
-    
-    status 200
-    { received: true }.to_json
-  rescue JSON::ParserError, Stripe::SignatureVerificationError => e
-    puts "Webhook error: #{e.message}"
+  rescue JSON::ParserError => e
+    puts "Invalid JSON payload: #{e.message}"
     status 400
-    { error: e.message }.to_json
-  rescue StandardError => e
-    puts "Unexpected webhook error: #{e.message}"
-    status 500
-    { error: "Internal server error" }.to_json
+    return
+  rescue Stripe::SignatureVerificationError => e
+    puts "Invalid signature: #{e.message}"
+    status 400
+    return
+  end
+  
+  # Handle the event using proper Stripe Event object syntax
+  case event.type
+  when 'checkout.session.completed'
+    handle_checkout_completed(event.data.object)
+  when 'charge.succeeded'
+    handle_charge_succeeded(event.data.object)
+  when 'payment_intent.succeeded'
+    handle_payment_intent_succeeded(event.data.object)
+  else
+    puts "Unhandled event type: #{event.type}"
+  end
+  
+  status 200
+  { received: true }.to_json
+end
+
+# Handle checkout session completion
+def handle_checkout_completed(session)
+  order_id = session.metadata.order_id
+  booking_id = session.metadata.booking_id
+  
+  puts "Processing checkout.session.completed for order_id: #{order_id}, booking_id: #{booking_id}"
+  
+  # Handle cart orders
+  if order_id && !order_id.empty?
+    process_order_confirmation(order_id, session)
+  end
+  
+  # Handle legacy studio bookings
+  if booking_id && !booking_id.empty?
+    process_booking_confirmation(booking_id, session)
+  end
+end
+
+# Handle charge succeeded events
+def handle_charge_succeeded(charge)
+  puts "Charge succeeded: #{charge.id} for amount: $#{charge.amount / 100.0}"
+  puts "Payment method: #{charge.payment_method_details.type}"
+  puts "Customer email: #{charge.billing_details.email}" if charge.billing_details.email
+  
+  # Log charge for accounting/reconciliation purposes
+  # You can add additional logic here if needed
+end
+
+# Handle payment intent succeeded events
+def handle_payment_intent_succeeded(payment_intent)
+  puts "Payment intent succeeded: #{payment_intent.id} for amount: $#{payment_intent.amount / 100.0}"
+  
+  # Additional payment confirmation logic can go here
+end
+
+# Process order confirmation
+def process_order_confirmation(order_id, session)
+  bookings_dir = File.join(Dir.pwd, 'bookings')
+  order_file = File.join(bookings_dir, "#{order_id}.json")
+  
+  if File.exist?(order_file)
+    begin
+      order_data = JSON.parse(File.read(order_file))
+      order_data['status'] = 'confirmed'
+      order_data['payment_status'] = session.payment_status
+      order_data['payment_intent'] = session.payment_intent
+      order_data['stripe_session_id'] = session.id
+      order_data['confirmed_at'] = Time.now.to_s
+      
+      File.open(order_file, 'w') do |file|
+        file.write(JSON.pretty_generate(order_data))
+      end
+      
+      # Add to Google Sheets if it contains studio sessions
+      add_to_google_sheets(order_data)
+      puts "Order #{order_id} confirmed and updated"
+    rescue StandardError => e
+      puts "Error processing order #{order_id}: #{e.message}"
+    end
+  else
+    puts "Order file not found: #{order_file}"
+  end
+end
+
+# Process booking confirmation
+def process_booking_confirmation(booking_id, session)
+  bookings_dir = File.join(Dir.pwd, 'bookings')
+  booking_file = File.join(bookings_dir, "#{booking_id}.json")
+  
+  if File.exist?(booking_file)
+    begin
+      booking_data = JSON.parse(File.read(booking_file))
+      booking_data['status'] = 'confirmed'
+      booking_data['payment_status'] = session.payment_status
+      booking_data['payment_intent'] = session.payment_intent
+      booking_data['stripe_session_id'] = session.id
+      booking_data['confirmed_at'] = Time.now.to_s
+      
+      File.open(booking_file, 'w') do |file|
+        file.write(JSON.pretty_generate(booking_data))
+      end
+      puts "Booking #{booking_id} confirmed and updated"
+    rescue StandardError => e
+      puts "Error processing booking #{booking_id}: #{e.message}"
+    end
+  else
+    puts "Booking file not found: #{booking_file}"
   end
 end
 
