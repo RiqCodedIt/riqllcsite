@@ -1,0 +1,265 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  /* Warm Color Palette */
+  --color-lightest: #fec5bb;    /* Light peach */
+  --color-light-2: #fcd5ce;     /* Soft peach */
+  --color-light: #fae1dd;       /* Very light peach */
+  --color-neutral-1: #f8edeb;   /* Off white */
+  --color-neutral-2: #e8e8e4;   /* Light gray */
+  --color-neutral-3: #d8e2dc;   /* Light sage */
+  --color-medium: #ece4db;      /* Warm beige */
+  --color-accent-1: #ffe5d9;    /* Light orange */
+  --color-accent-2: #ffd7ba;    /* Warm cream */
+  --color-accent-3: #fec89a;    /* Golden peach */
+  
+  /* High contrast text colors */
+  --text-dark: #2d2d2d;
+  --text-medium: #4a4a4a;
+  --text-light: #666666;
+
+  color-scheme: light;
+  color: var(--text-dark);
+  background-color: var(--color-neutral-1);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--color-neutral-1) 0%, var(--color-light) 100%);
+  color: var(--text-dark);
+}
+
+#root {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+h2 {
+  font-size: 2.5em;
+  line-height: 1.2;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+h3 {
+  font-size: 2em;
+  line-height: 1.3;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+h4 {
+  font-size: 1.5em;
+  line-height: 1.4;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+h5 {
+  font-size: 1.25em;
+  line-height: 1.4;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+h6 {
+  font-size: 1em;
+  line-height: 1.4;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+p {
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  color: var(--text-medium);
+}
+
+a {
+  font-weight: 500;
+  color: var(--text-dark);
+  text-decoration: inherit;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--text-medium);
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid var(--color-accent-3);
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 600;
+  font-family: inherit;
+  background-color: var(--color-accent-3);
+  color: var(--text-dark);
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+button:hover {
+  background-color: var(--color-lightest);
+  border-color: var(--color-lightest);
+  transform: translateY(-1px);
+}
+
+button:focus,
+button:focus-visible {
+  outline: 2px solid var(--color-accent-3);
+  outline-offset: 2px;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-neutral-2);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-accent-3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-lightest);
+}
+
+/* Selection styling */
+::selection {
+  background-color: var(--color-accent-3);
+  color: var(--text-dark);
+}
+
+/* Focus styles for accessibility */
+*:focus {
+  outline: 2px solid var(--color-accent-3);
+  outline-offset: 2px;
+}
+
+/* Remove focus outline for mouse users */
+.js-focus-visible *:focus:not(.focus-visible) {
+  outline: none;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Print styles */
+@media print {
+  * {
+    background: transparent !important;
+    color: black !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  
+  a,
+  a:visited {
+    text-decoration: underline;
+  }
+  
+  a[href]:after {
+    content: " (" attr(href) ")";
+  }
+  
+  abbr[title]:after {
+    content: " (" attr(title) ")";
+  }
+  
+  .no-print {
+    display: none !important;
+  }
+}
+
+/* Responsive typography */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2.5em;
+  }
+  
+  h2 {
+    font-size: 2em;
+  }
+  
+  h3 {
+    font-size: 1.5em;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 2em;
+  }
+  
+  h2 {
+    font-size: 1.5em;
+  }
+  
+  h3 {
+    font-size: 1.25em;
+  }
+}
+
+/* Form elements with better contrast */
+input, select, textarea {
+  background: var(--color-neutral-1);
+  border: 2px solid var(--color-neutral-3);
+  color: var(--text-dark);
+  border-radius: 6px;
+  padding: 0.75rem;
+  font-size: 1rem;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--color-accent-3);
+  box-shadow: 0 0 0 3px rgba(254, 200, 154, 0.2);
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--text-light);
+}
+
+/* Better contrast for disabled elements */
+button:disabled, input:disabled, select:disabled, textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: var(--color-neutral-2);
+  color: var(--text-light);
+}
