@@ -1,6 +1,5 @@
 import React from 'react';
 import CalendarSync from '../components/CalendarSync';
-import BookingsList from '../components/admin/BookingsList';
 
 const Admin: React.FC = () => {
   return (
@@ -12,11 +11,6 @@ const Admin: React.FC = () => {
           {/* Calendar Sync Section */}
           <div className="mb-8">
             <CalendarSync />
-          </div>
-          
-          {/* Bookings Management */}
-          <div className="mb-8">
-            <BookingsList />
           </div>
           
           {/* Additional Admin Features */}
