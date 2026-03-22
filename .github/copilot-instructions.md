@@ -133,7 +133,7 @@ The build will succeed without these; features that call the backend will fail a
 
 ## Key Conventions
 
-- **CSS**: No Tailwind. Each page/component has a matching `.css` file in `src/styles/`. Co-locate new styles there.
+- **CSS**: No Tailwind. Prefer adding styles in a matching `.css` file under `src/styles/` for each page/component. Co-locate new styles there where possible.
 - **Data editing**: Beats and services are static JSON in `src/data/`. Add a beat by appending to `beats.json`; beat cover images go in `public/covers/`. Beat audio previews are hosted on S3 (`riqbeatstorebucket.s3.us-east-2.amazonaws.com`).
 - **TypeScript strict mode is ON**: `strict: true`, `noUnusedLocals: true`, `noUnusedParameters: true`. Every new variable, prop, and parameter must be used or prefixed with `_`.
 - **Cart access**: Always use the `useCart()` hook from `src/components/cart/CartProvider.tsx`. Never import `CartContext` directly.
