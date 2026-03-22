@@ -11,7 +11,7 @@ The frontend for **prodbyriq.com** — a music producer/mix-engineer e-commerce 
 - **GitHub**: `RiqCodedIt/riqllcsite`, default branch: `frontend`
 - **Deployment**: Docker (multi-stage: `node:20-alpine` → `caddy`) → Railway. The `Dockerfile` and `Caddyfile` are in the root.
 - **Stack**: React 19 · TypeScript 5.7 · Vite 6 · React Router DOM 7 · Stripe (`@stripe/react-stripe-js` + `@stripe/stripe-js`) · CSS3 (no Tailwind, no component library)
-- **Runtime**: Node 22 · npm 10. **Always run `npm install` before any other command.**
+- **Runtime**: Local/dev: Node 22 · npm 10. Docker build/prod: `node:20-alpine` (Node 20). **Always run `npm install` before any other command.**
 
 ---
 
