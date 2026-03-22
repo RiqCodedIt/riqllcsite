@@ -34,7 +34,7 @@ npm run build
 ```
 ✅ Build passes cleanly. Manual chunks are defined in `vite.config.ts`: `vendor` (react/react-dom), `router` (react-router-dom), `stripe`.
 
-**Lint** — Use `npm run lint` (or `npx eslint .` for cross-platform usage):
+**Lint:**
 ```bash
 npm run lint
 ```
