@@ -1,139 +1,108 @@
-# Review Guidelines
-
-# Copilot Agent Instructions — riqllcsite (prodbyriq.com)
+# Copilot Agent Instructions — riqllcsite backend (prodbyriq.com)
 
 > Trust these instructions first. Only search the codebase if the information below is incomplete or appears out of date.
 
 ## What This Repo Is
 
-The frontend for **prodbyriq.com** — a music producer/mix-engineer e-commerce site. Features: beat marketplace with licensing (Lease $50 / Exclusive $200), mixing & mastering service booking, studio session booking, and Stripe-powered checkout. The backend (Stripe webhooks, Google Sheets) lives on the `backend` branch in the same repo and is a separate service. **This repo is the `frontend` branch only.**
+The **backend** service for **prodbyriq.com** — a music producer/mix-engineer e-commerce site. This service handles Stripe checkout sessions, Stripe webhooks, Google Sheets logging, and studio availability syncing from The Record Co's booking calendar.
 
-- **GitHub**: `RiqCodedIt/riqllcsite`, default branch: `frontend`
-- **Deployment**: Docker (multi-stage: `node:20-alpine` → `caddy`) → Railway. The `Dockerfile` and `Caddyfile` are in the root.
-- **Stack**: React 19 · TypeScript 5.7 · Vite 6 · React Router DOM 7 · Stripe (`@stripe/react-stripe-js` + `@stripe/stripe-js`) · CSS3 (no Tailwind, no component library)
-- **Runtime**: Node 22 · npm 10. **Always run `npm install` before any other command.**
+- **GitHub**: `RiqCodedIt/riqllcsite`, branch: `backend`
+- **Deployment**: Railway reads the `Procfile` (`web: bundle exec ruby server.rb`) to start the service. No Docker build step — Railway's Nixpacks/Heroku buildpack handles the Ruby environment.
+- **Stack**: Ruby 3.1 · Sinatra · Stripe · Google APIs (Sheets v4, Calendar v3) · Sequel · SQLite · Puma · whenever (cron)
+- **Runtime**: Bundler. **Always run `bundle install` before any other command.**
 
 ---
 
-## Build, Lint, and Run — Validated Commands
+## Setup and Run — Validated Commands
 
-**Install (always run first):**
+**Install dependencies (always run first):**
 ```bash
-npm install
+bundle install
 ```
 
-**Development server** (hot reload, port 5173):
+**Start the server** (binds to `$PORT`, defaults to the PORT env var):
 ```bash
-npm run dev
+bundle exec ruby server.rb
 ```
 
-**Production build** (outputs to `dist/`; takes ~1s):
+**Database migration** (creates the SQLite availability tables; uses `DATABASE_URL` env var or defaults to `sqlite://availability.db`):
 ```bash
-npm run build
-# runs: tsc -b && vite build
+bundle exec sequel -m db/migrate ${DATABASE_URL:-sqlite://availability.db}
 ```
-✅ Build passes cleanly. Manual chunks are defined in `vite.config.ts`: `vendor` (react/react-dom), `router` (react-router-dom), `stripe`.
 
-**Lint** — `npm run lint` fails in CI because `eslint` is not in `$PATH`. Always use the local binary:
+**Update cron schedule** (uses the `whenever` gem):
 ```bash
-./node_modules/.bin/eslint .
-```
-⚠️ There are **13 pre-existing lint errors** (all `@typescript-eslint/no-explicit-any`) and **3 warnings** in the existing codebase. Do not introduce new errors. The build does **not** fail on lint errors — `tsc -b` is the type gate.
-
-**Preview production build** (port 4173):
-```bash
-npm run build && npm run preview
+bundle exec whenever --update-crontab
 ```
 
-**No test suite exists.** There are no test files or test scripts. Validate changes with `npm run build` + `./node_modules/.bin/eslint .`.
+**No test suite exists.** There are no test files or test scripts. Validate changes by running the server and exercising the relevant endpoints.
 
-**Environment variables** — required for runtime but **not needed for build/lint**. For local dev, create `.env.local` (gitignored):
+**Environment variables** — required for runtime. Create a `.env` file (gitignored) for local development:
 ```
-VITE_STRIPE_PUBLISHABLE_KEY=pk_test_...
-VITE_API_URL=http://localhost:4000
-VITE_GOOGLE_CLIENT_ID=...
-VITE_GOOGLE_API_KEY=...
-VITE_GOOGLE_SHEET_ID=...
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+FRONTEND_URL=http://localhost:5173
+recordco_user=your_email@example.com
+recordco_pass=your_password
+DATABASE_URL=sqlite://availability.db
+ENABLE_CALENDAR_SYNC=true
+PORT=4000
 ```
-The build will succeed without these; features that call the backend will fail at runtime.
 
 ---
 
 ## Project Layout
 
 ```
-/                       ← repo root
-├── index.html          ← SPA entry; <title> and favicon must be changed here (currently default Vite scaffold)
-├── vite.config.ts      ← build config; manual chunks defined here
-├── tsconfig.json       ← references tsconfig.app.json + tsconfig.node.json
-├── tsconfig.app.json   ← app compiler options; strict mode ON (noUnusedLocals, noUnusedParameters, strict)
-├── eslint.config.js    ← ESLint flat config; react-hooks + react-refresh plugins
-├── Dockerfile          ← multi-stage: node:20-alpine build → caddy serve
-├── Caddyfile           ← SPA fallback (try_files → index.html), PORT env var, gzip
-├── server.js           ← Express fallback server (alternative to Caddy); not used in Docker
-├── src/
-│   ├── main.tsx        ← app entry; wraps App in <BrowserRouter>
-│   ├── App.tsx         ← route definitions (see Routes section below)
-│   ├── App.css         ← global app styles
-│   ├── index.css       ← CSS reset/base
-│   ├── components/
-│   │   ├── NavBar.tsx  ← site navigation; styles: src/styles/NavBar.css
-│   │   ├── Footer.tsx  ← copyright year (currently hardcoded 2025); styles: src/styles/Footer.css
-│   │   ├── beats/
-│   │   │   ├── BeatCard.tsx    ← renders single beat; handles add-to-cart
-│   │   │   └── BeatFilters.tsx ← filter sidebar (genre, key, BPM range, search)
-│   │   ├── cart/
-│   │   │   ├── CartProvider.tsx ← React Context + useReducer; persists to localStorage key 'riq-cart'
-│   │   │   └── CartDrawer.tsx   ← slide-out cart; "Proceed to Checkout" calls redirectToCheckout()
-│   │   └── checkout/
-│   │       └── CheckoutForm.tsx ← modal form (customer info + order summary); also calls redirectToCheckout()
-│   ├── pages/          ← one file per route
-│   ├── services/
-│   │   ├── stripe.ts       ← createCheckoutSession() POSTs to VITE_API_URL/create-checkout-session → redirects to Stripe hosted checkout
-│   │   ├── googleCalendar.ts
-│   │   └── googleSheets.ts ← stub; actual Sheet writes handled by backend via webhook
-│   ├── data/
-│   │   ├── beats.json      ← static beat catalog (8 entries); add beats here
-│   │   └── services.json   ← static service catalog (6 entries); add/edit services here
-│   ├── types/
-│   │   ├── beats.ts    ← Beat, CartItem, BeatCartItem, StudioCartItem, BeatFilters, GENRES, KEYS constants
-│   │   └── services.ts ← Service, ServiceCartItem, ServicesData
-│   ├── hooks/
-│   │   ├── useAvailability.ts      ← mock availability data; no live backend call yet
-│   │   └── useBookingValidation.ts
-│   ├── styles/         ← one .css file per page/component
-│   └── utils/
-│       └── dateUtils.ts
-└── public/
-    ├── covers/         ← beat cover images (cover001.png – cover010.jpg); referenced as /covers/filename
-    └── vite.svg        ← default Vite favicon; should be replaced with branded asset
+/                               ← repo root
+├── server.rb                   ← main Sinatra application; all HTTP routes defined here
+├── Procfile                    ← Railway start command: `bundle exec ruby server.rb`
+├── Gemfile                     ← Ruby dependencies (sinatra, stripe, google-apis-*, sequel, whenever, etc.)
+├── Gemfile.lock                ← locked dependency versions
+├── .ruby-version               ← specifies Ruby 3.1.0
+├── lib/
+│   ├── availability_manager.rb    ← manages DB operations and coordinates calendar availability syncing
+│   └── calendar_sync_service.rb   ← background thread service that periodically syncs Record Co calendar
+├── db/
+│   └── migrate/
+│       └── 001_create_availability.rb  ← Sequel migration: creates availability and sync_logs tables
+├── config/
+│   └── schedule.rb             ← whenever cron definitions (sync every 30 min, daily full sync, weekly cleanup)
+├── bookings/                   ← runtime-generated JSON files; one file per order/booking (gitignored)
+└── vendor/                     ← bundler vendored gems (if present)
 ```
 
 ---
 
-## Routes (defined in `src/App.tsx`)
+## HTTP API surface (from `server.rb`)
 
-| Path | Component | Notes |
+| Path | Method | Description |
 |---|---|---|
-| `/` | `Home` | Hero, Featured Work (Spotify embeds), service cards |
-| `/about` | `About` | Bio, no checkout path |
-| `/beats` | `Beats` | Beat catalog, filters, add-to-cart |
-| `/services` | `Services` | Service cards, add-to-cart |
-| `/booking` | `Booking` | Studio booking form (external studio, therecordco.org) |
-| `/featured-work` | `FeaturedWork` | Extended portfolio; not in NavBar |
-| `/success` | `Success` | Stripe post-payment success page |
-| `/admin` | `Admin` | Internal admin; not in NavBar |
+| `/` | `GET` | Health check — returns a plain-text "running" message |
+| `/health` | `GET` | JSON health check with timestamp; used by Railway |
+| `/create-checkout-session` | `POST` | Creates a Stripe Checkout Session from cart items + customer info; returns `{ url }` for redirect |
+| `/create-studio-checkout-session` | `POST` | Legacy endpoint for direct studio booking form checkout |
+| `/webhook` | `POST` | Stripe webhook receiver; handles `checkout.session.completed`, `charge.succeeded`, `payment_intent.succeeded` |
+| `/bookings` | `GET` | Returns all saved booking JSON files (admin use) |
+| `/success` | `GET` | Plain-text success page after Stripe redirect |
+| `/api/availability/:date` | `GET` | Returns studio availability for a given date (studioC / studioD, morning/afternoon/evening) |
+| `/api/sync-calendar` | `POST` | Accepts calendar events from the frontend and syncs availability |
+| `/api/sync-status` | `GET` | Returns last sync time, status, and record count |
+| `/api/availability/override` | `POST` | Admin: manually override availability for a specific studio + time slot |
+| `/api/sync-calendar-now` | `POST` | Admin: manually trigger an immediate calendar sync |
+| `/api/calendar-sync-status` | `GET` | Returns background sync service running state and interval |
 
-> ⚠️ There is **no `/checkout` route**. Checkout is handled entirely via `CartDrawer` → `redirectToCheckout()` which calls the backend API and redirects to Stripe's hosted checkout URL. Do not add a `/checkout` route that expects a Stripe Elements embed — the flow is Stripe-hosted checkout, not embedded.
+> ⚠️ There is **no `/checkout` route**. Checkout is handled via `/create-checkout-session`, which creates a Stripe Checkout Session and returns a `url` for the frontend to redirect to. Do not add a `/checkout` route that expects embedded Stripe Elements — the flow is Stripe-hosted checkout, not embedded.
 
 ---
 
 ## Key Conventions
 
-- **CSS**: No Tailwind. Each page/component has a matching `.css` file in `src/styles/`. Co-locate new styles there.
-- **Data editing**: Beats and services are static JSON in `src/data/`. Add a beat by appending to `beats.json`; beat cover images go in `public/covers/`. Beat audio previews are hosted on S3 (`riqbeatstorebucket.s3.us-east-2.amazonaws.com`).
-- **TypeScript strict mode is ON**: `strict: true`, `noUnusedLocals: true`, `noUnusedParameters: true`. Every new variable, prop, and parameter must be used or prefixed with `_`.
-- **Cart access**: Always use the `useCart()` hook from `src/components/cart/CartProvider.tsx`. Never import `CartContext` directly.
-- **Pricing**: All prices shown on the site must match the canonical rate card: WAV Lease $50 · Exclusive $200 · Mixing $75 · M&M $100 · Full Production $250 minimum · Session retainer $175/mo · Studio retainer $300/mo.
-- **No CI/CD pipeline exists yet.** There are no GitHub Actions workflows. Validate all PRs locally with `npm run build` and `./node_modules/.bin/eslint .` before pushing.
-- **Branch**: All feature work goes on `frontend` branch. Do not push to `backend` branch.
+- **Entry point**: All routes live in `server.rb`. Prefer extending this file or extracting to `lib/` helpers rather than adding new Sinatra apps.
+- **Environment variables only**: Never hardcode secrets. Use `ENV['VAR_NAME']` exclusively. All secrets (Stripe keys, Record Co credentials, Google credentials) are Railway environment variables.
+- **Order/booking persistence**: Orders and bookings are written to JSON files in the `bookings/` directory at checkout time and updated on webhook confirmation.
+- **Google Sheets logging**: Studio session orders are appended to the configured Google Sheet on `checkout.session.completed` via `add_to_google_sheets`.
+- **Calendar sync**: `CalendarSyncService` runs a background thread in production (when `ENABLE_CALENDAR_SYNC=true`). `AvailabilityManager` handles all DB reads/writes via Sequel.
+- **Cron jobs** (via `whenever`): sync runs every 30 minutes, full sync daily at 6 AM, cleanup weekly at 2 AM. See `config/schedule.rb`.
+- **No CI/CD pipeline exists yet.** Validate all PRs locally by running the server and testing affected endpoints.
+- **Branch**: All feature work goes on `backend` branch. Do not push to `frontend` branch.
