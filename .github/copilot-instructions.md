@@ -34,9 +34,9 @@ npm run build
 ```
 ✅ Build passes cleanly. Manual chunks are defined in `vite.config.ts`: `vendor` (react/react-dom), `router` (react-router-dom), `stripe`.
 
-**Lint** — `npm run lint` fails in CI because `eslint` is not in `$PATH`. Always use the local binary:
+**Lint:**
 ```bash
-./node_modules/.bin/eslint .
+npm run lint
 ```
 ⚠️ There are **13 pre-existing lint errors** (all `@typescript-eslint/no-explicit-any`) and **3 warnings** in the existing codebase. Do not introduce new errors. The build does **not** fail on lint errors — `tsc -b` is the type gate.
 
@@ -45,7 +45,7 @@ npm run build
 npm run build && npm run preview
 ```
 
-**No test suite exists.** There are no test files or test scripts. Validate changes with `npm run build` + `./node_modules/.bin/eslint .`.
+**No test suite exists.** There are no test files or test scripts. Validate changes with `npm run build` + `npm run lint`.
 
 **Environment variables** — required for runtime but **not needed for build/lint**. For local dev, create `.env.local` (gitignored):
 ```
