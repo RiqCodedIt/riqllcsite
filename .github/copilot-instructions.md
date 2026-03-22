@@ -51,10 +51,13 @@ npm run build && npm run preview
 ```
 VITE_STRIPE_PUBLISHABLE_KEY=pk_test_...
 VITE_API_URL=http://localhost:4000
-VITE_GOOGLE_CLIENT_ID=...
-VITE_GOOGLE_API_KEY=...
-VITE_GOOGLE_SHEET_ID=...
 ```
+> ⚠️ **Google Calendar integration** (`src/services/googleCalendar.ts`, `src/components/CalendarSync.tsx`) currently reads `REACT_APP_*` prefixed variables, which is incorrect for Vite (Vite only exposes `VITE_*` vars to the client). The code must be updated to use `VITE_*` prefixes before these features will work:
+> ```
+> VITE_GOOGLE_API_KEY=...
+> VITE_GOOGLE_CALENDAR_STUDIO_C_ID=...
+> VITE_GOOGLE_CALENDAR_STUDIO_D_ID=...
+> ```
 The build will succeed without these; features that call the backend will fail at runtime.
 
 ---
@@ -135,5 +138,5 @@ The build will succeed without these; features that call the backend will fail a
 - **TypeScript strict mode is ON**: `strict: true`, `noUnusedLocals: true`, `noUnusedParameters: true`. Every new variable, prop, and parameter must be used or prefixed with `_`.
 - **Cart access**: Always use the `useCart()` hook from `src/components/cart/CartProvider.tsx`. Never import `CartContext` directly.
 - **Pricing**: All prices shown on the site must match the canonical rate card: WAV Lease $50 · Exclusive $200 · Mixing $75 · M&M $100 · Full Production $250 minimum · Session retainer $175/mo · Studio retainer $300/mo.
-- **No CI/CD pipeline exists yet.** There are no GitHub Actions workflows. Validate all PRs locally with `npm run build` and `./node_modules/.bin/eslint .` before pushing.
+- **No CI/CD pipeline exists yet.** There are no GitHub Actions workflows. Validate all PRs locally with `npm run build` and `npm run lint` before pushing.
 - **Branch**: All feature work goes on `frontend` branch. Do not push to `backend` branch.
