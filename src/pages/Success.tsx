@@ -12,6 +12,8 @@ const Success = () => {
     const [error, setError] = useState<string | null>(null);
     const location = useLocation();
 
+    useEffect(() => { document.title = 'Order Confirmed | PRODBYRIQ'; }, []);
+
     useEffect(() => {
         const processSuccessfulPayment = async () => {
             try {

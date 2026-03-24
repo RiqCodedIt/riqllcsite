@@ -11,6 +11,8 @@ const Services: React.FC = () => {
   const [expandedCard, setExpandedCard] = useState<string | null>(null);
   const { addServiceToCart } = useCart();
 
+  useEffect(() => { document.title = 'Mixing & Mastering Services | PRODBYRIQ'; }, []);
+
   useEffect(() => {
     setServices(servicesData.services as Service[]);
     setIsLoading(false);

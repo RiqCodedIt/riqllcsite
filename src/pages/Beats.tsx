@@ -13,6 +13,8 @@ const Beats: React.FC = () => {
   const [currentlyPlaying, setCurrentlyPlaying] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  useEffect(() => { document.title = 'Buy Beats | PRODBYRIQ'; }, []);
+
   // Load beats data
   useEffect(() => {
     setBeats(beatsData.beats);
