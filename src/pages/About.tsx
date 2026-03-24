@@ -1,9 +1,9 @@
-import { useEffect } from 'react';
+import usePageTitle from '../hooks/usePageTitle';
 import '../styles/PageContent.css';
 import '../styles/About.css';
 
 const About = () => {
-    useEffect(() => { document.title = 'About | PRODBYRIQ'; }, []);
+    usePageTitle('About | PRODBYRIQ');
     return (
         <div className="page-content">
             <div className="about-hero">

@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+import usePageTitle from '../hooks/usePageTitle';
 import StudioBookingForm from '../components/StudioBookingForm';
 import '../styles/PageContent.css';
 import '../styles/Booking.css';
 
 const Booking: React.FC = () => {
-    useEffect(() => { document.title = 'Book a Studio Session | PRODBYRIQ'; }, []);
+    usePageTitle('Book a Studio Session | PRODBYRIQ');
     return <StudioBookingForm />;
 };
 

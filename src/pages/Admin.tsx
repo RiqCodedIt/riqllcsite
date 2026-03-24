@@ -1,7 +1,9 @@
 import React from 'react';
 import CalendarSync from '../components/CalendarSync';
+import usePageTitle from '../hooks/usePageTitle';
 
 const Admin: React.FC = () => {
+  usePageTitle('Admin Dashboard | PRODBYRIQ');
   return (
     <div className="admin-page min-h-screen bg-gray-100 py-8">
       <div className="container mx-auto px-4">

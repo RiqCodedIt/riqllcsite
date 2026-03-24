@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import usePageTitle from '../hooks/usePageTitle';
 import '../styles/PageContent.css';
 import '../styles/BeatsStyles.css';
 import BeatCard from '../components/beats/BeatCard';
@@ -13,7 +14,7 @@ const Beats: React.FC = () => {
   const [currentlyPlaying, setCurrentlyPlaying] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => { document.title = 'Buy Beats | PRODBYRIQ'; }, []);
+  usePageTitle('Buy Beats | PRODBYRIQ');
 
   // Load beats data
   useEffect(() => {

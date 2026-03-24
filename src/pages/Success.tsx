@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import usePageTitle from '../hooks/usePageTitle';
 import { useLocation, Link } from 'react-router-dom';
 import '../styles/PageContent.css';
 import '../styles/Success.css';
@@ -12,7 +13,7 @@ const Success = () => {
     const [error, setError] = useState<string | null>(null);
     const location = useLocation();
 
-    useEffect(() => { document.title = 'Order Confirmed | PRODBYRIQ'; }, []);
+    usePageTitle('Order Confirmed | PRODBYRIQ');
 
     useEffect(() => {
         const processSuccessfulPayment = async () => {
