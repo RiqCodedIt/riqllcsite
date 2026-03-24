@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import usePageTitle from '../hooks/usePageTitle';
 import { Link } from 'react-router-dom';
 import '../styles/PageContent.css';
 import '../styles/FeaturedWork.css';
@@ -13,6 +14,7 @@ interface Track {
 }
 
 const FeaturedWork = () => {
+    usePageTitle('Featured Work | PRODBYRIQ');
     const [filter, setFilter] = useState<'all' | 'spotify' | 'soundcloud'>('all');
 
     // Sample tracks - you can easily add more here

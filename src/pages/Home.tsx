@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom';
 import SpotifyTrack from '../components/SpotifyTrack';
+import usePageTitle from '../hooks/usePageTitle';
 import '../styles/PageContent.css';
 import '../styles/Home.css';
 
 
 const Home = () => {
+    usePageTitle('PRODBYRIQ | Beats, Mixing & Music Production');
     const featuredTracks = [
         {
             url: 'https://open.spotify.com/track/3rlbQrNDUyIpF5QPjpFCkV',
