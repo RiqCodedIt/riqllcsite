@@ -120,7 +120,7 @@ app.post('/create-checkout-session', async (req, res) => {
               name: serviceData.name,
               description: serviceData.category || undefined,
             },
-            unit_amount: serviceData.price * 100,
+            unit_amount: Math.round(serviceData.price * 100),
           },
           quantity: 1,
         });
