@@ -33,7 +33,7 @@ const Home = () => {
                         From beat creation to final mastering, I deliver industry-standard quality that makes your music stand out.
                     </p>
                     <div className="hero-buttons">
-                        <Link to="/booking" className="cta-button primary">Book a Session</Link>
+                        <Link to="/services" className="cta-button primary">Book a Session</Link>
                         <Link to="/about" className="cta-button secondary">Learn More</Link>
                     </div>
                 </div>
