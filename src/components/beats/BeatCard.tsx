@@ -10,6 +10,7 @@ interface BeatCardProps {
 }
 
 const BeatCard: React.FC<BeatCardProps> = ({ beat, isPlaying = false, onPlay, onPause }) => {
+  const hasPreview = Boolean(beat.preview_path);
   const [isLoading, setIsLoading] = useState(false);
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
@@ -105,19 +106,24 @@ const BeatCard: React.FC<BeatCardProps> = ({ beat, isPlaying = false, onPlay, on
         
         {/* Play/Pause Overlay */}
         <div className="play-overlay">
-          <button 
-            className={`play-btn ${isPlaying ? 'playing' : ''}`}
-            onClick={handlePlayPause}
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <div className="loading-spinner"></div>
-            ) : isPlaying ? (
-              <span className="pause-icon">⏸</span>
-            ) : (
-              <span className="play-icon">▶</span>
-            )}
-          </button>
+          {hasPreview ? (
+            <button
+              className={`play-btn ${isPlaying ? 'playing' : ''}`}
+              onClick={handlePlayPause}
+              disabled={isLoading}
+              aria-label={isPlaying ? 'Pause preview' : 'Play preview'}
+            >
+              {isLoading ? (
+                <div className="loading-spinner"></div>
+              ) : isPlaying ? (
+                <span className="pause-icon">⏸</span>
+              ) : (
+                <span className="play-icon">▶</span>
+              )}
+            </button>
+          ) : (
+            <span className="no-preview-label">Preview coming soon</span>
+          )}
         </div>
 
         {/* Progress Bar */}
@@ -173,12 +179,14 @@ const BeatCard: React.FC<BeatCardProps> = ({ beat, isPlaying = false, onPlay, on
         </div>
       </div>
 
-      {/* Hidden audio element */}
-      <audio 
-        ref={audioRef}
-        preload="metadata"
-        src={beat.preview_path}
-      />
+      {/* Audio element — only rendered when a preview URL exists */}
+      {hasPreview && (
+        <audio
+          ref={audioRef}
+          preload="metadata"
+          src={beat.preview_path}
+        />
+      )}
     </div>
   );
 };
