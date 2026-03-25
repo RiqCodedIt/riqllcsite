@@ -68,17 +68,25 @@ app.get('/health', (req, res) => {
   });
 });
 
+// Server-side studio session hourly rate — never trust client-sent price
+const STUDIO_HOURLY_RATE = parseInt(process.env.STUDIO_HOURLY_RATE || '75', 10);
+
 // Stripe checkout session
 app.post('/create-checkout-session', async (req, res) => {
   try {
     const { items, customerInfo } = req.body;
 
-    if (!items || items.length === 0) {
+    if (!Array.isArray(items) || items.length === 0) {
       return res.status(400).json({ error: 'No items in cart' });
     }
 
-    // Use a server-configured base URL to prevent open-redirect via client-controlled headers
-    const baseUrl = (process.env.PUBLIC_SITE_URL || `https://${req.headers.host}`).replace(/\/$/, '');
+    // Require server-configured PUBLIC_SITE_URL — never trust client-controlled Host header
+    const publicSiteUrl = process.env.PUBLIC_SITE_URL;
+    if (!publicSiteUrl) {
+      console.error('Missing PUBLIC_SITE_URL environment variable');
+      return res.status(500).json({ error: 'Server misconfiguration' });
+    }
+    const baseUrl = publicSiteUrl.replace(/\/$/, '');
 
     const lineItems = [];
 
@@ -92,8 +100,8 @@ app.post('/create-checkout-session', async (req, res) => {
           return res.status(400).json({ error: `Invalid license type: ${item.license_type}` });
         }
         const unitAmount = item.license_type === 'lease'
-          ? beatData.lease * 100
-          : beatData.exclusive * 100;
+          ? Math.round(beatData.lease * 100)
+          : Math.round(beatData.exclusive * 100);
         const coverImageUrl = beatData.cover_path
           ? toAbsoluteUrl(beatData.cover_path, baseUrl)
           : null;
@@ -125,14 +133,16 @@ app.post('/create-checkout-session', async (req, res) => {
           quantity: 1,
         });
       } else if (item.type === 'studio_session') {
+        const duration = typeof item.duration === 'number' && item.duration > 0 ? item.duration : 1;
+        const studioUnitAmount = Math.round(duration * STUDIO_HOURLY_RATE * 100);
         lineItems.push({
           price_data: {
             currency: 'usd',
             product_data: {
               name: `Studio Session — ${item.studio_name}`,
-              description: `${item.date} • ${item.time_slot} • ${item.duration}h`,
+              description: `${item.date} • ${item.time_slot} • ${duration}h`,
             },
-            unit_amount: Math.round(item.price * 100),
+            unit_amount: studioUnitAmount,
           },
           quantity: 1,
         });
