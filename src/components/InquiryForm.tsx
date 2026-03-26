@@ -1,32 +1,61 @@
 import React, { useState } from 'react';
+import servicesData from '../data/services.json';
+import type { Service } from '../types/services';
 
 interface InquiryFormProps {
   defaultService?: string;
 }
 
-const SERVICE_OPTIONS = [
-  'Mixing + Mastering ($100)',
-  'Mixing Only ($75)',
-  'Mastering Only ($50)',
-  'Session Retainer ($175/mo)',
-  'Studio Retainer ($300/mo)',
-  'Full Production',
-  'Other',
+const RETAINER_OPTIONS = [
+  { label: 'Session Retainer ($175/mo)', value: 'Session Retainer' },
+  { label: 'Studio Retainer ($300/mo)', value: 'Studio Retainer' },
+  { label: 'Other', value: 'Other' },
 ];
+
+const serviceOptions = [
+  ...(servicesData.services as Service[]).map(s => ({
+    label: `${s.name} ($${s.price})`,
+    value: s.name,
+  })),
+  ...RETAINER_OPTIONS,
+];
+
+interface FormErrors {
+  name?: string;
+  email?: string;
+}
 
 const InquiryForm: React.FC<InquiryFormProps> = ({ defaultService = '' }) => {
   const [form, setForm] = useState({ name: '', email: '', service: defaultService, notes: '' });
+  const [errors, setErrors] = useState<FormErrors>({});
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    setForm(prev => ({ ...prev, [name]: value }));
+    if (errors[name as keyof FormErrors]) {
+      setErrors(prev => ({ ...prev, [name]: undefined }));
+    }
+  };
+
+  const validate = (): boolean => {
+    const next: FormErrors = {};
+    if (!form.name.trim()) next.name = 'Name is required';
+    if (!form.email.trim()) {
+      next.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+      next.email = 'Enter a valid email address';
+    }
+    setErrors(next);
+    return Object.keys(next).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validate()) return;
     setStatus('loading');
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/submit-inquiry`, {
+      const res = await fetch('/submit-inquiry', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
@@ -59,8 +88,9 @@ const InquiryForm: React.FC<InquiryFormProps> = ({ defaultService = '' }) => {
             value={form.name}
             onChange={handleChange}
             placeholder="Your name"
-            required
+            aria-describedby={errors.name ? 'inq-name-err' : undefined}
           />
+          {errors.name && <span id="inq-name-err" className="inquiry-field-error">{errors.name}</span>}
         </div>
         <div className="inquiry-field">
           <label htmlFor="inq-email">Email</label>
@@ -71,8 +101,9 @@ const InquiryForm: React.FC<InquiryFormProps> = ({ defaultService = '' }) => {
             value={form.email}
             onChange={handleChange}
             placeholder="your@email.com"
-            required
+            aria-describedby={errors.email ? 'inq-email-err' : undefined}
           />
+          {errors.email && <span id="inq-email-err" className="inquiry-field-error">{errors.email}</span>}
         </div>
       </div>
 
@@ -80,8 +111,8 @@ const InquiryForm: React.FC<InquiryFormProps> = ({ defaultService = '' }) => {
         <label htmlFor="inq-service">Service</label>
         <select id="inq-service" name="service" value={form.service} onChange={handleChange}>
           <option value="">Select a service...</option>
-          {SERVICE_OPTIONS.map(opt => (
-            <option key={opt} value={opt}>{opt}</option>
+          {serviceOptions.map(opt => (
+            <option key={opt.value} value={opt.value}>{opt.label}</option>
           ))}
         </select>
       </div>
@@ -95,6 +126,7 @@ const InquiryForm: React.FC<InquiryFormProps> = ({ defaultService = '' }) => {
           onChange={handleChange}
           placeholder="Tell me about your project — genre, vibe, timeline, anything relevant."
           rows={4}
+          maxLength={2000}
         />
       </div>
 

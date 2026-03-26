@@ -1,15 +1,32 @@
 import React, { useState } from 'react';
+import '../styles/EmailCapture.css';
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const EmailCapture: React.FC = () => {
   const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+
+  const validate = (): boolean => {
+    if (!email.trim()) {
+      setEmailError('Email is required');
+      return false;
+    }
+    if (!EMAIL_REGEX.test(email)) {
+      setEmailError('Enter a valid email address');
+      return false;
+    }
+    setEmailError('');
+    return true;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
+    if (!validate()) return;
     setStatus('loading');
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/subscribe`, {
+      const res = await fetch('/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
@@ -39,17 +56,20 @@ const EmailCapture: React.FC = () => {
           <p>No spam. Unsubscribe anytime.</p>
         </div>
         <form className="email-capture-form" onSubmit={handleSubmit} noValidate>
-          <input
-            type="email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            placeholder="your@email.com"
-            required
-            aria-label="Email address"
-          />
-          <button type="submit" disabled={status === 'loading'}>
-            {status === 'loading' ? 'Joining...' : 'Join the List'}
-          </button>
+          <div className="email-capture-input-wrap">
+            <input
+              type="email"
+              value={email}
+              onChange={e => { setEmail(e.target.value); setEmailError(''); }}
+              placeholder="your@email.com"
+              aria-label="Email address"
+              aria-describedby={emailError ? 'ec-email-err' : undefined}
+            />
+            <button type="submit" disabled={status === 'loading'}>
+              {status === 'loading' ? 'Joining...' : 'Join the List'}
+            </button>
+          </div>
+          {emailError && <span id="ec-email-err" className="email-capture-field-error">{emailError}</span>}
         </form>
         {status === 'error' && (
           <p className="email-capture-error">Something went wrong — try again.</p>

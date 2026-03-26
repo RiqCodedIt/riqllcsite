@@ -715,6 +715,11 @@
   margin: 0;
 }
 
+.inquiry-field-error {
+  font-size: 0.8rem;
+  color: #ff6b6b;
+}
+
 @media (max-width: 600px) {
   .inquiry-form-row {
     grid-template-columns: 1fr;

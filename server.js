@@ -181,20 +181,31 @@ app.post('/create-checkout-session', async (req, res) => {
 // Inquiry form submission
 app.post('/submit-inquiry', (req, res) => {
   const { name, email, service, notes } = req.body;
-  if (!name || !email) {
-    return res.status(400).json({ error: 'Name and email are required' });
+  if (!name || typeof name !== 'string' || name.trim().length > 120) {
+    return res.status(400).json({ error: 'Valid name is required (max 120 chars)' });
   }
-  console.log('[INQUIRY]', { name, email, service, notes, ts: new Date().toISOString() });
+  if (!email || typeof email !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return res.status(400).json({ error: 'Valid email is required' });
+  }
+  if (notes && typeof notes === 'string' && notes.length > 2000) {
+    return res.status(400).json({ error: 'Notes must be under 2000 characters' });
+  }
+  // Log only non-PII metadata for audit trail
+  console.log('[INQUIRY]', { service: service || 'unspecified', ts: new Date().toISOString() });
   return res.json({ success: true });
 });
 
 // Email capture / newsletter subscribe
 app.post('/subscribe', (req, res) => {
-  const { email, name } = req.body;
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+  const { email } = req.body;
+  if (!email || typeof email !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return res.status(400).json({ error: 'Valid email is required' });
   }
-  console.log('[SUBSCRIBE]', { email, name, ts: new Date().toISOString() });
+  if (email.length > 254) {
+    return res.status(400).json({ error: 'Email too long' });
+  }
+  // Log only non-PII metadata
+  console.log('[SUBSCRIBE]', { ts: new Date().toISOString() });
   return res.json({ success: true });
 });
 

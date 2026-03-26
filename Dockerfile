@@ -1,4 +1,4 @@
-FROM node:20-alpine AS build
+FROM node:22-alpine AS build
 
 ENV NPM_CONFIG_UPDATE_NOTIFIER=false
 ENV NPM_CONFIG_FUND=false
@@ -11,20 +11,22 @@ RUN npm ci
 
 COPY . ./
 
-# Specify any needed environment variables here
 ARG VITE_API_URL
-
-# Debug: Echo the VITE_API_URL environment variable
-RUN echo "BACKEND_URL during build: $VITE_API_URL"
+RUN echo "VITE_API_URL during build: $VITE_API_URL"
 
 RUN npm run build
 
-FROM caddy
+FROM node:22-alpine AS production
 
 WORKDIR /app
 
-COPY Caddyfile ./
+COPY package*.json ./
+RUN npm ci --omit=dev
 
-COPY --from=build /app/dist /app/dist
+COPY --from=build /app/dist ./dist
+COPY server.js ./
+COPY src/data ./src/data
 
-CMD ["caddy", "run", "--config", "Caddyfile", "--adapter", "caddyfile"]
+EXPOSE 4000
+
+CMD ["node", "server.js"]
