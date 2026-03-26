@@ -3,6 +3,7 @@ import usePageTitle from '../hooks/usePageTitle';
 import '../styles/PageContent.css';
 import '../styles/BeatsStyles.css';
 import BeatCard from '../components/beats/BeatCard';
+import EmailCapture from '../components/EmailCapture';
 import BeatFilters from '../components/beats/BeatFilters';
 import type { Beat, BeatFilters as BeatFiltersType } from '../types/beats';
 import beatsData from '../data/beats.json';
@@ -141,6 +142,7 @@ const Beats: React.FC = () => {
           )}
         </main>
       </div>
+      <EmailCapture />
     </div>
   );
 };

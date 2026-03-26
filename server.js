@@ -178,6 +178,26 @@ app.post('/create-checkout-session', async (req, res) => {
   }
 });
 
+// Inquiry form submission
+app.post('/submit-inquiry', (req, res) => {
+  const { name, email, service, notes } = req.body;
+  if (!name || !email) {
+    return res.status(400).json({ error: 'Name and email are required' });
+  }
+  console.log('[INQUIRY]', { name, email, service, notes, ts: new Date().toISOString() });
+  return res.json({ success: true });
+});
+
+// Email capture / newsletter subscribe
+app.post('/subscribe', (req, res) => {
+  const { email, name } = req.body;
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return res.status(400).json({ error: 'Valid email is required' });
+  }
+  console.log('[SUBSCRIBE]', { email, name, ts: new Date().toISOString() });
+  return res.json({ success: true });
+});
+
 // Handle React Router (SPA routing)
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));

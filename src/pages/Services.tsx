@@ -3,6 +3,7 @@ import usePageTitle from '../hooks/usePageTitle';
 import '../styles/PageContent.css';
 import '../styles/ServicesStyles.css';
 import { useCart } from '../components/cart/CartProvider';
+import InquiryForm from '../components/InquiryForm';
 import type { Service } from '../types/services';
 import servicesData from '../data/services.json';
 
@@ -163,6 +164,52 @@ const Services: React.FC = () => {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Retainer Plans */}
+      <div className="retainer-section">
+        <div className="retainer-header">
+          <h2>Monthly Retainer Plans</h2>
+          <p>Priority access, consistent delivery, and a dedicated engineer on your team every month.</p>
+        </div>
+        <div className="retainer-grid">
+          <div className="retainer-card">
+            <div className="retainer-badge">Most Popular</div>
+            <h3>Session Retainer</h3>
+            <div className="retainer-price">$175<span>/mo</span></div>
+            <ul className="retainer-features">
+              <li>Up to 4 mixing sessions per month</li>
+              <li>Priority turnaround (24–48 hrs)</li>
+              <li>Unlimited revisions per session</li>
+              <li>Direct line via email & DM</li>
+              <li>Monthly performance recap</li>
+            </ul>
+            <a href="#inquiry" className="retainer-cta">Get Started</a>
+          </div>
+          <div className="retainer-card retainer-card--premium">
+            <div className="retainer-badge retainer-badge--premium">Full Access</div>
+            <h3>Studio Retainer</h3>
+            <div className="retainer-price">$300<span>/mo</span></div>
+            <ul className="retainer-features">
+              <li>Unlimited mixing sessions</li>
+              <li>Same-day turnaround available</li>
+              <li>Mastering included on all tracks</li>
+              <li>Beat licensing discounts</li>
+              <li>Dedicated project folder & archive</li>
+              <li>Monthly strategy call</li>
+            </ul>
+            <a href="#inquiry" className="retainer-cta retainer-cta--premium">Get Started</a>
+          </div>
+        </div>
+      </div>
+
+      {/* Inquiry Form */}
+      <div className="inquiry-section" id="inquiry">
+        <div className="inquiry-section-header">
+          <h2>Start a Project</h2>
+          <p>Tell me what you're working on and I'll get back to you within 24 hours.</p>
+        </div>
+        <InquiryForm />
       </div>
     </div>
   );
