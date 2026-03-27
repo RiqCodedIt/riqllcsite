@@ -60,7 +60,7 @@ const EmailCapture: React.FC = () => {
             <input
               type="email"
               value={email}
-              onChange={e => { setEmail(e.target.value); setEmailError(''); }}
+              onChange={e => { setEmail(e.target.value); setEmailError(''); if (status === 'error') setStatus('idle'); }}
               placeholder="your@email.com"
               aria-label="Email address"
               aria-describedby={emailError ? 'ec-email-err' : undefined}

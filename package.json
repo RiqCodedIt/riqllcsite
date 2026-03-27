@@ -19,6 +19,7 @@
     "@stripe/stripe-js": "^7.3.1",
     "@types/gapi": "^0.0.47",
     "express": "^4.18.2",
+    "express-rate-limit": "^8.3.1",
     "gapi-script": "^1.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

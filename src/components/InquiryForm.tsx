@@ -71,7 +71,7 @@ const InquiryForm: React.FC<InquiryFormProps> = ({ defaultService = '' }) => {
     return (
       <div className="inquiry-confirmation">
         <h3>Got it — I'll be in touch soon.</h3>
-        <p>Check your inbox for a confirmation. Most responses within 24 hours.</p>
+        <p>I'll review your inquiry and respond within 24 hours.</p>
       </div>
     );
   }

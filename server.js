@@ -3,6 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { createRequire } from 'module';
 import Stripe from 'stripe';
+import { rateLimit } from 'express-rate-limit';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -178,25 +179,47 @@ app.post('/create-checkout-session', async (req, res) => {
   }
 });
 
+const formRateLimit = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests, please try again later.' },
+});
+
 // Inquiry form submission
-app.post('/submit-inquiry', (req, res) => {
+app.post('/submit-inquiry', formRateLimit, (req, res) => {
   const { name, email, service, notes } = req.body;
-  if (!name || typeof name !== 'string' || name.trim().length > 120) {
+  if (!name || typeof name !== 'string' || name.trim().length === 0 || name.trim().length > 120) {
     return res.status(400).json({ error: 'Valid name is required (max 120 chars)' });
   }
   if (!email || typeof email !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return res.status(400).json({ error: 'Valid email is required' });
   }
-  if (notes && typeof notes === 'string' && notes.length > 2000) {
-    return res.status(400).json({ error: 'Notes must be under 2000 characters' });
+  if (service !== undefined && service !== null) {
+    if (typeof service !== 'string') {
+      return res.status(400).json({ error: 'Service must be a string' });
+    }
+    if (service.trim().length > 120) {
+      return res.status(400).json({ error: 'Service must be under 120 chars' });
+    }
   }
+  if (notes !== undefined && notes !== null) {
+    if (typeof notes !== 'string') {
+      return res.status(400).json({ error: 'Notes must be a string' });
+    }
+    if (notes.length > 2000) {
+      return res.status(400).json({ error: 'Notes must be under 2000 characters' });
+    }
+  }
+  const loggedService = typeof service === 'string' && service.trim() ? service.trim().slice(0, 120) : 'unspecified';
   // Log only non-PII metadata for audit trail
-  console.log('[INQUIRY]', { service: service || 'unspecified', ts: new Date().toISOString() });
+  console.log('[INQUIRY]', { service: loggedService, ts: new Date().toISOString() });
   return res.json({ success: true });
 });
 
 // Email capture / newsletter subscribe
-app.post('/subscribe', (req, res) => {
+app.post('/subscribe', formRateLimit, (req, res) => {
   const { email } = req.body;
   if (!email || typeof email !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return res.status(400).json({ error: 'Valid email is required' });
