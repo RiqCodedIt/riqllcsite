@@ -1,9 +1,13 @@
-import usePageTitle from '../hooks/usePageTitle';
+import usePageMeta from '../hooks/usePageMeta';
 import '../styles/PageContent.css';
 import '../styles/About.css';
 
 const About = () => {
-    usePageTitle('About | PRODBYRIQ');
+    usePageMeta({
+        title: 'About | PRODBYRIQ',
+        description: 'RIQ is a professional music producer and mix engineer. Learn about the experience and credits behind PRODBYRIQ.',
+        canonicalPath: '/about',
+    });
     return (
         <div className="page-content">
             <div className="about-hero">
