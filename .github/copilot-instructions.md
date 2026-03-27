@@ -9,9 +9,9 @@
 The frontend for **prodbyriq.com** — a music producer/mix-engineer e-commerce site. Features: beat marketplace with licensing (Lease $50 / Exclusive $200), mixing & mastering service booking, studio session booking, and Stripe-powered checkout. The backend (Stripe webhooks, Google Sheets) lives on the `backend` branch in the same repo and is a separate service. **This repo is the `frontend` branch only.**
 
 - **GitHub**: `RiqCodedIt/riqllcsite`, default branch: `frontend`
-- **Deployment**: Docker (multi-stage: `node:20-alpine` → `caddy`) → Railway. The `Dockerfile` and `Caddyfile` are in the root.
+- **Deployment**: Docker (multi-stage: `node:22-alpine` build → `node:22-alpine` production) → Railway. The container runs `node server.js` (Express) which serves both the `dist/` static files and the API routes (`/create-checkout-session`, `/submit-inquiry`, `/subscribe`). The `Caddyfile` is retained for reference but is **not used** in production.
 - **Stack**: React 19 · TypeScript 5.7 · Vite 6 · React Router DOM 7 · Stripe (`@stripe/react-stripe-js` + `@stripe/stripe-js`) · CSS3 (no Tailwind, no component library)
-- **Runtime**: Local/dev: Node 22 · npm 10. Docker build/prod: `node:20-alpine` (Node 20). **Always run `npm install` before any other command.**
+- **Runtime**: Local/dev: Node 22 · npm 10. Docker build/prod: `node:22-alpine` (Node 22). **Always run `npm install` before any other command.**
 
 ---
 
@@ -71,9 +71,9 @@ The build will succeed without these; features that call the backend will fail a
 ├── tsconfig.json       ← references tsconfig.app.json + tsconfig.node.json
 ├── tsconfig.app.json   ← app compiler options; strict mode ON (noUnusedLocals, noUnusedParameters, strict)
 ├── eslint.config.js    ← ESLint flat config; react-hooks + react-refresh plugins
-├── Dockerfile          ← multi-stage: node:20-alpine build → caddy serve
-├── Caddyfile           ← SPA fallback (try_files → index.html), PORT env var, gzip
-├── server.js           ← Express fallback server (alternative to Caddy); not used in Docker
+├── Dockerfile          ← multi-stage: node:22-alpine build → node:22-alpine production (runs server.js)
+├── Caddyfile           ← retained for reference; not used in production
+├── server.js           ← Express server; serves dist/ + API routes; used in Docker production
 ├── src/
 │   ├── main.tsx        ← app entry; wraps App in <BrowserRouter>
 │   ├── App.tsx         ← route definitions (see Routes section below)

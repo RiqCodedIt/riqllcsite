@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import SpotifyTrack from '../components/SpotifyTrack';
+import EmailCapture from '../components/EmailCapture';
 import usePageTitle from '../hooks/usePageTitle';
 import '../styles/PageContent.css';
 import '../styles/Home.css';
@@ -79,6 +80,7 @@ const Home = () => {
                     </div>
                 </div>
             </div>
+            <EmailCapture />
         </div>
     );
 };

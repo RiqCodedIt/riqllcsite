@@ -21,7 +21,11 @@ export default defineConfig({
   },
   server: {
     host: '0.0.0.0',
-    port: 5173
+    port: 5173,
+    proxy: {
+      '/submit-inquiry': 'http://localhost:4000',
+      '/subscribe': 'http://localhost:4000',
+    },
   },
   preview: {
     host: '0.0.0.0',
