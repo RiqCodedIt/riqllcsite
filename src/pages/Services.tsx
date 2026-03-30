@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import usePageTitle from '../hooks/usePageTitle';
+import usePageMeta from '../hooks/usePageMeta';
 import '../styles/PageContent.css';
 import '../styles/ServicesStyles.css';
 import { useCart } from '../components/cart/CartProvider';
@@ -13,7 +13,11 @@ const Services: React.FC = () => {
   const [expandedCard, setExpandedCard] = useState<string | null>(null);
   const { addServiceToCart } = useCart();
 
-  usePageTitle('Mixing & Mastering Services | PRODBYRIQ');
+  usePageMeta({
+    title: 'Mixing & Mastering Services | PRODBYRIQ',
+    description: 'Professional mixing & mastering from $75. Monthly retainer plans from $175/mo. Send your stems for studio-quality sound.',
+    canonicalPath: '/services',
+  });
 
   useEffect(() => {
     setServices(servicesData.services as Service[]);

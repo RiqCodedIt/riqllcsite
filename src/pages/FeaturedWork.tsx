@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import usePageTitle from '../hooks/usePageTitle';
+import usePageMeta from '../hooks/usePageMeta';
 import { Link } from 'react-router-dom';
 import '../styles/PageContent.css';
 import '../styles/FeaturedWork.css';
@@ -14,7 +14,11 @@ interface Track {
 }
 
 const FeaturedWork = () => {
-    usePageTitle('Featured Work | PRODBYRIQ');
+    usePageMeta({
+        title: 'Featured Work | PRODBYRIQ',
+        description: 'Hear mixes, masters, and productions by RIQ — hip hop, drill, R&B, and more.',
+        canonicalPath: '/featured-work',
+    });
     const [filter, setFilter] = useState<'all' | 'spotify' | 'soundcloud'>('all');
 
     // Sample tracks - you can easily add more here

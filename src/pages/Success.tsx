@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import usePageTitle from '../hooks/usePageTitle';
+import usePageMeta from '../hooks/usePageMeta';
 import { useLocation, Link } from 'react-router-dom';
 import '../styles/PageContent.css';
 import '../styles/Success.css';
@@ -13,7 +13,11 @@ const Success = () => {
     const [error, setError] = useState<string | null>(null);
     const location = useLocation();
 
-    usePageTitle('Order Confirmed | PRODBYRIQ');
+    usePageMeta({
+        title: 'Order Confirmed | PRODBYRIQ',
+        description: 'Your order has been confirmed. Thank you for your purchase.',
+        canonicalPath: '/success',
+    });
 
     useEffect(() => {
         const processSuccessfulPayment = async () => {
