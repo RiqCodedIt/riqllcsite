@@ -7,7 +7,11 @@ import '../styles/Home.css';
 
 
 const Home = () => {
-    usePageMeta({ title: 'PRODBYRIQ | Beats, Mixing & Music Production', description: 'Professional beats, mixing & mastering by RIQ. Buy WAV leases from $50, exclusive licenses from $200, mixing from $75.', canonicalPath: '/', });
+    usePageMeta({
+        title: 'PRODBYRIQ | Beats, Mixing & Music Production',
+        description: 'Professional beats, mixing & mastering by RIQ. Buy WAV leases from $50, exclusive licenses from $200, mixing from $75.',
+        canonicalPath: '/',
+    });
     const featuredTracks = [
         {
             url: 'https://open.spotify.com/track/3rlbQrNDUyIpF5QPjpFCkV',

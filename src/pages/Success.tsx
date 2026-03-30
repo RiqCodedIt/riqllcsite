@@ -17,6 +17,7 @@ const Success = () => {
         title: 'Order Confirmed | PRODBYRIQ',
         description: 'Your order has been confirmed. Thank you for your purchase.',
         canonicalPath: '/success',
+        noIndex: true,
     });
 
     useEffect(() => {

@@ -5,10 +5,11 @@ interface PageMeta {
   description: string;
   canonicalPath: string;
   ogImage?: string;
+  noIndex?: boolean;
 }
 
 const SITE_URL = 'https://prodbyriq.com';
-const DEFAULT_OG_IMAGE = `${SITE_URL}/og-default.jpg`;
+const DEFAULT_OG_IMAGE = `${SITE_URL}/covers/cover001.png`;
 
 function setMeta(name: string, content: string, attr: 'name' | 'property' = 'name') {
   let el = document.querySelector<HTMLMetaElement>(`meta[${attr}="${name}"]`);
@@ -30,7 +31,7 @@ function setLink(rel: string, href: string) {
   el.setAttribute('href', href);
 }
 
-const usePageMeta = ({ title, description, canonicalPath, ogImage }: PageMeta): void => {
+const usePageMeta = ({ title, description, canonicalPath, ogImage, noIndex }: PageMeta): void => {
   useEffect(() => {
     const canonical = `${SITE_URL}${canonicalPath}`;
     const image = ogImage ?? DEFAULT_OG_IMAGE;
@@ -38,6 +39,7 @@ const usePageMeta = ({ title, description, canonicalPath, ogImage }: PageMeta): 
     document.title = title;
 
     setMeta('description', description);
+    setMeta('robots', noIndex ? 'noindex, nofollow' : 'index, follow');
 
     setMeta('og:type', 'website', 'property');
     setMeta('og:site_name', 'PRODBYRIQ', 'property');
@@ -52,7 +54,7 @@ const usePageMeta = ({ title, description, canonicalPath, ogImage }: PageMeta): 
     setMeta('twitter:image', image);
 
     setLink('canonical', canonical);
-  }, [title, description, canonicalPath, ogImage]);
+  }, [title, description, canonicalPath, ogImage, noIndex]);
 };
 
 export default usePageMeta;

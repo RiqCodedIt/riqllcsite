@@ -21,8 +21,8 @@ const About = () => {
             <div className="about-photo-section">
                 <div className="about-photo-wrapper">
                     {/* Replace /producer-photo.jpg with the real asset path when available */}
-                    <div className="about-photo-placeholder" aria-label="Producer photo">
-                        <span className="about-photo-initials">RIQ</span>
+                    <div className="about-photo-placeholder" role="img" aria-label="Producer photo">
+                        <span className="about-photo-initials" aria-hidden="true">RIQ</span>
                     </div>
                 </div>
                 <div className="about-photo-bio">
@@ -41,7 +41,7 @@ const About = () => {
                     <h2>My Story</h2>
                     <p>
                         Tariq Georges is a multi-faceted Musician that has been trained in classical music.
-                        He has been playing the piano since the age of 4 and is a self taught producer and audio engineer.
+                        He has been playing the piano since the age of 4 and is a self-taught producer and audio engineer.
                         He has been making beats since 2020 when COVID-19 hit. He used that time to develop his skills
                         as a producer and engineer. He now works with a variety of artists from Boston, London,
                         and more to make beautiful tracks.
