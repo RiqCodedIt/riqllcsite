@@ -258,13 +258,13 @@
   border-radius: 6px;
 }
 
-.credit-title {
+.about-credit-title {
   font-size: 1rem;
   font-weight: 600;
   color: var(--text-dark);
 }
 
-.credit-role {
+.about-credit-role {
   font-size: 0.9rem;
   color: var(--text-medium);
   font-style: italic;

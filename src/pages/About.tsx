@@ -40,11 +40,11 @@ const About = () => {
                 <div className="about-section">
                     <h2>My Story</h2>
                     <p>
-                        Tariq Georges is a multi-faceted Musician that has been trained in classical music.
+                        Tariq Georges is a multi-faceted musician who was trained in classical music.
                         He has been playing the piano since the age of 4 and is a self-taught producer and audio engineer.
-                        He has been making beats since 2020 when COVID-19 hit. He used that time to develop his skills
-                        as a producer and engineer. He now works with a variety of artists from Boston, London,
-                        and more to make beautiful tracks.
+                        He started making beats in 2020 when COVID-19 hit and used that time to develop his skills
+                        as a producer and engineer. He now works with artists from Boston, London, and beyond
+                        to make beautiful tracks.
                     </p>
                 </div>
 
@@ -55,16 +55,16 @@ const About = () => {
                     <ul className="about-credits-list">
                         {/* Replace these placeholders with real credits */}
                         <li className="about-credit-item">
-                            <span className="credit-title">Credit Title &mdash; Artist Name</span>
-                            <span className="credit-role">Produced by RIQ</span>
+                            <span className="about-credit-title">Credit Title &mdash; Artist Name</span>
+                            <span className="about-credit-role">Produced by RIQ</span>
                         </li>
                         <li className="about-credit-item">
-                            <span className="credit-title">Credit Title &mdash; Artist Name</span>
-                            <span className="credit-role">Mixed &amp; Mastered by RIQ</span>
+                            <span className="about-credit-title">Credit Title &mdash; Artist Name</span>
+                            <span className="about-credit-role">Mixed &amp; Mastered by RIQ</span>
                         </li>
                         <li className="about-credit-item">
-                            <span className="credit-title">Credit Title &mdash; Artist Name</span>
-                            <span className="credit-role">Mixed by RIQ</span>
+                            <span className="about-credit-title">Credit Title &mdash; Artist Name</span>
+                            <span className="about-credit-role">Mixed by RIQ</span>
                         </li>
                     </ul>
                 </div>

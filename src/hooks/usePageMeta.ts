@@ -8,7 +8,7 @@ interface PageMeta {
   noIndex?: boolean;
 }
 
-const SITE_URL = 'https://prodbyriq.com';
+const SITE_URL = (import.meta.env.VITE_SITE_URL as string | undefined) ?? 'https://prodbyriq.com';
 const DEFAULT_OG_IMAGE = `${SITE_URL}/covers/cover001.png`;
 
 function setMeta(name: string, content: string, attr: 'name' | 'property' = 'name') {
