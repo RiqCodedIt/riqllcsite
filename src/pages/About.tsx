@@ -1,15 +1,38 @@
-import usePageTitle from '../hooks/usePageTitle';
+import usePageMeta from '../hooks/usePageMeta';
 import '../styles/PageContent.css';
 import '../styles/About.css';
 
 const About = () => {
-    usePageTitle('About | PRODBYRIQ');
+    usePageMeta({
+        title: 'About | PRODBYRIQ',
+        description: 'RIQ is a professional music producer and mix engineer. Learn about the experience and credits behind PRODBYRIQ.',
+        canonicalPath: '/about',
+    });
     return (
         <div className="page-content">
             <div className="about-hero">
                 <div className="about-content">
                     <h1>About RIQ</h1>
-                    <p className="about-subtitle">Music Producer, Audio Engineer & Creative Visionary</p>
+                    <p className="about-subtitle">Music Producer, Audio Engineer &amp; Creative Visionary</p>
+                </div>
+            </div>
+
+            {/* Producer Photo + Bio */}
+            <div className="about-photo-section">
+                <div className="about-photo-wrapper">
+                    {/* Replace /producer-photo.jpg with the real asset path when available */}
+                    <div className="about-photo-placeholder" role="img" aria-label="Producer photo">
+                        <span className="about-photo-initials" aria-hidden="true">RIQ</span>
+                    </div>
+                </div>
+                <div className="about-photo-bio">
+                    <h2>Tariq Georges</h2>
+                    <p className="about-photo-role">Producer · Mix Engineer · Pianist</p>
+                    <p>
+                        Tariq Georges is a multi-faceted musician trained in classical piano since age 4.
+                        A self-taught producer and audio engineer, he built his craft during 2020 and now
+                        works with artists from Boston, London, and beyond to deliver industry-grade records.
+                    </p>
                 </div>
             </div>
 
@@ -17,12 +40,33 @@ const About = () => {
                 <div className="about-section">
                     <h2>My Story</h2>
                     <p>
-                        Tariq Georges is a multi-faceted Musician that has been trained in classical music. 
-                        He has been playing the piano since the age of 4 and is a self taught producer and audio engineer.
-                        He has been making beats since 2020 when COVID-19 hit. He used that time to develop his skills 
-                        as a producer and engineer. He now works with a variety of artists from Boston, London, 
-                        and more to make beautiful tracks.
+                        Tariq Georges is a multi-faceted musician who was trained in classical music.
+                        He has been playing the piano since the age of 4 and is a self-taught producer and audio engineer.
+                        He started making beats in 2020 when COVID-19 hit and used that time to develop his skills
+                        as a producer and engineer. He now works with artists from Boston, London, and beyond
+                        to make beautiful tracks.
                     </p>
+                </div>
+
+                {/* Credits */}
+                <div className="about-section">
+                    <h2>Credits</h2>
+                    <p className="about-credits-intro">Selected production, mixing, and mastering work.</p>
+                    <ul className="about-credits-list">
+                        {/* Replace these placeholders with real credits */}
+                        <li className="about-credit-item">
+                            <span className="about-credit-title">Credit Title &mdash; Artist Name</span>
+                            <span className="about-credit-role">Produced by RIQ</span>
+                        </li>
+                        <li className="about-credit-item">
+                            <span className="about-credit-title">Credit Title &mdash; Artist Name</span>
+                            <span className="about-credit-role">Mixed &amp; Mastered by RIQ</span>
+                        </li>
+                        <li className="about-credit-item">
+                            <span className="about-credit-title">Credit Title &mdash; Artist Name</span>
+                            <span className="about-credit-role">Mixed by RIQ</span>
+                        </li>
+                    </ul>
                 </div>
 
                 <div className="about-section">
@@ -50,23 +94,27 @@ const About = () => {
                 <div className="about-section">
                     <h2>My Approach</h2>
                     <p>
-                        Every project is unique, and I believe in working closely with each artist to understand 
-                        their vision and goals. Whether you're looking for a specific sound or want to explore 
-                        new creative territories, I'm here to guide you through the process.
+                        Every project is unique, and I believe in working closely with each artist to understand
+                        their vision and goals. Whether you&apos;re looking for a specific sound or want to explore
+                        new creative territories, I&apos;m here to guide you through the process.
                     </p>
                 </div>
 
-                {/* <div className="about-section">
-                    <h2>Let's Work Together</h2>
-                    <p>
-                        Ready to take your music to the next level? I'm always excited to work with new artists 
-                        and help bring fresh ideas to life. Whether you need a single beat, full production, 
-                        or mixing and mastering services, let's discuss your project.
-                    </p>
-                    <div className="contact-info">
-                        <p>Get in touch to discuss your next project and see how we can create something amazing together.</p>
+                {/* Testimonials */}
+                <div className="about-section">
+                    <h2>What Artists Say</h2>
+                    <div className="about-testimonials">
+                        {/* Replace placeholder quotes with real client reviews */}
+                        <blockquote className="about-testimonial">
+                            <p>&ldquo;Testimonial quote goes here &mdash; replace with a real client review.&rdquo;</p>
+                            <cite>&mdash; Artist Name</cite>
+                        </blockquote>
+                        <blockquote className="about-testimonial">
+                            <p>&ldquo;Second testimonial quote goes here &mdash; replace with a real client review.&rdquo;</p>
+                            <cite>&mdash; Artist Name</cite>
+                        </blockquote>
                     </div>
-                </div> */}
+                </div>
             </div>
         </div>
     );

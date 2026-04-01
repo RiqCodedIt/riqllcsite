@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import usePageTitle from '../hooks/usePageTitle';
+import usePageMeta from '../hooks/usePageMeta';
 import '../styles/PageContent.css';
 import '../styles/BeatsStyles.css';
 import BeatCard from '../components/beats/BeatCard';
@@ -15,7 +15,11 @@ const Beats: React.FC = () => {
   const [currentlyPlaying, setCurrentlyPlaying] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  usePageTitle('Buy Beats | PRODBYRIQ');
+  usePageMeta({
+    title: 'Buy Beats | PRODBYRIQ',
+    description: 'Buy hip hop, trap, drill & more beats. WAV lease $50 | Exclusive $200. Instant download with 30-second previews.',
+    canonicalPath: '/beats',
+  });
 
   // Load beats data
   useEffect(() => {

@@ -1,13 +1,17 @@
 import { Link } from 'react-router-dom';
 import SpotifyTrack from '../components/SpotifyTrack';
 import EmailCapture from '../components/EmailCapture';
-import usePageTitle from '../hooks/usePageTitle';
+import usePageMeta from '../hooks/usePageMeta';
 import '../styles/PageContent.css';
 import '../styles/Home.css';
 
 
 const Home = () => {
-    usePageTitle('PRODBYRIQ | Beats, Mixing & Music Production');
+    usePageMeta({
+        title: 'PRODBYRIQ | Beats, Mixing & Music Production',
+        description: 'Professional beats, mixing & mastering by RIQ. Buy WAV leases from $50, exclusive licenses from $200, mixing from $75.',
+        canonicalPath: '/',
+    });
     const featuredTracks = [
         {
             url: 'https://open.spotify.com/track/3rlbQrNDUyIpF5QPjpFCkV',
