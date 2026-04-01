@@ -18,6 +18,7 @@ const NavBar = () => {
                     RIQ
                 </Link>
                 <button
+                    type="button"
                     className="mobile-menu-toggle"
                     onClick={() => setMenuOpen(prev => !prev)}
                     aria-label={menuOpen ? 'Close menu' : 'Open menu'}

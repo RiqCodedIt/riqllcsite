@@ -55,21 +55,10 @@ const StudioBookingForm: React.FC = () => {
 
   // Handle input changes
   const handleContactInfoChange = (field: string, value: string) => {
-    if (field.includes('.')) {
-      const [parent, child] = field.split('.');
-      setContactInfo(prev => ({
-        ...prev,
-        [parent]: {
-          ...(prev[parent as keyof ContactInfo] as unknown as Record<string, string>),
-          [child]: value
-        }
-      }));
-    } else {
-      setContactInfo(prev => ({
-        ...prev,
-        [field]: value
-      }));
-    }
+    setContactInfo(prev => ({
+      ...prev,
+      [field]: value
+    }));
   };
 
   const handleSessionDetailsChange = (field: string, value: string | number) => {

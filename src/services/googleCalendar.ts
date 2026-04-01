@@ -10,7 +10,7 @@ interface CalendarEvent {
     date?: string;
   };
   description?: string;
-  studioSource?: string;
+  studioSource?: 'C' | 'D';
 }
 
 interface AvailabilityEvent {
@@ -108,12 +108,12 @@ class GoogleCalendarService {
       // Combine events from both calendars
       const studioCEvents = (studioCResponse.result.items || []).map((event: CalendarEvent) => ({
         ...event,
-        studioSource: 'C'
+        studioSource: 'C' as const
       }));
 
       const studioDEvents = (studioDResponse.result.items || []).map((event: CalendarEvent) => ({
         ...event,
-        studioSource: 'D'
+        studioSource: 'D' as const
       }));
 
       return [...studioCEvents, ...studioDEvents];
