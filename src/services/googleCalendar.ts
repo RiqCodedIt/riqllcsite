@@ -27,11 +27,12 @@ class GoogleCalendarService {
   private isInitialized: boolean = false;
 
   constructor() {
-    this.apiKey = import.meta.env.VITE_GOOGLE_API_KEY;
-    this.studioCCalendarId = import.meta.env.VITE_GOOGLE_CALENDAR_STUDIO_C_ID;
-    this.studioDCalendarId = import.meta.env.VITE_GOOGLE_CALENDAR_STUDIO_D_ID;
+    this.apiKey = import.meta.env.VITE_GOOGLE_API_KEY as string;
+    this.studioCCalendarId = import.meta.env.VITE_GOOGLE_CALENDAR_STUDIO_C_ID as string;
+    this.studioDCalendarId = import.meta.env.VITE_GOOGLE_CALENDAR_STUDIO_D_ID as string;
+
     if (!this.apiKey || !this.studioCCalendarId || !this.studioDCalendarId) {
-      console.warn('Google Calendar: missing VITE_GOOGLE_API_KEY, VITE_GOOGLE_CALENDAR_STUDIO_C_ID, or VITE_GOOGLE_CALENDAR_STUDIO_D_ID');
+      throw new Error('Missing required Google Calendar env vars: VITE_GOOGLE_API_KEY, VITE_GOOGLE_CALENDAR_STUDIO_C_ID, VITE_GOOGLE_CALENDAR_STUDIO_D_ID');
     }
   }
 
