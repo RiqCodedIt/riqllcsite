@@ -40,10 +40,13 @@ class GoogleCalendarService {
       await this.loadGoogleAPI();
       
       // Initialize the API
+      if (!window.gapi) {
+        throw new Error('Google API script loaded but window.gapi is unavailable');
+      }
       await new Promise<void>((resolve, reject) => {
-        window.gapi.load('client', async () => {
+        window.gapi!.load('client', async () => {
           try {
-            await window.gapi.client.init({
+            await window.gapi!.client.init({
               apiKey: this.apiKey,
               discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest']
             });
@@ -80,17 +83,20 @@ class GoogleCalendarService {
       await this.initialize();
     }
 
+    if (!window.gapi) {
+      throw new Error('Google API is not initialized');
+    }
     try {
       // Fetch events from both studio calendars
       const [studioCResponse, studioDResponse] = await Promise.all([
-        window.gapi.client.calendar.events.list({
+        window.gapi!.client.calendar.events.list({
           calendarId: this.studioCCalendarId,
           timeMin: startDate.toISOString(),
           timeMax: endDate.toISOString(),
           singleEvents: true,
           orderBy: 'startTime'
         }),
-        window.gapi.client.calendar.events.list({
+        window.gapi!.client.calendar.events.list({
           calendarId: this.studioDCalendarId,
           timeMin: startDate.toISOString(),
           timeMax: endDate.toISOString(),
@@ -256,7 +262,7 @@ interface GapiClient {
 
 declare global {
   interface Window {
-    gapi: GapiClient;
+    gapi?: GapiClient;
   }
 }
 
