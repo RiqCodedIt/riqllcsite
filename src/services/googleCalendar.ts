@@ -10,6 +10,7 @@ interface CalendarEvent {
     date?: string;
   };
   description?: string;
+  studioSource?: string;
 }
 
 interface AvailabilityEvent {
@@ -99,12 +100,12 @@ class GoogleCalendarService {
       ]);
 
       // Combine events from both calendars
-      const studioCEvents = (studioCResponse.result.items || []).map((event: any) => ({
+      const studioCEvents = (studioCResponse.result.items || []).map((event: CalendarEvent) => ({
         ...event,
         studioSource: 'C'
       }));
-      
-      const studioDEvents = (studioDResponse.result.items || []).map((event: any) => ({
+
+      const studioDEvents = (studioDResponse.result.items || []).map((event: CalendarEvent) => ({
         ...event,
         studioSource: 'D'
       }));
@@ -122,7 +123,7 @@ class GoogleCalendarService {
     events.forEach(event => {
       try {
         // Get studio from source calendar (studioSource property)
-        const studioId = (event as any).studioSource || 'C'; // Default to C if not specified
+        const studioId = event.studioSource ?? 'C'; // Default to C if not specified
         const timeSlot = this.parseTimeSlot(event);
         const date = this.parseEventDate(event);
 
@@ -235,9 +236,27 @@ class GoogleCalendarService {
 }
 
 // Global type declarations
+interface GapiClient {
+  load(library: string, callback: () => void): void;
+  client: {
+    init(config: { apiKey: string; discoveryDocs: string[] }): Promise<void>;
+    calendar: {
+      events: {
+        list(params: {
+          calendarId: string;
+          timeMin: string;
+          timeMax: string;
+          singleEvents: boolean;
+          orderBy: string;
+        }): Promise<{ result: { items?: CalendarEvent[] } }>;
+      };
+    };
+  };
+}
+
 declare global {
   interface Window {
-    gapi: any;
+    gapi: GapiClient;
   }
 }
 

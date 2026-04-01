@@ -3,7 +3,7 @@ import type { ContactInfo } from '../types/booking';
 
 interface ContactFormProps {
   contactInfo: Partial<ContactInfo>;
-  onContactInfoChange: (field: string, value: any) => void;
+  onContactInfoChange: (field: string, value: string) => void;
   errors?: { [key: string]: string };
 }
 

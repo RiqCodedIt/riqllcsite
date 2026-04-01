@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import type { ValidationErrors, FormStepValidation, ContactInfo, SessionDetails } from '../types/booking';
+import type { ValidationErrors, FormStepValidation, ContactInfo, SessionDetails, Studio, TimeSlot } from '../types/booking';
 
 export const useBookingValidation = () => {
   const [errors, setErrors] = useState<ValidationErrors>({});
@@ -14,7 +14,7 @@ export const useBookingValidation = () => {
     return phoneRegex.test(phone);
   };
 
-  const validateStep1 = useCallback((data: { studio: any }): FormStepValidation => {
+  const validateStep1 = useCallback((data: { studio: Studio | null }): FormStepValidation => {
     const stepErrors: ValidationErrors = {};
 
     if (!data.studio?.id) {
@@ -27,7 +27,7 @@ export const useBookingValidation = () => {
     };
   }, []);
 
-  const validateStep2 = useCallback((data: { date: string; timeSlot: any }): FormStepValidation => {
+  const validateStep2 = useCallback((data: { date: string; timeSlot: TimeSlot | null }): FormStepValidation => {
     const stepErrors: ValidationErrors = {};
 
     if (!data.date) {

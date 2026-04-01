@@ -13,7 +13,7 @@ const BeatFiltersComponent: React.FC<BeatFiltersProps> = ({
   onFiltersChange, 
   onClearFilters 
 }) => {
-  const updateFilter = (key: keyof BeatFilters, value: any) => {
+  const updateFilter = (key: keyof BeatFilters, value: BeatFilters[typeof key]) => {
     onFiltersChange({
       ...filters,
       [key]: value
