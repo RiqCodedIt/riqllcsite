@@ -55,13 +55,6 @@ const NavBar = () => {
                     >
                         Services
                     </Link>
-                    <Link
-                        to="/booking"
-                        className={`nav-link ${location.pathname === '/booking' ? 'active' : ''}`}
-                        onClick={closeMenu}
-                    >
-                        Booking
-                    </Link>
                     <button
                         className="cart-icon-btn"
                         onClick={() => { openCart(); closeMenu(); }}

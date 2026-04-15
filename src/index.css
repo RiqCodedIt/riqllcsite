@@ -52,6 +52,29 @@
   --transition-default: 0.2s ease;
   --transition-slow: 0.3s ease;
 
+  /* ── Backward-compatibility aliases ──────────────────────────
+     Existing stylesheets still reference the old --color-* and
+     --text-* variables. Map them to the nearest new token so
+     pages that haven't been migrated yet don't break.         */
+  --color-lightest: var(--tan);
+  --color-light-2: var(--pale-oak);
+  --color-light: var(--almond);
+  --color-neutral-1: var(--bg-primary);
+  --color-neutral-2: var(--almond);
+  --color-neutral-3: var(--pale-oak);
+  --color-medium: var(--almond);
+  --color-accent-1: var(--accent-warm);
+  --color-accent-2: var(--accent-warm);
+  --color-accent-3: var(--accent-primary);
+  --text-dark: var(--text-primary);
+  --text-medium: var(--text-secondary);
+  --text-light: var(--text-muted);
+  --button-primary-bg: var(--accent-primary);
+  --button-primary-text: #FFFFFF;
+  --button-secondary-bg: var(--almond);
+  --button-secondary-text: var(--text-primary);
+  --button-hover-bg: var(--accent-hover);
+
   font-family: var(--font-body);
   line-height: 1.5;
   font-weight: 400;
