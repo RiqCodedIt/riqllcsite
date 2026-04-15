@@ -8,21 +8,14 @@ const CartDrawer: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD'
-    }).format(amount);
-  };
+  const formatCurrency = (amount: number) =>
+    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
 
   const handleCheckout = async () => {
     setLoading(true);
     setError(null);
-
     try {
-      await redirectToCheckout({
-        items: cart.items
-      });
+      await redirectToCheckout({ items: cart.items });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred during checkout');
       setLoading(false);
@@ -41,29 +34,7 @@ const CartDrawer: React.FC = () => {
             <p className="license-type">{item.license_type === 'lease' ? 'Lease License' : 'Exclusive License'}</p>
             <p className="item-price">{formatCurrency(item.price)}</p>
           </div>
-          <button 
-            className="remove-item-btn"
-            onClick={() => removeFromCart(index.toString())}
-            aria-label="Remove item"
-          >
-            ×
-          </button>
-        </div>
-      );
-    } else if (item.type === 'studio_session') {
-      return (
-        <div key={index} className="cart-item studio-item">
-          <div className="cart-item-icon">
-            🎵
-          </div>
-          <div className="cart-item-details">
-            <h4>Studio Session</h4>
-            <p className="studio-name">{item.studio_name}</p>
-            <p className="session-details">{item.date} • {item.time_slot}</p>
-            <p className="session-type">{item.session_type} • {item.duration}h</p>
-            <p className="item-price">{formatCurrency(item.price)}</p>
-          </div>
-          <button 
+          <button
             className="remove-item-btn"
             onClick={() => removeFromCart(index.toString())}
             aria-label="Remove item"
@@ -76,15 +47,13 @@ const CartDrawer: React.FC = () => {
       // Service item
       return (
         <div key={index} className="cart-item service-item">
-          <div className="cart-item-icon">
-            🎛️
-          </div>
+          <div className="cart-item-icon">🎛️</div>
           <div className="cart-item-details">
             <h4>{item.service_name}</h4>
             <p className="service-category">{item.category}</p>
             <p className="item-price">{formatCurrency(item.price)}</p>
           </div>
-          <button 
+          <button
             className="remove-item-btn"
             onClick={() => removeFromCart(index.toString())}
             aria-label="Remove item"
@@ -100,16 +69,11 @@ const CartDrawer: React.FC = () => {
 
   return (
     <>
-      {/* Overlay */}
       <div className="cart-overlay" onClick={closeCart} />
-      
-      {/* Drawer */}
       <div className="cart-drawer">
         <div className="cart-header">
           <h3>Your Cart</h3>
-          <button className="close-cart-btn" onClick={closeCart}>
-            ×
-          </button>
+          <button className="close-cart-btn" onClick={closeCart}>×</button>
         </div>
 
         <div className="cart-content">
@@ -117,7 +81,7 @@ const CartDrawer: React.FC = () => {
             <div className="empty-cart">
               <div className="empty-cart-icon">🛒</div>
               <h4>Your cart is empty</h4>
-              <p>Add some beats or book a studio session to get started!</p>
+              <p>Add some beats or services to get started!</p>
             </div>
           ) : (
             <>
@@ -134,18 +98,15 @@ const CartDrawer: React.FC = () => {
                 </div>
 
                 <div className="cart-actions">
-                  <button 
-                    className="clear-cart-btn secondary"
-                    onClick={clearCart}
-                  >
+                  <button className="clear-cart-btn secondary" onClick={clearCart}>
                     Clear Cart
                   </button>
-                  <button 
+                  <button
                     className="checkout-btn primary"
                     onClick={handleCheckout}
                     disabled={loading}
                   >
-                    {loading ? 'Processing...' : 'Proceed to Checkout'}
+                    {loading ? 'Processing...' : 'Checkout'}
                   </button>
                 </div>
               </div>
@@ -153,8 +114,7 @@ const CartDrawer: React.FC = () => {
           )}
         </div>
       </div>
-      
-      {/* Error Message */}
+
       {error && (
         <div className="cart-error">
           <p>{error}</p>

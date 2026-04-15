@@ -13,6 +13,10 @@ export interface Beat {
   exclusive_price: number;
   created_at?: string;
   tags?: string[];
+  mood?: string[];
+  plays?: number;
+  googleDriveFileId?: string;
+  googleDriveCoverId?: string;
 }
 
 export interface BeatsData {
@@ -30,20 +34,9 @@ export interface BeatCartItem {
   cover_path: string;
 }
 
-export interface StudioCartItem {
-  type: 'studio_session';
-  session_id: string;
-  studio_name: string;
-  date: string;
-  time_slot: string;
-  session_type: string;
-  duration: number;
-  price: number;
-}
-
 import type { ServiceCartItem } from './services';
 
-export type CartItem = BeatCartItem | StudioCartItem | ServiceCartItem;
+export type CartItem = BeatCartItem | ServiceCartItem;
 
 export interface CartState {
   items: CartItem[];
@@ -66,6 +59,7 @@ export interface AuthState {
 
 export interface BeatFilters {
   genre?: string;
+  mood?: string;
   bpmMin?: number;
   bpmMax?: number;
   key?: string;
@@ -85,6 +79,17 @@ export const GENRES = [
   'Soul',
   'Electronic',
   'Other'
+];
+
+export const MOODS = [
+  'Dark',
+  'Chill',
+  'Energetic',
+  'Smooth',
+  'Hard',
+  'Melodic',
+  'Aggressive',
+  'Emotional'
 ];
 
 export const KEYS = [

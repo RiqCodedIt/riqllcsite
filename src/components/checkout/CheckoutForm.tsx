@@ -75,12 +75,6 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onClose }) => {
                         <span className="item-type">{item.license_type} License</span>
                       </>
                     )}
-                    {item.type === 'studio_session' && (
-                      <>
-                        <span className="item-name">Studio Session</span>
-                        <span className="item-type">{item.studio_name} • {item.date}</span>
-                      </>
-                    )}
                     {item.type === 'service' && (
                       <>
                         <span className="item-name">{item.service_name}</span>
