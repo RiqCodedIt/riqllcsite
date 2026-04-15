@@ -3,6 +3,7 @@ import SpotifyTrack from '../components/SpotifyTrack';
 import EmailCapture from '../components/EmailCapture';
 import usePageMeta from '../hooks/usePageMeta';
 import '../styles/Home.css';
+import '../styles/PageContent.css';
 
 const Home = () => {
     usePageMeta({
