@@ -113,10 +113,7 @@ const Home = () => {
                         {featuredTracks.map((track, index) => (
                             <div key={index} className="track-item">
                                 <p className="track-credit">{track.description}</p>
-                                <SpotifyTrack
-                                    trackUrl={track.url}
-                                    description={track.description}
-                                />
+                                <SpotifyTrack trackUrl={track.url} />
                             </div>
                         ))}
                     </div>
@@ -130,13 +127,7 @@ const Home = () => {
             <section className="home-email-capture">
                 <div className="home-container">
                     <div className="email-capture-wrap">
-                        <div className="email-capture-copy">
-                            <h2>Get a Free Mix Feedback Session</h2>
-                            <p>Enter your email to receive a free review of your mix. I'll give you actionable notes to improve your sound.</p>
-                        </div>
-                        <div className="email-capture-form-wrap">
-                            <EmailCapture />
-                        </div>
+                        <EmailCapture />
                     </div>
                 </div>
             </section>
