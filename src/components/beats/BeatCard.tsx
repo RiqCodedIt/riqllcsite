@@ -1,192 +1,148 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React from 'react';
 import { useCart } from '../cart/CartProvider';
+import { useAudioPlayer } from '../AudioPlayerContext';
 import type { Beat } from '../../types/beats';
 
 interface BeatCardProps {
   beat: Beat;
-  isPlaying?: boolean;
-  onPlay?: (beatId: string) => void;
-  onPause?: () => void;
+  view?: 'list' | 'grid';
 }
 
-const BeatCard: React.FC<BeatCardProps> = ({ beat, isPlaying = false, onPlay, onPause }) => {
-  const hasPreview = Boolean(beat.preview_path);
-  const [isLoading, setIsLoading] = useState(false);
-  const [duration, setDuration] = useState(0);
-  const [currentTime, setCurrentTime] = useState(0);
-  const audioRef = useRef<HTMLAudioElement>(null);
+const BeatCard: React.FC<BeatCardProps> = ({ beat, view = 'list' }) => {
   const { addBeatToCart } = useCart();
+  const { currentBeat, isPlaying, playBeat, pauseBeat } = useAudioPlayer();
 
-  const formatTime = (time: number) => {
-    const minutes = Math.floor(time / 60);
-    const seconds = Math.floor(time % 60);
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-  };
+  const isThisBeatPlaying = currentBeat?.beat_id === beat.beat_id && isPlaying;
+  const hasPreview = Boolean(beat.preview_path);
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD'
-    }).format(amount);
-  };
+  const formatCurrency = (amount: number) =>
+    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0 }).format(amount);
 
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    const handleLoadedMetadata = () => {
-      setDuration(audio.duration);
-      setIsLoading(false);
-    };
-
-    const handleTimeUpdate = () => {
-      setCurrentTime(audio.currentTime);
-    };
-
-    const handleEnded = () => {
-      if (onPause) onPause();
-      setCurrentTime(0);
-    };
-
-    const handleLoadStart = () => {
-      setIsLoading(true);
-    };
-
-    audio.addEventListener('loadedmetadata', handleLoadedMetadata);
-    audio.addEventListener('timeupdate', handleTimeUpdate);
-    audio.addEventListener('ended', handleEnded);
-    audio.addEventListener('loadstart', handleLoadStart);
-
-    return () => {
-      audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
-      audio.removeEventListener('timeupdate', handleTimeUpdate);
-      audio.removeEventListener('ended', handleEnded);
-      audio.removeEventListener('loadstart', handleLoadStart);
-    };
-  }, [onPause]);
-
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    if (isPlaying) {
-      audio.play().catch(console.error);
+  const handlePlayPause = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!hasPreview) return;
+    if (isThisBeatPlaying) {
+      pauseBeat();
     } else {
-      audio.pause();
-    }
-  }, [isPlaying]);
-
-  const handlePlayPause = () => {
-    if (isPlaying) {
-      if (onPause) onPause();
-    } else {
-      if (onPlay) onPlay(beat.beat_id);
+      playBeat(beat);
     }
   };
 
-  const handleAddToCart = (licenseType: 'lease' | 'exclusive') => {
+  const handleAddToCart = (e: React.MouseEvent, licenseType: 'lease' | 'exclusive') => {
+    e.stopPropagation();
     const price = licenseType === 'lease' ? beat.lease_price : beat.exclusive_price;
-    addBeatToCart(
-      {
-        beat_id: beat.beat_id,
-        title: beat.title,
-        cover_path: beat.cover_path
-      },
-      licenseType,
-      price
-    );
+    addBeatToCart({ beat_id: beat.beat_id, title: beat.title, cover_path: beat.cover_path }, licenseType, price);
   };
 
-  const progressPercentage = duration > 0 ? (currentTime / duration) * 100 : 0;
-
-  return (
-    <div className="beat-card">
-      <div className="beat-cover">
-        <img src={beat.cover_path} alt={beat.title} />
-        
-        {/* Play/Pause Overlay */}
-        <div className="play-overlay">
-          {hasPreview ? (
-            <button
-              className={`play-btn ${isPlaying ? 'playing' : ''}`}
-              onClick={handlePlayPause}
-              disabled={isLoading}
-              aria-label={isPlaying ? 'Pause preview' : 'Play preview'}
-            >
-              {isLoading ? (
-                <div className="loading-spinner"></div>
-              ) : isPlaying ? (
-                <span className="pause-icon">⏸</span>
-              ) : (
-                <span className="play-icon">▶</span>
-              )}
-            </button>
-          ) : (
-            <span className="no-preview-label">Preview coming soon</span>
-          )}
+  if (view === 'grid') {
+    return (
+      <div
+        className={`beat-card-grid${isThisBeatPlaying ? ' is-playing' : ''}`}
+        role="article"
+        aria-label={beat.title}
+      >
+        <div className="bcg-cover" onClick={handlePlayPause}>
+          <img src={beat.cover_path} alt={beat.title} loading="lazy" />
+          <div className="bcg-play-overlay" aria-hidden="true">
+            {isThisBeatPlaying ? (
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
+                <rect x="6" y="4" width="4" height="16" rx="1"/>
+                <rect x="14" y="4" width="4" height="16" rx="1"/>
+              </svg>
+            ) : (
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
+                <polygon points="5,3 19,12 5,21"/>
+              </svg>
+            )}
+          </div>
         </div>
-
-        {/* Progress Bar */}
-        {isPlaying && (
-          <div className="progress-bar">
-            <div 
-              className="progress-fill" 
-              style={{ width: `${progressPercentage}%` }}
-            ></div>
+        <div className="bcg-info">
+          <h3 className="bcg-title">{beat.title}</h3>
+          <div className="bcg-meta">
+            <span>{beat.bpm} BPM</span>
+            <span>·</span>
+            <span>{beat.key}</span>
+            <span>·</span>
+            <span>{beat.genres[0]}</span>
           </div>
-        )}
-
-        {/* Time Display */}
-        {isPlaying && (
-          <div className="time-display">
-            {formatTime(currentTime)} / {formatTime(duration)}
+          <div className="beat-buy-btns">
+            <button
+              className="beat-btn-lease"
+              onClick={(e) => handleAddToCart(e, 'lease')}
+            >
+              Lease {formatCurrency(beat.lease_price)}
+            </button>
+            <button
+              className="beat-btn-exclusive"
+              onClick={(e) => handleAddToCart(e, 'exclusive')}
+            >
+              Excl. {formatCurrency(beat.exclusive_price)}
+            </button>
           </div>
-        )}
+        </div>
       </div>
+    );
+  }
 
-      <div className="beat-info">
-        <h3 className="beat-title">{beat.title}</h3>
-        
-        <div className="beat-metadata">
-          <span className="beat-bpm">{beat.bpm} BPM</span>
-          <span className="beat-key">{beat.key}</span>
-          {beat.genres.map((genre, index) => (
-            <span key={index} className="beat-genre">{genre}</span>
+  // Default: list view
+  return (
+    <div
+      className={`beat-card-list${isThisBeatPlaying ? ' is-playing' : ''}`}
+      role="article"
+      aria-label={beat.title}
+    >
+      <button
+        className="bcl-play-btn"
+        onClick={handlePlayPause}
+        disabled={!hasPreview}
+        aria-label={isThisBeatPlaying ? `Pause ${beat.title}` : `Play ${beat.title}`}
+      >
+        {isThisBeatPlaying ? (
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <rect x="6" y="4" width="4" height="16" rx="1"/>
+            <rect x="14" y="4" width="4" height="16" rx="1"/>
+          </svg>
+        ) : (
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="5,3 19,12 5,21"/>
+          </svg>
+        )}
+      </button>
+
+      <img src={beat.cover_path} alt={beat.title} className="bcl-cover" loading="lazy" />
+
+      <div className="bcl-info">
+        <span className="bcl-title">{beat.title}</span>
+        <div className="bcl-tags">
+          {beat.mood?.map(m => (
+            <span key={m} className="bcl-tag bcl-tag-mood">{m}</span>
+          ))}
+          {beat.tags?.slice(0, 2).map(t => (
+            <span key={t} className="bcl-tag">#{t}</span>
           ))}
         </div>
-
-        {beat.tags && beat.tags.length > 0 && (
-          <div className="beat-tags">
-            {beat.tags.map((tag, index) => (
-              <span key={index} className="beat-tag">#{tag}</span>
-            ))}
-          </div>
-        )}
-
-        <div className="beat-pricing">
-          <button 
-            className="lease-btn"
-            onClick={() => handleAddToCart('lease')}
-          >
-            Lease - {formatCurrency(beat.lease_price)}
-          </button>
-          <button 
-            className="exclusive-btn"
-            onClick={() => handleAddToCart('exclusive')}
-          >
-            Exclusive - {formatCurrency(beat.exclusive_price)}
-          </button>
-        </div>
       </div>
 
-      {/* Audio element — only rendered when a preview URL exists */}
-      {hasPreview && (
-        <audio
-          ref={audioRef}
-          preload="metadata"
-          src={beat.preview_path}
-        />
-      )}
+      <div className="bcl-meta">
+        <span className="bcl-bpm">{beat.bpm} BPM</span>
+        <span className="bcl-key">{beat.key}</span>
+        <span className="bcl-genre">{beat.genres[0]}</span>
+      </div>
+
+      <div className="beat-buy-btns">
+        <button
+          className="beat-btn-lease"
+          onClick={(e) => handleAddToCart(e, 'lease')}
+        >
+          Lease {formatCurrency(beat.lease_price)}
+        </button>
+        <button
+          className="beat-btn-exclusive"
+          onClick={(e) => handleAddToCart(e, 'exclusive')}
+        >
+          Excl. {formatCurrency(beat.exclusive_price)}
+        </button>
+      </div>
     </div>
   );
 };
