@@ -120,7 +120,7 @@ const BeatFiltersComponent: React.FC<BeatFiltersProps> = ({
                 min={BPM_RANGES.min} max={BPM_RANGES.max} step={BPM_RANGES.step}
                 placeholder="Min"
                 value={filters.bpmMin || ''}
-                onChange={e => onFiltersChange({ ...filters, bpmMin: e.target.value ? parseInt(e.target.value) : undefined })}
+                onChange={e => { const v = parseInt(e.target.value); onFiltersChange({ ...filters, bpmMin: e.target.value && !isNaN(v) ? v : undefined }); }}
                 aria-label="Minimum BPM"
               />
               <span className="bfb-bpm-sep">–</span>
@@ -130,7 +130,7 @@ const BeatFiltersComponent: React.FC<BeatFiltersProps> = ({
                 min={BPM_RANGES.min} max={BPM_RANGES.max} step={BPM_RANGES.step}
                 placeholder="Max"
                 value={filters.bpmMax || ''}
-                onChange={e => onFiltersChange({ ...filters, bpmMax: e.target.value ? parseInt(e.target.value) : undefined })}
+                onChange={e => { const v = parseInt(e.target.value); onFiltersChange({ ...filters, bpmMax: e.target.value && !isNaN(v) ? v : undefined }); }}
                 aria-label="Maximum BPM"
               />
             </div>

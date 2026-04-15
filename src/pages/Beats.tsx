@@ -40,8 +40,9 @@ const Beats: React.FC = () => {
     }
 
     if (filters.mood) {
+      // Only apply mood filter to beats that have mood data; beats without it are shown
       filtered = filtered.filter(beat =>
-        beat.mood?.map(m => m.toLowerCase()).includes(filters.mood!.toLowerCase())
+        !beat.mood || beat.mood.map(m => m.toLowerCase()).includes(filters.mood!.toLowerCase())
       );
     }
 
@@ -53,11 +54,11 @@ const Beats: React.FC = () => {
       filtered = filtered.filter(beat => beat.key === filters.key);
     }
 
-    if (filters.bpmMin) {
+    if (filters.bpmMin !== undefined && !isNaN(filters.bpmMin)) {
       filtered = filtered.filter(beat => beat.bpm >= filters.bpmMin!);
     }
 
-    if (filters.bpmMax) {
+    if (filters.bpmMax !== undefined && !isNaN(filters.bpmMax)) {
       filtered = filtered.filter(beat => beat.bpm <= filters.bpmMax!);
     }
 
