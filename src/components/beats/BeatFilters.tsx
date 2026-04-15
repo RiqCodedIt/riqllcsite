@@ -46,7 +46,9 @@ const BeatFiltersComponent: React.FC<BeatFiltersProps> = ({
       {/* Mood pills */}
       <div className="bfb-pills-row" role="group" aria-label="Filter by mood">
         <button
+          type="button"
           className={`bfb-pill${!filters.mood ? ' active' : ''}`}
+          aria-pressed={!filters.mood}
           onClick={() => setMood(undefined)}
         >
           All
@@ -54,7 +56,9 @@ const BeatFiltersComponent: React.FC<BeatFiltersProps> = ({
         {MOODS.map(mood => (
           <button
             key={mood}
+            type="button"
             className={`bfb-pill${filters.mood === mood ? ' active' : ''}`}
+            aria-pressed={filters.mood === mood}
             onClick={() => setMood(filters.mood === mood ? undefined : mood)}
           >
             {mood}

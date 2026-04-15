@@ -40,9 +40,8 @@ const Beats: React.FC = () => {
     }
 
     if (filters.mood) {
-      // Only apply mood filter to beats that have mood data; beats without it are shown
       filtered = filtered.filter(beat =>
-        !beat.mood || beat.mood.map(m => m.toLowerCase()).includes(filters.mood!.toLowerCase())
+        beat.mood?.map(m => m.toLowerCase()).includes(filters.mood!.toLowerCase())
       );
     }
 
