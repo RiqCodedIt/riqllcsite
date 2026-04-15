@@ -41,21 +41,28 @@ const BeatCard: React.FC<BeatCardProps> = ({ beat, view = 'list' }) => {
         role="article"
         aria-label={beat.title}
       >
-        <div className="bcg-cover" onClick={handlePlayPause}>
-          <img src={beat.cover_path} alt={beat.title} loading="lazy" />
-          <div className="bcg-play-overlay" aria-hidden="true">
-            {isThisBeatPlaying ? (
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
-                <rect x="6" y="4" width="4" height="16" rx="1"/>
-                <rect x="14" y="4" width="4" height="16" rx="1"/>
-              </svg>
-            ) : (
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
-                <polygon points="5,3 19,12 5,21"/>
-              </svg>
-            )}
-          </div>
-        </div>
+        <button
+          className="bcg-cover"
+          onClick={handlePlayPause}
+          disabled={!hasPreview}
+          aria-label={isThisBeatPlaying ? `Pause ${beat.title}` : `Play ${beat.title}`}
+        >
+          <img src={beat.cover_path} alt="" loading="lazy" />
+          {hasPreview && (
+            <div className="bcg-play-overlay" aria-hidden="true">
+              {isThisBeatPlaying ? (
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
+                  <rect x="6" y="4" width="4" height="16" rx="1"/>
+                  <rect x="14" y="4" width="4" height="16" rx="1"/>
+                </svg>
+              ) : (
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
+                  <polygon points="5,3 19,12 5,21"/>
+                </svg>
+              )}
+            </div>
+          )}
+        </button>
         <div className="bcg-info">
           <h3 className="bcg-title">{beat.title}</h3>
           <div className="bcg-meta">

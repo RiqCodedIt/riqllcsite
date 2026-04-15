@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { BeatFilters } from '../../types/beats';
-import { GENRES, MOODS } from '../../types/beats';
+import { GENRES, MOODS, KEYS, BPM_RANGES } from '../../types/beats';
 
 interface BeatFiltersProps {
   filters: BeatFilters;
@@ -106,8 +106,7 @@ const BeatFiltersComponent: React.FC<BeatFiltersProps> = ({
               onChange={e => onFiltersChange({ ...filters, key: e.target.value || undefined })}
             >
               <option value="">Any Key</option>
-              {['C','C#','D','D#','E','F','F#','G','G#','A','A#','B',
-                'Cm','C#m','Dm','D#m','Em','Fm','F#m','Gm','G#m','Am','A#m','Bm'].map(k => (
+              {KEYS.map(k => (
                 <option key={k} value={k}>{k}</option>
               ))}
             </select>
@@ -118,7 +117,7 @@ const BeatFiltersComponent: React.FC<BeatFiltersProps> = ({
               <input
                 type="number"
                 className="bfb-bpm-input"
-                min={60} max={200} step={5}
+                min={BPM_RANGES.min} max={BPM_RANGES.max} step={BPM_RANGES.step}
                 placeholder="Min"
                 value={filters.bpmMin || ''}
                 onChange={e => onFiltersChange({ ...filters, bpmMin: e.target.value ? parseInt(e.target.value) : undefined })}
@@ -128,7 +127,7 @@ const BeatFiltersComponent: React.FC<BeatFiltersProps> = ({
               <input
                 type="number"
                 className="bfb-bpm-input"
-                min={60} max={200} step={5}
+                min={BPM_RANGES.min} max={BPM_RANGES.max} step={BPM_RANGES.step}
                 placeholder="Max"
                 value={filters.bpmMax || ''}
                 onChange={e => onFiltersChange({ ...filters, bpmMax: e.target.value ? parseInt(e.target.value) : undefined })}

@@ -22,7 +22,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ currentBeat, isPlaying, onPla
     return `${m}:${s.toString().padStart(2, '0')}`;
   };
 
-  // Load new beat
+  // Load new beat — and auto-play if already in playing state
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio || !currentBeat?.preview_path) return;
@@ -30,9 +30,12 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ currentBeat, isPlaying, onPla
     audio.load();
     setCurrentTime(0);
     setDuration(0);
-  }, [currentBeat?.beat_id]);
+    if (isPlaying) {
+      audio.play().catch(console.error);
+    }
+  }, [currentBeat?.beat_id]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Play/pause
+  // Play/pause (handles toggling on the current beat)
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
