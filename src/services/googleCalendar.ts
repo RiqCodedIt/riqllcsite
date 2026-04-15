@@ -10,6 +10,7 @@ interface CalendarEvent {
     date?: string;
   };
   description?: string;
+  studioSource?: 'C' | 'D';
 }
 
 interface AvailabilityEvent {
@@ -26,9 +27,13 @@ class GoogleCalendarService {
   private isInitialized: boolean = false;
 
   constructor() {
-    this.apiKey = import.meta.env.REACT_APP_GOOGLE_API_KEY;
-    this.studioCCalendarId = import.meta.env.REACT_APP_GOOGLE_CALENDAR_STUDIO_C_ID;
-    this.studioDCalendarId = import.meta.env.REACT_APP_GOOGLE_CALENDAR_STUDIO_D_ID;
+    this.apiKey = import.meta.env.VITE_GOOGLE_API_KEY as string;
+    this.studioCCalendarId = import.meta.env.VITE_GOOGLE_CALENDAR_STUDIO_C_ID as string;
+    this.studioDCalendarId = import.meta.env.VITE_GOOGLE_CALENDAR_STUDIO_D_ID as string;
+
+    if (!this.apiKey || !this.studioCCalendarId || !this.studioDCalendarId) {
+      throw new Error('Missing required Google Calendar env vars: VITE_GOOGLE_API_KEY, VITE_GOOGLE_CALENDAR_STUDIO_C_ID, VITE_GOOGLE_CALENDAR_STUDIO_D_ID');
+    }
   }
 
   async initialize(): Promise<void> {
@@ -39,10 +44,13 @@ class GoogleCalendarService {
       await this.loadGoogleAPI();
       
       // Initialize the API
+      if (!window.gapi) {
+        throw new Error('Google API script loaded but window.gapi is unavailable');
+      }
       await new Promise<void>((resolve, reject) => {
-        window.gapi.load('client', async () => {
+        window.gapi!.load('client', async () => {
           try {
-            await window.gapi.client.init({
+            await window.gapi!.client.init({
               apiKey: this.apiKey,
               discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest']
             });
@@ -79,17 +87,20 @@ class GoogleCalendarService {
       await this.initialize();
     }
 
+    if (!window.gapi) {
+      throw new Error('Google API is not initialized');
+    }
     try {
       // Fetch events from both studio calendars
       const [studioCResponse, studioDResponse] = await Promise.all([
-        window.gapi.client.calendar.events.list({
+        window.gapi!.client.calendar.events.list({
           calendarId: this.studioCCalendarId,
           timeMin: startDate.toISOString(),
           timeMax: endDate.toISOString(),
           singleEvents: true,
           orderBy: 'startTime'
         }),
-        window.gapi.client.calendar.events.list({
+        window.gapi!.client.calendar.events.list({
           calendarId: this.studioDCalendarId,
           timeMin: startDate.toISOString(),
           timeMax: endDate.toISOString(),
@@ -99,14 +110,14 @@ class GoogleCalendarService {
       ]);
 
       // Combine events from both calendars
-      const studioCEvents = (studioCResponse.result.items || []).map((event: any) => ({
+      const studioCEvents = (studioCResponse.result.items || []).map((event: CalendarEvent) => ({
         ...event,
-        studioSource: 'C'
+        studioSource: 'C' as const
       }));
-      
-      const studioDEvents = (studioDResponse.result.items || []).map((event: any) => ({
+
+      const studioDEvents = (studioDResponse.result.items || []).map((event: CalendarEvent) => ({
         ...event,
-        studioSource: 'D'
+        studioSource: 'D' as const
       }));
 
       return [...studioCEvents, ...studioDEvents];
@@ -122,7 +133,7 @@ class GoogleCalendarService {
     events.forEach(event => {
       try {
         // Get studio from source calendar (studioSource property)
-        const studioId = (event as any).studioSource || 'C'; // Default to C if not specified
+        const studioId = event.studioSource ?? 'C'; // Default to C if not specified
         const timeSlot = this.parseTimeSlot(event);
         const date = this.parseEventDate(event);
 
@@ -203,7 +214,7 @@ class GoogleCalendarService {
       console.log(`Processed ${availabilityEvents.length} availability events`);
       
       // Send to backend
-      const response = await fetch(`${import.meta.env.REACT_APP_API_URL}/api/sync-calendar`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/sync-calendar`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -235,9 +246,27 @@ class GoogleCalendarService {
 }
 
 // Global type declarations
+interface GapiClient {
+  load(library: string, callback: () => void): void;
+  client: {
+    init(config: { apiKey: string; discoveryDocs: string[] }): Promise<void>;
+    calendar: {
+      events: {
+        list(params: {
+          calendarId: string;
+          timeMin: string;
+          timeMax: string;
+          singleEvents: boolean;
+          orderBy: string;
+        }): Promise<{ result: { items?: CalendarEvent[] } }>;
+      };
+    };
+  };
+}
+
 declare global {
   interface Window {
-    gapi: any;
+    gapi?: GapiClient;
   }
 }
 

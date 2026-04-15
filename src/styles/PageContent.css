@@ -5,6 +5,12 @@
   min-height: calc(100vh - 80px);
 }
 
+@media (max-width: 480px) {
+  .page-content {
+    padding: 1rem;
+  }
+}
+
 .content-section {
   margin: 2rem 0;
 }

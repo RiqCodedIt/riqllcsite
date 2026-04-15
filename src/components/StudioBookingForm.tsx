@@ -54,25 +54,14 @@ const StudioBookingForm: React.FC = () => {
   const depositAmount = totalCost * 0.5;
 
   // Handle input changes
-  const handleContactInfoChange = (field: string, value: any) => {
-    if (field.includes('.')) {
-      const [parent, child] = field.split('.');
-      setContactInfo(prev => ({
-        ...prev,
-        [parent]: {
-          ...(prev[parent as keyof ContactInfo] as any),
-          [child]: value
-        }
-      }));
-    } else {
-      setContactInfo(prev => ({
-        ...prev,
-        [field]: value
-      }));
-    }
+  const handleContactInfoChange = (field: string, value: string) => {
+    setContactInfo(prev => ({
+      ...prev,
+      [field]: value
+    }));
   };
 
-  const handleSessionDetailsChange = (field: string, value: any) => {
+  const handleSessionDetailsChange = (field: string, value: string | number) => {
     setSessionDetails(prev => ({
       ...prev,
       [field]: value

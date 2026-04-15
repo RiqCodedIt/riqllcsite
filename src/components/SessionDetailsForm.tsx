@@ -4,7 +4,7 @@ import { SESSION_TYPES } from '../types/booking';
 
 interface SessionDetailsFormProps {
   sessionDetails: Partial<SessionDetails>;
-  onSessionDetailsChange: (field: string, value: any) => void;
+  onSessionDetailsChange: (field: string, value: string | number) => void;
   errors?: { [key: string]: string };
 }
 

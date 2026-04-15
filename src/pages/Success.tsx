@@ -36,8 +36,8 @@ const Success = () => {
                     // Fetch order details to determine what was purchased
                     const response = await fetch(`${import.meta.env.VITE_API_URL}/bookings`);
                     if (response.ok) {
-                        const bookings = await response.json();
-                        const order = bookings.find((b: any) => b.id === orderIdParam);
+                        const bookings = await response.json() as Array<{ id: string; has_consultation?: boolean; has_studio_session?: boolean }>;
+                        const order = bookings.find((b) => b.id === orderIdParam);
                         
                         if (order) {
                             setHasConsultation(order.has_consultation || false);
