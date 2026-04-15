@@ -1,7 +1,7 @@
 import './App.css'
 import './styles/Cart.css'
 import Home from './pages/Home.tsx'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import About from './pages/About.tsx'
 import Beats from './pages/Beats.tsx'
 import Services from './pages/Services.tsx'
@@ -27,6 +27,7 @@ function App() {
             <Route path="/featured-work" element={<FeaturedWork />} />
             <Route path="/success" element={<Success />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
         <Footer />

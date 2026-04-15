@@ -49,6 +49,20 @@ const Success = () => {
         );
     }
 
+    if (!sessionId) {
+        return (
+            <div className="page-content">
+                <div className="success-container">
+                    <div className="error-message">
+                        <h3>No order found</h3>
+                        <p>This page can only be accessed after a completed checkout.</p>
+                        <Link to="/" className="home-button">Return to Home</Link>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="page-content">
             <h2>Payment Successful!</h2>
