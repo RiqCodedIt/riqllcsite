@@ -15,8 +15,8 @@ export interface Beat {
   tags?: string[];
   mood?: string[];
   plays?: number;
-  googleDriveFileId?: string;
-  googleDriveCoverId?: string;
+  google_drive_file_id?: string;
+  google_drive_cover_id?: string;
 }
 
 export interface BeatsData {
@@ -85,8 +85,7 @@ export const MOODS = [
   'Dark',
   'Chill',
   'Energetic',
-  'Smooth',
-  'Hard',
+  'Happy',
   'Melodic',
   'Aggressive',
   'Emotional'

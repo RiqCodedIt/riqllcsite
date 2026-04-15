@@ -1,5 +1,6 @@
 import './App.css'
 import './styles/Cart.css'
+import './styles/PageContent.css'
 import Home from './pages/Home.tsx'
 import { Routes, Route, Link } from 'react-router-dom'
 import About from './pages/About.tsx'
@@ -14,12 +15,10 @@ import { CartProvider } from './components/cart/CartProvider'
 import CartDrawer from './components/cart/CartDrawer'
 
 const NotFound = () => (
-  <div style={{ textAlign: 'center', padding: '4rem 2rem' }}>
+  <div className="not-found">
     <h2>Page Not Found</h2>
-    <p style={{ color: 'var(--text-secondary)', margin: '1rem 0 2rem' }}>
-      The page you're looking for doesn't exist.
-    </p>
-    <Link to="/" style={{ color: 'var(--accent-primary)' }}>Return to Home</Link>
+    <p>The page you're looking for doesn't exist.</p>
+    <Link to="/" className="cta-button primary">Return to Home</Link>
   </div>
 );
 
