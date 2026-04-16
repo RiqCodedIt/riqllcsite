@@ -53,7 +53,7 @@ const IconChevron = ({ open }: { open: boolean }) => (
 );
 
 /* ── Category icon map ────────────────────────────────────── */
-const getCategoryIcon = (category: string) => {
+const getCategoryIcon = (category: Service['category']) => {
   switch (category) {
     case 'mixing':    return <IconMixing />;
     case 'mastering': return <IconMastering />;
