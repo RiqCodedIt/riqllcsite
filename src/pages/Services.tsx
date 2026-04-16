@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import usePageMeta from '../hooks/usePageMeta';
 import '../styles/PageContent.css';
 import '../styles/ServicesStyles.css';
@@ -90,8 +90,7 @@ const HOW_IT_WORKS = [
 
 /* ── Component ────────────────────────────────────────────── */
 const Services: React.FC = () => {
-  const [services, setServices] = useState<Service[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const services = servicesData.services as Service[];
   const [expandedCard, setExpandedCard] = useState<string | null>(null);
   const { addServiceToCart } = useCart();
 
@@ -100,11 +99,6 @@ const Services: React.FC = () => {
     description: 'Professional remote mixing & mastering from $50. Send your stems, get back a polished record. Fast turnaround, revisions included.',
     canonicalPath: '/services',
   });
-
-  useEffect(() => {
-    setServices(servicesData.services as Service[]);
-    setIsLoading(false);
-  }, []);
 
   const formatCurrency = (amount: number) =>
     new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
@@ -121,14 +115,6 @@ const Services: React.FC = () => {
   const toggleExpanded = (serviceId: string) => {
     setExpandedCard(prev => (prev === serviceId ? null : serviceId));
   };
-
-  if (isLoading) {
-    return (
-      <div className="page-content">
-        <div className="svc-loading">Loading services…</div>
-      </div>
-    );
-  }
 
   return (
     <div className="page-content svc-page">
@@ -234,7 +220,7 @@ const Services: React.FC = () => {
                       {nonDeliveryFeatures.length > 3 && (
                         <div className="svc-detail-block">
                           <p className="svc-detail-label">All included</p>
-                          <ul className="svc-features-full" aria-label="All features">
+                          <ul className="svc-features-full" aria-label={`${service.name} all features`}>
                             {nonDeliveryFeatures.map((feature, i) => (
                               <li key={i}>
                                 <span className="svc-check-icon"><IconCheck /></span>
