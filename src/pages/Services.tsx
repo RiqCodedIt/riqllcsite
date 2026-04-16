@@ -143,7 +143,7 @@ const Services: React.FC = () => {
           </h1>
           <p className="svc-hero-sub">
             Professional mixing &amp; mastering — done remotely.
-            No studio time. No location limits. Just results.
+            No in-person sessions. No location limits. Just results.
           </p>
           <a href="#inquiry" className="svc-hero-cta">Start a Project</a>
 
@@ -191,9 +191,9 @@ const Services: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Top features — always visible */}
+                  {/* Top features — always visible (exclude delivery/policy strings already shown in details) */}
                   <ul className="svc-card-features" aria-label={`${service.name} features`}>
-                    {service.features.slice(0, 3).map((feature, i) => (
+                    {service.features.filter(f => !f.startsWith('Delivery')).slice(0, 3).map((feature, i) => (
                       <li key={i}>
                         <span className="svc-check-icon"><IconCheck /></span>
                         {feature}
@@ -231,11 +231,11 @@ const Services: React.FC = () => {
                     role="region"
                     aria-label={`${service.name} details`}
                   >
-                      {service.features.length > 3 && (
+                      {service.features.filter(f => !f.startsWith('Delivery')).length > 3 && (
                         <div className="svc-detail-block">
                           <p className="svc-detail-label">All included</p>
                           <ul className="svc-features-full" aria-label="All features">
-                            {service.features.map((feature, i) => (
+                            {service.features.filter(f => !f.startsWith('Delivery')).map((feature, i) => (
                               <li key={i}>
                                 <span className="svc-check-icon"><IconCheck /></span>
                                 {feature}
@@ -314,7 +314,7 @@ const Services: React.FC = () => {
             <div className="svc-retainer-card">
               <div className="svc-retainer-top">
                 <span className="svc-retainer-badge">Popular</span>
-                <h3>Session Plan</h3>
+                <h3>Session Retainer</h3>
                 <div className="svc-retainer-price">
                   <span className="svc-price-amount">$175</span>
                   <span className="svc-price-period">/mo</span>
