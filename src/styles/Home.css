@@ -267,7 +267,7 @@
 }
 
 /* Resets for EmailCapture component rendered inside the section */
-.email-capture-form-wrap .email-capture-section {
+.email-capture-wrap .email-capture-section {
   margin: 0;
   padding: 0;
   background: transparent;
