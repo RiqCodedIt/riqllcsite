@@ -156,7 +156,7 @@ const FeaturedWork = () => {
                 <h2>Ready to Work Together?</h2>
                 <p>Let's create your next hit track</p>
                 <div className="cta-buttons">
-                    <Link to="/booking" className="cta-button primary">Book a Session</Link>
+                    <Link to="/services" className="cta-button primary">Start a Project</Link>
                     <Link to="/beats" className="cta-button secondary">Browse Beats</Link>
                 </div>
             </div>
