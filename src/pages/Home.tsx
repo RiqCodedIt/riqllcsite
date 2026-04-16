@@ -2,9 +2,8 @@ import { Link } from 'react-router-dom';
 import SpotifyTrack from '../components/SpotifyTrack';
 import EmailCapture from '../components/EmailCapture';
 import usePageMeta from '../hooks/usePageMeta';
-import '../styles/PageContent.css';
 import '../styles/Home.css';
-
+import '../styles/PageContent.css';
 
 const Home = () => {
     usePageMeta({
@@ -12,6 +11,7 @@ const Home = () => {
         description: 'Professional beats, mixing & mastering by RIQ. Buy WAV leases from $50, exclusive licenses from $200, mixing from $75.',
         canonicalPath: '/',
     });
+
     const featuredTracks = [
         {
             url: 'https://open.spotify.com/track/3rlbQrNDUyIpF5QPjpFCkV',
@@ -28,63 +28,111 @@ const Home = () => {
     ];
 
     return (
-        <div className="page-content">
-            <div className="hero-section">
-                <div className="hero-content">
-                    <h1>RIQ Music Production</h1>
-                    <p className="hero-subtitle">Professional Music Production, Mixing & Mastering</p>
-                    <p className="hero-description">
-                        Transform your musical vision into reality with professional production services. 
-                        From beat creation to final mastering, I deliver industry-standard quality that makes your music stand out.
-                    </p>
-                    <div className="hero-buttons">
-                        <Link to="/services" className="cta-button primary">Book a Session</Link>
-                        <Link to="/about" className="cta-button secondary">Learn More</Link>
-                    </div>
-                </div>
-            </div>
+        <div className="home-page">
 
-            <div className="featured-section">
-                <h2>Featured Work</h2>
-                <p>Listen to some of my recent productions and mixes</p>
-                
-                <div className="tracks-grid">
-                    {featuredTracks.map((track, index) => (
-                        <div key={index} className="track-item">
-                            <SpotifyTrack 
-                                trackUrl={track.url} 
-                                description={track.description}
-                            />
+            {/* Hero */}
+            <section className="home-hero">
+                <div className="home-container">
+                    <div className="hero-content">
+                        <p className="hero-eyebrow">Remote · Fast Turnaround · Premium Quality</p>
+                        <h1>Professional Music Production, Mixing &amp; Mastering</h1>
+                        <p className="hero-subtitle">
+                            Transform your sound with industry-standard quality.
+                            Remote services. Fast turnaround. Premium results.
+                        </p>
+                        <div className="hero-buttons">
+                            <Link to="/beats" className="btn-primary hero-btn">Browse Beats</Link>
+                            <Link to="/services" className="btn-secondary hero-btn">View Services</Link>
                         </div>
-                    ))}
+                    </div>
                 </div>
-                
-                <div className="featured-more">
-                    <Link to="/featured-work" className="cta-button secondary">View All Work</Link>
-                </div>
-            </div>
+            </section>
 
-            <div className="services-preview">
-                <h2>Services</h2>
-                <div className="services-grid">
-                    <div className="service-card">
-                        <h3>Beat Production</h3>
-                        <p>Custom beats tailored to your style and vision</p>
-                        <Link to="/beats" className="service-link">Explore Beats →</Link>
-                    </div>
-                    <div className="service-card">
-                        <h3>Mixing & Mastering</h3>
-                        <p>Professional mixing and mastering to industry standards</p>
-                        <Link to="/services" className="service-link">View Services →</Link>
-                    </div>
-                    <div className="service-card">
-                        <h3>Full Production</h3>
-                        <p>Complete song production from concept to final master</p>
-                        <Link to="/booking" className="service-link">Book Session →</Link>
+            {/* Stats Bar */}
+            <section className="home-stats">
+                <div className="home-container">
+                    <div className="stats-bar">
+                        <div className="stat-item">
+                            <span className="stat-number">50+</span>
+                            <span className="stat-label">Beats Available</span>
+                        </div>
+                        <div className="stat-divider" aria-hidden="true" />
+                        <div className="stat-item">
+                            <span className="stat-number">100+</span>
+                            <span className="stat-label">Tracks Mixed</span>
+                        </div>
+                        <div className="stat-divider" aria-hidden="true" />
+                        <div className="stat-item">
+                            <span className="stat-number">Remote</span>
+                            <span className="stat-label">Worldwide Service</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <EmailCapture />
+            </section>
+
+            {/* Services Preview */}
+            <section className="home-services">
+                <div className="home-container">
+                    <div className="section-header">
+                        <h2>What I Do</h2>
+                        <p className="section-subtitle">Everything you need to take your music to the next level</p>
+                    </div>
+                    <div className="services-cards">
+                        <Link to="/beats" className="service-preview-card">
+                            <div className="service-preview-icon" aria-hidden="true">🎵</div>
+                            <h3>Beat Leases</h3>
+                            <p>Professionally crafted beats in Trap, Drill, R&amp;B, and more.</p>
+                            <span className="service-preview-price">From $50</span>
+                            <span className="service-preview-link">Browse Beats →</span>
+                        </Link>
+                        <Link to="/services" className="service-preview-card">
+                            <div className="service-preview-icon" aria-hidden="true">🎚️</div>
+                            <h3>Mixing &amp; Mastering</h3>
+                            <p>Send your stems and get back a polished, release-ready record.</p>
+                            <span className="service-preview-price">From $75</span>
+                            <span className="service-preview-link">View Services →</span>
+                        </Link>
+                        <Link to="/services" className="service-preview-card">
+                            <div className="service-preview-icon" aria-hidden="true">🎛️</div>
+                            <h3>Full Production</h3>
+                            <p>Complete song production from initial concept to final master.</p>
+                            <span className="service-preview-price">From $250</span>
+                            <span className="service-preview-link">Get Started →</span>
+                        </Link>
+                    </div>
+                </div>
+            </section>
+
+            {/* Featured Productions */}
+            <section className="home-featured">
+                <div className="home-container">
+                    <div className="section-header">
+                        <h2>Featured Productions</h2>
+                        <p className="section-subtitle">Recent work — mixed, mastered, and produced by RIQ</p>
+                    </div>
+                    <div className="tracks-grid">
+                        {featuredTracks.map((track, index) => (
+                            <div key={index} className="track-item">
+                                <p className="track-credit">{track.description}</p>
+                                <SpotifyTrack trackUrl={track.url} />
+                            </div>
+                        ))}
+                    </div>
+                    <div className="featured-more">
+                        <Link to="/featured-work" className="btn-secondary">See All Work →</Link>
+                    </div>
+                </div>
+            </section>
+
+            {/* Email Capture */}
+            <section className="home-email-capture">
+                <div className="home-container">
+                    <div className="email-capture-wrap">
+                        <EmailCapture />
+                    </div>
+                </div>
+            </section>
+
         </div>
     );
 };
