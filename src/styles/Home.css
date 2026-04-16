@@ -250,7 +250,7 @@
   margin-bottom: 2rem;
 }
 
-.email-capture-copy h2 {
+.email-capture-copy h3 {
   font-family: var(--font-display);
   font-size: 2.25rem;
   font-weight: 600;
@@ -338,7 +338,7 @@
     max-width: 280px;
   }
 
-  .email-capture-copy h2 {
+  .email-capture-copy h3 {
     font-size: 1.75rem;
   }
 }

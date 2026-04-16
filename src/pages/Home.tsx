@@ -79,21 +79,21 @@ const Home = () => {
                     </div>
                     <div className="services-cards">
                         <Link to="/beats" className="service-preview-card">
-                            <div className="service-preview-icon">🎵</div>
+                            <div className="service-preview-icon" aria-hidden="true">🎵</div>
                             <h3>Beat Leases</h3>
                             <p>Professionally crafted beats in Trap, Drill, R&amp;B, and more.</p>
                             <span className="service-preview-price">From $50</span>
                             <span className="service-preview-link">Browse Beats →</span>
                         </Link>
                         <Link to="/services" className="service-preview-card">
-                            <div className="service-preview-icon">🎚️</div>
+                            <div className="service-preview-icon" aria-hidden="true">🎚️</div>
                             <h3>Mixing &amp; Mastering</h3>
                             <p>Send your stems and get back a polished, release-ready record.</p>
                             <span className="service-preview-price">From $75</span>
                             <span className="service-preview-link">View Services →</span>
                         </Link>
                         <Link to="/services" className="service-preview-card">
-                            <div className="service-preview-icon">🎛️</div>
+                            <div className="service-preview-icon" aria-hidden="true">🎛️</div>
                             <h3>Full Production</h3>
                             <p>Complete song production from initial concept to final master.</p>
                             <span className="service-preview-price">From $250</span>
