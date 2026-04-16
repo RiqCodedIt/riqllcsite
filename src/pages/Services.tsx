@@ -74,7 +74,7 @@ const HOW_IT_WORKS = [
   {
     step: '01',
     title: 'Place Your Order',
-    description: 'Add a service to your cart and complete checkout. You\'ll receive an order confirmation email immediately.'
+    description: 'Add a service to your cart and complete checkout. Once payment is complete, your order will be confirmed and RIQ will follow up with next steps.'
   },
   {
     step: '02',
@@ -97,7 +97,7 @@ const Services: React.FC = () => {
 
   usePageMeta({
     title: 'Mixing & Mastering Services | PRODBYRIQ',
-    description: 'Professional remote mixing & mastering from $75. Send your stems, get back a polished record. Fast turnaround, revisions included.',
+    description: 'Professional remote mixing & mastering from $25. Send your stems, get back a polished record. Fast turnaround, revisions included.',
     canonicalPath: '/services',
   });
 
