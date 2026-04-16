@@ -97,7 +97,7 @@ const Services: React.FC = () => {
 
   usePageMeta({
     title: 'Mixing & Mastering Services | PRODBYRIQ',
-    description: 'Professional remote mixing & mastering from $25. Send your stems, get back a polished record. Fast turnaround, revisions included.',
+    description: 'Professional remote mixing & mastering from $50. Send your stems, get back a polished record. Fast turnaround, revisions included.',
     canonicalPath: '/services',
   });
 
@@ -248,18 +248,27 @@ const Services: React.FC = () => {
                       <div className="svc-detail-block">
                         <p className="svc-detail-label">Delivery times</p>
                         <div className="svc-delivery-table">
-                          <div className="svc-delivery-row">
-                            <span>1 song</span>
-                            <strong>{service.delivery_info.delivery_times.one_song}</strong>
-                          </div>
-                          <div className="svc-delivery-row">
-                            <span>5 songs</span>
-                            <strong>{service.delivery_info.delivery_times.five_songs}</strong>
-                          </div>
-                          <div className="svc-delivery-row">
-                            <span>10 songs</span>
-                            <strong>{service.delivery_info.delivery_times.ten_songs}</strong>
-                          </div>
+                          {service.category === 'other' && service.delivery_info.delivery_times.one_song === service.delivery_info.delivery_times.five_songs ? (
+                            <div className="svc-delivery-row">
+                              <span>Turnaround</span>
+                              <strong>{service.delivery_info.delivery_times.one_song}</strong>
+                            </div>
+                          ) : (
+                            <>
+                              <div className="svc-delivery-row">
+                                <span>1 song</span>
+                                <strong>{service.delivery_info.delivery_times.one_song}</strong>
+                              </div>
+                              <div className="svc-delivery-row">
+                                <span>5 songs</span>
+                                <strong>{service.delivery_info.delivery_times.five_songs}</strong>
+                              </div>
+                              <div className="svc-delivery-row">
+                                <span>10 songs</span>
+                                <strong>{service.delivery_info.delivery_times.ten_songs}</strong>
+                              </div>
+                            </>
+                          )}
                         </div>
                         <div className="svc-policy-chips">
                           {service.delivery_info.delivery_policy.map((policy, i) => (
