@@ -9,13 +9,6 @@
   margin: 0;
 }
 
-.svc-loading {
-  text-align: center;
-  padding: 6rem 1.5rem;
-  color: var(--text-muted);
-  font-size: 1rem;
-}
-
 /* ── Shared Layout ───────────────────────────────────────────── */
 .svc-container {
   width: 100%;
