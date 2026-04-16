@@ -107,10 +107,21 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     if (savedCart) {
       try {
         const parsedCart = JSON.parse(savedCart);
-        // Filter out any stale studio_session items from old cart data
-        const cleanItems = (parsedCart.items || []).filter(
-          (item: { type: string }) => item.type !== 'studio_session'
-        ) as CartItem[];
+        // Validate all required fields so stale/corrupt items don't crash the UI
+        const cleanItems = (parsedCart.items || []).filter((item: Record<string, unknown>) => {
+          if (item.type === 'beat') {
+            return typeof item.price === 'number' && isFinite(item.price as number) &&
+              typeof item.beat_id === 'string' &&
+              typeof item.beat_title === 'string' &&
+              typeof item.cover_path === 'string' &&
+              typeof item.license_type === 'string';
+          }
+          if (item.type === 'service') {
+            return typeof item.price === 'number' && isFinite(item.price as number) &&
+              typeof item.service_name === 'string';
+          }
+          return false;
+        }) as CartItem[];
         dispatch({
           type: 'LOAD_CART',
           payload: { ...parsedCart, items: cleanItems, total: calculateTotal(cleanItems), isOpen: false }
