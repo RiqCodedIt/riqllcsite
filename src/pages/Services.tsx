@@ -7,34 +7,88 @@ import InquiryForm from '../components/InquiryForm';
 import type { Service } from '../types/services';
 import servicesData from '../data/services.json';
 
+/* ── SVG Icons (inline, no emoji) ─────────────────────────── */
+const IconMixing = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <line x1="4" y1="6" x2="4" y2="6" /><line x1="4" y1="10" x2="20" y2="10" />
+    <line x1="4" y1="14" x2="4" y2="14" /><line x1="4" y1="18" x2="20" y2="18" />
+    <circle cx="8" cy="6" r="2" /><circle cx="16" cy="14" r="2" />
+    <line x1="10" y1="6" x2="20" y2="6" /><line x1="4" y1="14" x2="14" y2="14" />
+  </svg>
+);
+
+const IconMastering = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+  </svg>
+);
+
+const IconCombo = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" />
+  </svg>
+);
+
+const IconOther = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+  </svg>
+);
+
+const IconCheck = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <polyline points="20 6 9 17 4 12" />
+  </svg>
+);
+
+const IconChevron = ({ open }: { open: boolean }) => (
+  <svg
+    width="16" height="16" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+    aria-hidden="true"
+    style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }}
+  >
+    <polyline points="6 9 12 15 18 9" />
+  </svg>
+);
+
+/* ── Category icon map ────────────────────────────────────── */
+const getCategoryIcon = (category: string) => {
+  switch (category) {
+    case 'mixing':    return <IconMixing />;
+    case 'mastering': return <IconMastering />;
+    case 'combo':     return <IconCombo />;
+    default:          return <IconOther />;
+  }
+};
+
+/* ── Trust stats ──────────────────────────────────────────── */
+const TRUST_STATS = [
+  { value: '100+', label: 'Tracks Mixed' },
+  { value: '24–48hr', label: 'Avg. Turnaround' },
+  { value: 'Remote', label: 'Worldwide' },
+];
+
+/* ── How It Works steps ───────────────────────────────────── */
 const HOW_IT_WORKS = [
   {
     step: '01',
     title: 'Place Your Order',
-    description: 'Add a service to your cart and complete checkout. You\'ll get an order confirmation with next steps.'
+    description: 'Add a service to your cart and complete checkout. You\'ll receive an order confirmation email immediately.'
   },
   {
     step: '02',
     title: 'Send Your Files',
-    description: 'Upload your stems or audio files via the link in your confirmation email. WAV or AIFF at the session\'s sample rate preferred.'
+    description: 'RIQ will reach out with stem upload instructions after your order is confirmed. WAV or AIFF at session sample rate preferred.'
   },
   {
     step: '03',
     title: 'Receive Your Mix',
-    description: 'Get back a polished, release-ready record within the delivery window. Revisions included — no extra charge.'
+    description: 'Get back a polished, release-ready record within the delivery window. Revisions are included — no extra charge.'
   }
 ];
 
-const getCategoryIcon = (category: string) => {
-  switch (category) {
-    case 'mixing': return '🎚️';
-    case 'mastering': return '🎛️';
-    case 'combo': return '🎵';
-    case 'other': return '⚡';
-    default: return '🎶';
-  }
-};
-
+/* ── Component ────────────────────────────────────────────── */
 const Services: React.FC = () => {
   const [services, setServices] = useState<Service[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -43,7 +97,7 @@ const Services: React.FC = () => {
 
   usePageMeta({
     title: 'Mixing & Mastering Services | PRODBYRIQ',
-    description: 'Professional remote mixing & mastering from $75. Send your stems, get back a polished record. Fast turnaround, unlimited revisions.',
+    description: 'Professional remote mixing & mastering from $75. Send your stems, get back a polished record. Fast turnaround, revisions included.',
     canonicalPath: '/services',
   });
 
@@ -77,82 +131,130 @@ const Services: React.FC = () => {
   }
 
   return (
-    <div className="page-content">
+    <div className="page-content svc-page">
 
       {/* ── Hero ─────────────────────────────────────────────── */}
       <section className="svc-hero">
-        <div className="svc-hero-inner">
-          <p className="svc-eyebrow">Remote · Fast Turnaround · Unlimited Revisions</p>
-          <h1>Remote Mixing &amp; Mastering</h1>
+        <div className="svc-container">
+          <p className="svc-eyebrow">Remote · Fast Turnaround · Revisions Included</p>
+          <h1 className="svc-hero-headline">
+            Send Your Stems.<br />
+            Get Back a Finished Record.
+          </h1>
           <p className="svc-hero-sub">
-            Send your stems. Get back a finished record.
-            No studio time required — just results.
+            Professional mixing &amp; mastering — done remotely.
+            No studio time. No location limits. Just results.
           </p>
-          <a href="#inquiry" className="btn-primary svc-hero-cta">Start a Project</a>
+          <a href="#inquiry" className="svc-hero-cta">Start a Project</a>
+
+          {/* Trust Stats */}
+          <div className="svc-trust-bar" role="list" aria-label="Service highlights">
+            {TRUST_STATS.map(({ value, label }) => (
+              <div key={label} className="svc-trust-stat" role="listitem">
+                <span className="svc-trust-value">{value}</span>
+                <span className="svc-trust-label">{label}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* ── Services Grid ─────────────────────────────────────── */}
-      <section className="svc-section">
+      <section className="svc-services-section" aria-labelledby="services-heading">
         <div className="svc-container">
           <div className="svc-section-header">
-            <h2>Services</h2>
-            <p>Choose the service that fits your project. All work is done remotely.</p>
+            <h2 id="services-heading">Services</h2>
+            <p>All work is done remotely. Stems in, polished record out.</p>
           </div>
+
           <div className="svc-grid">
             {services.map((service) => {
               const expanded = expandedCard === service.service_id;
+              const detailsId = `svc-details-${service.service_id}`;
               return (
-                <div
+                <article
                   key={service.service_id}
                   className={`svc-card${expanded ? ' svc-card--expanded' : ''}`}
                   data-category={service.category}
                 >
-                  <button
-                    type="button"
-                    className="svc-card-header"
-                    onClick={() => toggleExpanded(service.service_id)}
-                    aria-expanded={expanded}
-                  >
-                    <span className="svc-card-icon" aria-hidden="true">
+                  {/* Card top — always visible */}
+                  <div className="svc-card-top">
+                    <div className="svc-card-icon-wrap" data-category={service.category}>
                       {getCategoryIcon(service.category)}
-                    </span>
-                    <span className="svc-card-title-wrap">
-                      <span className="svc-card-title">{service.name}</span>
+                    </div>
+                    <div className="svc-card-meta">
+                      <h3 className="svc-card-name">{service.name}</h3>
+                      <p className="svc-card-desc">{service.description}</p>
+                    </div>
+                    <div className="svc-card-price-wrap">
                       <span className="svc-card-price">{formatCurrency(service.price)}</span>
-                    </span>
-                    <span className="svc-card-toggle" aria-hidden="true">
-                      {expanded ? '−' : '+'}
-                    </span>
-                  </button>
+                    </div>
+                  </div>
 
-                  <p className="svc-card-desc">{service.description}</p>
+                  {/* Top features — always visible */}
+                  <ul className="svc-card-features" aria-label={`${service.name} features`}>
+                    {service.features.slice(0, 3).map((feature, i) => (
+                      <li key={i}>
+                        <span className="svc-check-icon"><IconCheck /></span>
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
 
+                  {/* Actions row */}
+                  <div className="svc-card-actions">
+                    <button
+                      type="button"
+                      className="svc-add-btn"
+                      onClick={() => handleAddToCart(service)}
+                    >
+                      Add to Cart — {formatCurrency(service.price)}
+                    </button>
+                    {(service.features.length > 3 || service.delivery_info) && (
+                      <button
+                        type="button"
+                        className="svc-details-toggle"
+                        onClick={() => toggleExpanded(service.service_id)}
+                        aria-expanded={expanded}
+                        aria-controls={detailsId}
+                      >
+                        {expanded ? 'Hide details' : 'View details'}
+                        <IconChevron open={expanded} />
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Expandable details */}
                   {expanded && (
-                    <div className="svc-card-details">
-                      <div className="svc-detail-block">
-                        <h4>What's included</h4>
-                        <ul className="svc-features-list">
-                          {service.features.map((feature, i) => (
-                            <li key={i}>{feature}</li>
-                          ))}
-                        </ul>
-                      </div>
+                    <div className="svc-card-details" id={detailsId} role="region" aria-label={`${service.name} details`}>
+                      {service.features.length > 3 && (
+                        <div className="svc-detail-block">
+                          <p className="svc-detail-label">All included</p>
+                          <ul className="svc-features-full" aria-label="All features">
+                            {service.features.map((feature, i) => (
+                              <li key={i}>
+                                <span className="svc-check-icon"><IconCheck /></span>
+                                {feature}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
 
                       <div className="svc-detail-block">
-                        <h4>Delivery times</h4>
+                        <p className="svc-detail-label">Delivery times</p>
                         <div className="svc-delivery-table">
                           <div className="svc-delivery-row">
                             <span>1 song</span>
-                            <span>{service.delivery_info.delivery_times.one_song}</span>
+                            <strong>{service.delivery_info.delivery_times.one_song}</strong>
                           </div>
                           <div className="svc-delivery-row">
                             <span>5 songs</span>
-                            <span>{service.delivery_info.delivery_times.five_songs}</span>
+                            <strong>{service.delivery_info.delivery_times.five_songs}</strong>
                           </div>
                           <div className="svc-delivery-row">
                             <span>10 songs</span>
-                            <span>{service.delivery_info.delivery_times.ten_songs}</span>
+                            <strong>{service.delivery_info.delivery_times.ten_songs}</strong>
                           </div>
                         </div>
                         <div className="svc-policy-chips">
@@ -163,22 +265,12 @@ const Services: React.FC = () => {
                       </div>
 
                       <div className="svc-detail-block">
-                        <h4>How to send files</h4>
-                        <p>{service.how_to_send.instructions}</p>
+                        <p className="svc-detail-label">How to send files</p>
+                        <p className="svc-detail-text">{service.how_to_send.instructions}</p>
                       </div>
                     </div>
                   )}
-
-                  <div className="svc-card-actions">
-                    <button
-                      type="button"
-                      className="btn-primary svc-add-btn"
-                      onClick={() => handleAddToCart(service)}
-                    >
-                      Add to Cart — {formatCurrency(service.price)}
-                    </button>
-                  </div>
-                </div>
+                </article>
               );
             })}
           </div>
@@ -186,16 +278,17 @@ const Services: React.FC = () => {
       </section>
 
       {/* ── How It Works ─────────────────────────────────────── */}
-      <section className="svc-how-section">
+      <section className="svc-how-section" aria-labelledby="how-heading">
         <div className="svc-container">
           <div className="svc-section-header">
-            <h2>How It Works</h2>
-            <p>Simple, remote, and built around your schedule.</p>
+            <h2 id="how-heading">How It Works</h2>
+            <p>Simple, remote, built around your schedule.</p>
           </div>
-          <ol className="svc-steps" aria-label="How it works steps">
+          <ol className="svc-steps" aria-label="Process steps">
             {HOW_IT_WORKS.map(({ step, title, description }) => (
               <li key={step} className="svc-step">
-                <span className="svc-step-number" aria-hidden="true">{step}</span>
+                <div className="svc-step-num" aria-hidden="true">{step}</div>
+                <div className="svc-step-connector" aria-hidden="true" />
                 <div className="svc-step-body">
                   <h3>{title}</h3>
                   <p>{description}</p>
@@ -207,52 +300,71 @@ const Services: React.FC = () => {
       </section>
 
       {/* ── Retainer Plans ───────────────────────────────────── */}
-      <section className="svc-retainer-section">
+      <section className="svc-retainer-section" aria-labelledby="retainer-heading">
         <div className="svc-container">
           <div className="svc-section-header">
-            <h2>Monthly Retainer Plans</h2>
-            <p>Priority access, consistent delivery, and a dedicated engineer every month.</p>
+            <h2 id="retainer-heading">Monthly Retainer Plans</h2>
+            <p>Consistent output every month. Priority turnaround. No per-track negotiations.</p>
           </div>
           <div className="svc-retainer-grid">
+
             <div className="svc-retainer-card">
-              <span className="svc-retainer-badge">Most Popular</span>
-              <h3>Session Retainer</h3>
-              <div className="svc-retainer-price">$175<span>/mo</span></div>
+              <div className="svc-retainer-top">
+                <span className="svc-retainer-badge">Popular</span>
+                <h3>Session Plan</h3>
+                <div className="svc-retainer-price">
+                  <span className="svc-price-amount">$175</span>
+                  <span className="svc-price-period">/mo</span>
+                </div>
+              </div>
               <ul className="svc-retainer-features">
-                <li>Up to 4 mixing sessions per month</li>
-                <li>Priority turnaround (24–48 hrs)</li>
-                <li>Unlimited revisions per session</li>
-                <li>Direct line via email &amp; DM</li>
-                <li>Monthly performance recap</li>
+                <li><IconCheck />Up to 4 mixing sessions per month</li>
+                <li><IconCheck />Priority turnaround (24–48 hrs)</li>
+                <li><IconCheck />Revisions included per session</li>
+                <li><IconCheck />Direct line via email &amp; DM</li>
+                <li><IconCheck />Monthly performance recap</li>
               </ul>
-              <a href="#inquiry" className="btn-secondary svc-retainer-cta">Get Started</a>
+              <a href="#inquiry" className="svc-retainer-cta svc-retainer-cta--secondary">
+                Get Started
+              </a>
             </div>
+
             <div className="svc-retainer-card svc-retainer-card--premium">
-              <span className="svc-retainer-badge svc-retainer-badge--premium">Full Access</span>
-              <h3>Pro Retainer</h3>
-              <div className="svc-retainer-price">$300<span>/mo</span></div>
+              <div className="svc-retainer-top">
+                <span className="svc-retainer-badge svc-retainer-badge--premium">Full Access</span>
+                <h3>Pro Plan</h3>
+                <div className="svc-retainer-price">
+                  <span className="svc-price-amount">$300</span>
+                  <span className="svc-price-period">/mo</span>
+                </div>
+              </div>
               <ul className="svc-retainer-features">
-                <li>Unlimited mixing sessions</li>
-                <li>Same-day turnaround available</li>
-                <li>Mastering included on all tracks</li>
-                <li>Beat licensing discounts</li>
-                <li>Dedicated project folder &amp; archive</li>
-                <li>Monthly strategy call</li>
+                <li><IconCheck />Unlimited mixing sessions</li>
+                <li><IconCheck />Same-day turnaround available</li>
+                <li><IconCheck />Mastering included on all tracks</li>
+                <li><IconCheck />Beat licensing discounts</li>
+                <li><IconCheck />Dedicated project folder &amp; archive</li>
+                <li><IconCheck />Monthly strategy call</li>
               </ul>
-              <a href="#inquiry" className="btn-primary svc-retainer-cta">Get Started</a>
+              <a href="#inquiry" className="svc-retainer-cta svc-retainer-cta--primary">
+                Get Started
+              </a>
             </div>
+
           </div>
         </div>
       </section>
 
       {/* ── Inquiry Form ─────────────────────────────────────── */}
-      <section className="svc-inquiry-section" id="inquiry">
-        <div className="svc-container svc-inquiry-inner">
-          <div className="svc-section-header">
-            <h2>Start a Project</h2>
-            <p>Tell me what you're working on and I'll get back to you within 24 hours.</p>
+      <section className="svc-inquiry-section" id="inquiry" aria-labelledby="inquiry-heading">
+        <div className="svc-container">
+          <div className="svc-inquiry-inner">
+            <div className="svc-section-header">
+              <h2 id="inquiry-heading">Start a Project</h2>
+              <p>Tell me what you're working on — I'll get back to you within 24 hours.</p>
+            </div>
+            <InquiryForm />
           </div>
-          <InquiryForm />
         </div>
       </section>
 
