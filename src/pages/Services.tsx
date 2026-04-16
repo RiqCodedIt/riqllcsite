@@ -335,7 +335,7 @@ const Services: React.FC = () => {
             <div className="svc-retainer-card svc-retainer-card--premium">
               <div className="svc-retainer-top">
                 <span className="svc-retainer-badge svc-retainer-badge--premium">Full Access</span>
-                <h3>Pro Plan</h3>
+                <h3>Pro Retainer</h3>
                 <div className="svc-retainer-price">
                   <span className="svc-price-amount">$300</span>
                   <span className="svc-price-period">/mo</span>
