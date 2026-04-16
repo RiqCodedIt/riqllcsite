@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import usePageMeta from '../hooks/usePageMeta';
-import '../styles/PageContent.css';
 import '../styles/BeatsStyles.css';
 import BeatCard from '../components/beats/BeatCard';
 import EmailCapture from '../components/EmailCapture';
@@ -12,7 +11,7 @@ const Beats: React.FC = () => {
   const [beats, setBeats] = useState<Beat[]>([]);
   const [filteredBeats, setFilteredBeats] = useState<Beat[]>([]);
   const [filters, setFilters] = useState<BeatFiltersType>({});
-  const [currentlyPlaying, setCurrentlyPlaying] = useState<string | null>(null);
+  const [view, setView] = useState<'list' | 'grid'>('list');
   const [isLoading, setIsLoading] = useState(true);
 
   usePageMeta({
@@ -21,132 +20,159 @@ const Beats: React.FC = () => {
     canonicalPath: '/beats',
   });
 
-  // Load beats data
   useEffect(() => {
     setBeats(beatsData.beats);
     setFilteredBeats(beatsData.beats);
     setIsLoading(false);
   }, []);
 
-  // Apply filters
   useEffect(() => {
     let filtered = [...beats];
 
-    // Search filter
     if (filters.search) {
-      const searchTerm = filters.search.toLowerCase();
-      filtered = filtered.filter(beat => 
-        beat.title.toLowerCase().includes(searchTerm) ||
-        beat.genres.some(genre => genre.toLowerCase().includes(searchTerm)) ||
-        beat.tags?.some(tag => tag.toLowerCase().includes(searchTerm))
+      const q = filters.search.toLowerCase();
+      filtered = filtered.filter(beat =>
+        beat.title.toLowerCase().includes(q) ||
+        beat.genres.some(g => g.toLowerCase().includes(q)) ||
+        beat.tags?.some(t => t.toLowerCase().includes(q)) ||
+        beat.mood?.some(m => m.toLowerCase().includes(q))
       );
     }
 
-    // Genre filter
+    if (filters.mood) {
+      filtered = filtered.filter(beat =>
+        beat.mood?.map(m => m.toLowerCase()).includes(filters.mood!.toLowerCase())
+      );
+    }
+
     if (filters.genre) {
       filtered = filtered.filter(beat => beat.genres.includes(filters.genre!));
     }
 
-    // Key filter
     if (filters.key) {
       filtered = filtered.filter(beat => beat.key === filters.key);
     }
 
-    // BPM filters
-    if (filters.bpmMin) {
+    if (filters.bpmMin !== undefined && !isNaN(filters.bpmMin)) {
       filtered = filtered.filter(beat => beat.bpm >= filters.bpmMin!);
     }
-    if (filters.bpmMax) {
+
+    if (filters.bpmMax !== undefined && !isNaN(filters.bpmMax)) {
       filtered = filtered.filter(beat => beat.bpm <= filters.bpmMax!);
     }
 
     setFilteredBeats(filtered);
   }, [beats, filters]);
 
-  const handlePlay = (beatId: string) => {
-    setCurrentlyPlaying(beatId);
-  };
+  const handleFiltersChange = (newFilters: BeatFiltersType) => setFilters(newFilters);
+  const handleClearFilters = () => setFilters({});
 
-  const handlePause = () => {
-    setCurrentlyPlaying(null);
-  };
-
-  const handleFiltersChange = (newFilters: BeatFiltersType) => {
-    setFilters(newFilters);
-  };
-
-  const handleClearFilters = () => {
-    setFilters({});
-  };
+  const hasActiveFilters = Object.values(filters).some(v => v !== undefined && v !== '');
 
   if (isLoading) {
     return (
-      <div className="page-content">
-        <div className="loading-spinner">Loading beats...</div>
+      <div className="beats-page">
+        <div className="beats-loading">Loading beats…</div>
       </div>
     );
   }
 
   return (
-    <div className="page-content">
-      <div className="beats-header">
-        <h1>Beats</h1>
-        <p>High-quality instrumentals for your next project</p>
-        <div className="beats-stats">
-          <span>{beats.length} beats available</span>
-          <span>•</span>
-          <span>30-second previews</span>
-          <span>•</span>
-          <span>Instant download</span>
+    <div className="beats-page">
+      {/* Page header */}
+      <div className="beats-page-header">
+        <div className="beats-container">
+          <div className="beats-header-content">
+            <div>
+              <h1>Beat Store</h1>
+              <p className="beats-header-sub">
+                {beats.length} beats &nbsp;·&nbsp; Instant download &nbsp;·&nbsp; WAV quality
+              </p>
+            </div>
+            {/* View toggle */}
+            <div className="beats-view-toggle" role="group" aria-label="View mode">
+              <button
+                className={`vtoggle-btn${view === 'list' ? ' active' : ''}`}
+                onClick={() => setView('list')}
+                aria-pressed={view === 'list'}
+                title="List view"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <line x1="8" y1="6" x2="21" y2="6"/>
+                  <line x1="8" y1="12" x2="21" y2="12"/>
+                  <line x1="8" y1="18" x2="21" y2="18"/>
+                  <line x1="3" y1="6" x2="3.01" y2="6"/>
+                  <line x1="3" y1="12" x2="3.01" y2="12"/>
+                  <line x1="3" y1="18" x2="3.01" y2="18"/>
+                </svg>
+              </button>
+              <button
+                className={`vtoggle-btn${view === 'grid' ? ' active' : ''}`}
+                onClick={() => setView('grid')}
+                aria-pressed={view === 'grid'}
+                title="Grid view"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <rect x="3" y="3" width="7" height="7"/>
+                  <rect x="14" y="3" width="7" height="7"/>
+                  <rect x="3" y="14" width="7" height="7"/>
+                  <rect x="14" y="14" width="7" height="7"/>
+                </svg>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-      
-      <div className="beats-layout">
-        <aside className="beats-sidebar">
-          <BeatFilters 
+
+      {/* Filters */}
+      <div className="beats-filters-section">
+        <div className="beats-container">
+          <BeatFilters
             filters={filters}
             onFiltersChange={handleFiltersChange}
             onClearFilters={handleClearFilters}
           />
-        </aside>
+        </div>
+      </div>
 
-        <main className="beats-main">
-          <div className="beats-results-header">
-            <h2>
-              {filteredBeats.length} beat{filteredBeats.length !== 1 ? 's' : ''} found
-            </h2>
-            {Object.keys(filters).some(key => filters[key as keyof BeatFiltersType] !== undefined && filters[key as keyof BeatFiltersType] !== '') && (
-              <button 
-                className="clear-all-filters"
-                onClick={handleClearFilters}
-              >
-                Clear all filters
-              </button>
-            )}
-          </div>
+      {/* Results */}
+      <div className="beats-results-section">
+        <div className="beats-container">
+          {hasActiveFilters && (
+            <p className="beats-results-count">
+              {filteredBeats.length} result{filteredBeats.length !== 1 ? 's' : ''}
+            </p>
+          )}
 
           {filteredBeats.length === 0 ? (
-            <div className="no-beats-found">
-              <h3>No beats found</h3>
-              <p>Try adjusting your filters or browse all beats.</p>
-              <button onClick={handleClearFilters}>Show all beats</button>
+            <div className="beats-empty">
+              <p>No beats match your filters.</p>
+              <button className="btn-secondary" onClick={handleClearFilters}>
+                Clear Filters
+              </button>
+            </div>
+          ) : view === 'list' ? (
+            <div className="beats-list">
+              {filteredBeats.map(beat => (
+                <BeatCard key={beat.beat_id} beat={beat} view="list" />
+              ))}
             </div>
           ) : (
             <div className="beats-grid">
-              {filteredBeats.map((beat) => (
-                <BeatCard
-                  key={beat.beat_id}
-                  beat={beat}
-                  isPlaying={currentlyPlaying === beat.beat_id}
-                  onPlay={handlePlay}
-                  onPause={handlePause}
-                />
+              {filteredBeats.map(beat => (
+                <BeatCard key={beat.beat_id} beat={beat} view="grid" />
               ))}
             </div>
           )}
-        </main>
+        </div>
       </div>
-      <EmailCapture />
+
+      {/* Email capture */}
+      <div className="beats-email-section">
+        <div className="beats-container">
+          <EmailCapture />
+        </div>
+      </div>
     </div>
   );
 };

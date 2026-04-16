@@ -20,21 +20,13 @@ const Success = () => {
     useEffect(() => {
         const params = new URLSearchParams(location.search);
         const stripeSessionId = params.get('session_id');
+        const consultationFlag = params.get('has_consultation');
 
-        if (stripeSessionId) {
-            setSessionId(stripeSessionId);
-            // Check if this order included a consultation service
-            // The backend webhook handles fulfillment; we just display confirmation here.
-            // If a consultation was purchased, the backend can set a query param or we
-            // can inspect the cart snapshot stored in sessionStorage before checkout.
-            const consultationFlag = params.get('has_consultation');
-            if (consultationFlag === '1') {
-                setHasConsultation(true);
-            }
-        }
-
+        // Reset all state so navigating to a different /success URL never shows stale data
+        setSessionId(stripeSessionId);
+        setHasConsultation(consultationFlag === '1');
         setLoading(false);
-    }, [location]);
+    }, [location.search]);
 
     if (loading) {
         return (
