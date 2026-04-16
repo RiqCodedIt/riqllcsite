@@ -8,7 +8,7 @@ interface InquiryFormProps {
 
 const RETAINER_OPTIONS = [
   { label: 'Session Retainer ($175/mo)', value: 'Session Retainer' },
-  { label: 'Studio Retainer ($300/mo)', value: 'Studio Retainer' },
+  { label: 'Pro Plan ($300/mo)', value: 'Pro Plan' },
   { label: 'Other', value: 'Other' },
 ];
 

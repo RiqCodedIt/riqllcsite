@@ -330,13 +330,14 @@
   font-family: var(--font-body);
   cursor: pointer;
   width: 100%;
-  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
 }
 
 .svc-details-toggle:hover {
   background: var(--bg-secondary);
   color: var(--text-primary);
   border-color: var(--border-strong);
+  transform: none;
 }
 
 .svc-details-toggle:active {
@@ -363,9 +364,22 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .svc-card-details { animation: none; }
+/* Hidden details (aria-controls always valid) */
+.svc-card-details--closed {
+  display: none;
 }
+
+/* Chevron rotation — CSS-driven so prefers-reduced-motion applies */
+.svc-chevron {
+  transform: rotate(0deg);
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.svc-chevron--open {
+  transform: rotate(180deg);
+}
+
 
 .svc-detail-label {
   font-size: 0.75rem;
@@ -904,7 +918,12 @@
   .svc-hero-cta,
   .svc-add-btn,
   .svc-retainer-cta,
-  .svc-details-toggle {
+  .svc-details-toggle,
+  .svc-chevron {
     transition: none;
+  }
+
+  .svc-card-details {
+    animation: none;
   }
 }

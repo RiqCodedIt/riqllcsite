@@ -46,7 +46,7 @@ const IconChevron = ({ open }: { open: boolean }) => (
     width="16" height="16" viewBox="0 0 24 24" fill="none"
     stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
     aria-hidden="true"
-    style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }}
+    className={`svc-chevron${open ? ' svc-chevron--open' : ''}`}
   >
     <polyline points="6 9 12 15 18 9" />
   </svg>
@@ -65,7 +65,7 @@ const getCategoryIcon = (category: string) => {
 /* ── Trust stats ──────────────────────────────────────────── */
 const TRUST_STATS = [
   { value: '100+', label: 'Tracks Mixed' },
-  { value: '24–48hr', label: 'Avg. Turnaround' },
+  { value: '1–3 Days', label: 'Avg. Turnaround' },
   { value: 'Remote', label: 'Worldwide' },
 ];
 
@@ -174,7 +174,7 @@ const Services: React.FC = () => {
               return (
                 <article
                   key={service.service_id}
-                  className={`svc-card${expanded ? ' svc-card--expanded' : ''}`}
+                  className="svc-card"
                   data-category={service.category}
                 >
                   {/* Card top — always visible */}
@@ -224,9 +224,13 @@ const Services: React.FC = () => {
                     )}
                   </div>
 
-                  {/* Expandable details */}
-                  {expanded && (
-                    <div className="svc-card-details" id={detailsId} role="region" aria-label={`${service.name} details`}>
+                  {/* Expandable details — always in DOM so aria-controls is always valid */}
+                  <div
+                    className={`svc-card-details${expanded ? '' : ' svc-card-details--closed'}`}
+                    id={detailsId}
+                    role="region"
+                    aria-label={`${service.name} details`}
+                  >
                       {service.features.length > 3 && (
                         <div className="svc-detail-block">
                           <p className="svc-detail-label">All included</p>
@@ -269,7 +273,6 @@ const Services: React.FC = () => {
                         <p className="svc-detail-text">{service.how_to_send.instructions}</p>
                       </div>
                     </div>
-                  )}
                 </article>
               );
             })}
