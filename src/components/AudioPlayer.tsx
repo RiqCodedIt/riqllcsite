@@ -31,7 +31,10 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ currentBeat, isPlaying, onPla
     setCurrentTime(0);
     setDuration(0);
     if (isPlaying) {
-      audio.play().catch(console.error);
+      audio.play().catch((err) => {
+        console.error('Audio play failed:', err);
+        onEnded(); // resets isPlaying in the context
+      });
     }
   }, [currentBeat?.beat_id]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -40,11 +43,14 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ currentBeat, isPlaying, onPla
     const audio = audioRef.current;
     if (!audio) return;
     if (isPlaying) {
-      audio.play().catch(console.error);
+      audio.play().catch((err) => {
+        console.error('Audio play failed:', err);
+        onEnded();
+      });
     } else {
       audio.pause();
     }
-  }, [isPlaying]);
+  }, [isPlaying]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Volume
   useEffect(() => {

@@ -23,7 +23,10 @@ export const AudioPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   const pauseBeat = () => setIsPlaying(false);
 
-  const togglePlayPause = () => setIsPlaying(prev => !prev);
+  const togglePlayPause = () => {
+    if (!currentBeat) return;
+    setIsPlaying(prev => !prev);
+  };
 
   const stopBeat = () => {
     setIsPlaying(false);
