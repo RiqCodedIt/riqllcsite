@@ -514,10 +514,6 @@
   box-shadow: var(--shadow-sm);
 }
 
-.svc-step-connector {
-  display: none;
-}
-
 .svc-step-body h3 {
   font-size: 1rem;
   font-weight: 700;

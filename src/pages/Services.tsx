@@ -171,6 +171,8 @@ const Services: React.FC = () => {
             {services.map((service) => {
               const expanded = expandedCard === service.service_id;
               const detailsId = `svc-details-${service.service_id}`;
+              // Compute once — exclude delivery/policy strings already shown in delivery_info block
+              const nonDeliveryFeatures = service.features.filter(f => !f.startsWith('Delivery'));
               return (
                 <article
                   key={service.service_id}
@@ -191,9 +193,9 @@ const Services: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Top features — always visible (exclude delivery/policy strings already shown in details) */}
+                  {/* Top features — always visible */}
                   <ul className="svc-card-features" aria-label={`${service.name} features`}>
-                    {service.features.filter(f => !f.startsWith('Delivery')).slice(0, 3).map((feature, i) => (
+                    {nonDeliveryFeatures.slice(0, 3).map((feature, i) => (
                       <li key={i}>
                         <span className="svc-check-icon"><IconCheck /></span>
                         {feature}
@@ -210,18 +212,16 @@ const Services: React.FC = () => {
                     >
                       Add to Cart — {formatCurrency(service.price)}
                     </button>
-                    {(service.features.length > 3 || service.delivery_info) && (
-                      <button
-                        type="button"
-                        className="svc-details-toggle"
-                        onClick={() => toggleExpanded(service.service_id)}
-                        aria-expanded={expanded}
-                        aria-controls={detailsId}
-                      >
-                        {expanded ? 'Hide details' : 'View details'}
-                        <IconChevron open={expanded} />
-                      </button>
-                    )}
+                    <button
+                      type="button"
+                      className="svc-details-toggle"
+                      onClick={() => toggleExpanded(service.service_id)}
+                      aria-expanded={expanded}
+                      aria-controls={detailsId}
+                    >
+                      {expanded ? 'Hide details' : 'View details'}
+                      <IconChevron open={expanded} />
+                    </button>
                   </div>
 
                   {/* Expandable details — always in DOM so aria-controls is always valid */}
@@ -231,11 +231,11 @@ const Services: React.FC = () => {
                     role="region"
                     aria-label={`${service.name} details`}
                   >
-                      {service.features.filter(f => !f.startsWith('Delivery')).length > 3 && (
+                      {nonDeliveryFeatures.length > 3 && (
                         <div className="svc-detail-block">
                           <p className="svc-detail-label">All included</p>
                           <ul className="svc-features-full" aria-label="All features">
-                            {service.features.filter(f => !f.startsWith('Delivery')).map((feature, i) => (
+                            {nonDeliveryFeatures.map((feature, i) => (
                               <li key={i}>
                                 <span className="svc-check-icon"><IconCheck /></span>
                                 {feature}
@@ -291,7 +291,6 @@ const Services: React.FC = () => {
             {HOW_IT_WORKS.map(({ step, title, description }) => (
               <li key={step} className="svc-step">
                 <div className="svc-step-num" aria-hidden="true">{step}</div>
-                <div className="svc-step-connector" aria-hidden="true" />
                 <div className="svc-step-body">
                   <h3>{title}</h3>
                   <p>{description}</p>
