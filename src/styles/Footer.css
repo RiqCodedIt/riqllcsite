@@ -40,6 +40,11 @@
 }
 
 /* ── Column ─────────────────────────────────────────────────── */
+.ft-col {
+  display: flex;
+  flex-direction: column;
+}
+
 .ft-col-heading {
   font-family: var(--font-body);
   font-size: var(--text-xs);
