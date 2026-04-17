@@ -4,6 +4,9 @@ import { useLocation, Link } from 'react-router-dom';
 import '../styles/PageContent.css';
 import '../styles/Success.css';
 
+const CONSULTATION_CALENDAR_URL =
+  'https://calendar.google.com/calendar/appointments/schedules/AcZssZ2hV23dUVFD8uG_Z_K-1SkgVvAjw7yYxG9PzkSZ9kjWiC3l53mS8iFK5lfAMfiiVuJn5A-NR58r?gv=true';
+
 const Success = () => {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [hasConsultation, setHasConsultation] = useState(false);
@@ -81,7 +84,7 @@ const Success = () => {
             <p>Select a time slot for your artist consultation session:</p>
             <div className="succ-calendar">
               <iframe
-                src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ2hV23dUVFD8uG_Z_K-1SkgVvAjw7yYxG9PzkSZ9kjWiC3l53mS8iFK5lfAMfiiVuJn5A-NR58r?gv=true"
+                src={CONSULTATION_CALENDAR_URL}
                 style={{ border: 0 }}
                 width="100%"
                 height="600"
