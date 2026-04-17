@@ -90,6 +90,7 @@ const Success = () => {
                 height="600"
                 frameBorder="0"
                 title="Book Consultation Session"
+                loading="lazy"
               />
             </div>
           </div>
