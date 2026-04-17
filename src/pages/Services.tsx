@@ -134,14 +134,14 @@ const Services: React.FC = () => {
           <a href="#inquiry" className="svc-hero-cta">Start a Project</a>
 
           {/* Trust Stats */}
-          <div className="svc-trust-bar" role="list" aria-label="Service highlights">
+          <ul className="svc-trust-bar" aria-label="Service highlights">
             {TRUST_STATS.map(({ value, label }) => (
-              <div key={label} className="svc-trust-stat" role="listitem">
-                <span className="svc-trust-value">{value}</span>
+              <li key={label} className="svc-trust-stat">
+                <span className="svc-trust-value" data-stat>{value}</span>
                 <span className="svc-trust-label">{label}</span>
-              </div>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       </section>
 

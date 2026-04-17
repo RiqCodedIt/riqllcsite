@@ -12,14 +12,14 @@
 /* ── Shared Layout ───────────────────────────────────────────── */
 .svc-container {
   width: 100%;
-  max-width: 1080px;
-  margin: 0 auto;
-  padding: 0 1.5rem;
+  max-width: var(--container-lg);
+  margin-inline: auto;
+  padding-inline: var(--space-6);
 }
 
 .svc-section-header {
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: var(--space-12);
 }
 
 .svc-section-header h2 {
@@ -41,7 +41,7 @@
 
 /* ── Hero ────────────────────────────────────────────────────── */
 .svc-hero {
-  padding: 5rem 0 4rem;
+  padding: var(--space-20) 0 var(--space-16);
   background: var(--bg-secondary);
   border-bottom: 1px solid var(--border-default);
   text-align: center;
@@ -90,11 +90,13 @@
   border: 1px solid var(--accent-primary);
   border-radius: var(--radius-md);
   padding: 0.875rem 2rem;
+  min-height: 44px;
   font-size: 0.9375rem;
   font-weight: 600;
   font-family: var(--font-body);
   text-decoration: none;
   cursor: pointer;
+  touch-action: manipulation;
   transition: background var(--transition-default), border-color var(--transition-default), transform var(--transition-default);
   margin-bottom: 3rem;
 }
@@ -119,6 +121,8 @@
   overflow: hidden;
   max-width: 520px;
   margin: 0 auto;
+  list-style: none;
+  padding: 0;
 }
 
 .svc-trust-stat {
@@ -135,11 +139,21 @@
 }
 
 .svc-trust-value {
-  font-size: 1.25rem;
+  font-size: var(--text-xl);
   font-weight: 800;
   color: var(--text-heading);
   line-height: 1;
+  font-feature-settings: "tnum" 1;
   font-variant-numeric: tabular-nums;
+  animation: svcStatReveal 0.5s var(--ease-spring) both;
+}
+
+.svc-trust-stat:nth-child(2) .svc-trust-value { animation-delay: 0.08s; }
+.svc-trust-stat:nth-child(3) .svc-trust-value { animation-delay: 0.16s; }
+
+@keyframes svcStatReveal {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .svc-trust-label {
@@ -152,7 +166,7 @@
 
 /* ── Services Section ────────────────────────────────────────── */
 .svc-services-section {
-  padding: 5rem 0;
+  padding: var(--space-20) 0;
 }
 
 .svc-grid {
@@ -171,7 +185,7 @@
   flex-direction: column;
   gap: 0;
   overflow: hidden;
-  transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+  transition: box-shadow var(--transition-default), border-color var(--transition-default), transform var(--transition-slow);
   cursor: default;
 }
 
@@ -236,9 +250,10 @@
 }
 
 .svc-card-price {
-  font-size: 1.375rem;
+  font-size: var(--text-2xl);
   font-weight: 800;
   color: var(--text-heading);
+  font-feature-settings: "tnum" 1;
   font-variant-numeric: tabular-nums;
   line-height: 1;
   white-space: nowrap;
@@ -282,17 +297,23 @@
 
 .svc-add-btn {
   width: 100%;
+  min-height: 44px;
   background: var(--accent-primary);
   color: var(--cream);
   border: 1px solid var(--accent-primary);
   border-radius: var(--radius-md);
-  padding: 0.75rem 1rem;
-  font-size: 0.9375rem;
+  padding: 0.75rem var(--space-4);
+  font-size: var(--text-base);
   font-weight: 600;
   font-family: var(--font-body);
   cursor: pointer;
-  transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+  touch-action: manipulation;
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    transform 0.1s var(--ease-spring);
   text-align: center;
+  font-feature-settings: "tnum" 1;
 }
 
 .svc-add-btn:hover {
@@ -302,11 +323,12 @@
 }
 
 .svc-add-btn:active {
-  transform: translateY(0);
+  transform: scale(0.97);
+  transition-duration: 0.07s;
 }
 
 .svc-add-btn:focus-visible {
-  outline: 2px solid var(--tan);
+  outline: 2px solid var(--border-focus);
   outline-offset: 2px;
 }
 
@@ -321,10 +343,12 @@
   border: 1px solid var(--border-default);
   border-radius: var(--radius-md);
   padding: 0.5rem 1rem;
+  min-height: 44px;
   font-size: 0.875rem;
   font-weight: 500;
   font-family: var(--font-body);
   cursor: pointer;
+  touch-action: manipulation;
   width: 100%;
   transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
 }
@@ -341,7 +365,7 @@
 }
 
 .svc-details-toggle:focus-visible {
-  outline: 2px solid var(--tan);
+  outline: 2px solid var(--border-focus);
   outline-offset: 2px;
 }
 
@@ -454,7 +478,7 @@
   background: var(--bg-secondary);
   border-top: 1px solid var(--border-default);
   border-bottom: 1px solid var(--border-default);
-  padding: 5rem 0;
+  padding: var(--space-20) 0;
 }
 
 .svc-steps {
@@ -526,7 +550,7 @@
 
 /* ── Retainer Plans ──────────────────────────────────────────── */
 .svc-retainer-section {
-  padding: 5rem 0;
+  padding: var(--space-20) 0;
 }
 
 .svc-retainer-grid {
@@ -642,16 +666,24 @@
 }
 
 .svc-retainer-cta {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  padding: 0.75rem 1rem;
+  padding: 0.75rem var(--space-4);
+  min-height: 44px;
   border-radius: var(--radius-md);
   font-weight: 600;
-  font-size: 0.9375rem;
+  font-size: var(--text-base);
   font-family: var(--font-body);
   text-decoration: none;
   cursor: pointer;
-  transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease, color 0.2s ease;
+  touch-action: manipulation;
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    transform 0.1s var(--ease-spring);
   margin-top: auto;
 }
 
@@ -687,7 +719,7 @@
 .svc-inquiry-section {
   background: var(--bg-secondary);
   border-top: 1px solid var(--border-default);
-  padding: 5rem 0;
+  padding: var(--space-20) 0;
 }
 
 .svc-inquiry-inner {
@@ -740,7 +772,7 @@
 .inquiry-field select:focus,
 .inquiry-field textarea:focus {
   outline: none;
-  border-color: var(--tan);
+  border-color: var(--border-focus);
   box-shadow: 0 0 0 3px var(--accent-glow);
 }
 
@@ -765,6 +797,7 @@
   font-size: 0.9375rem;
   font-family: var(--font-body);
   cursor: pointer;
+  touch-action: manipulation;
   transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
   align-self: flex-start;
   min-height: 48px;
@@ -786,7 +819,7 @@
 }
 
 .inquiry-submit-btn:focus-visible {
-  outline: 2px solid var(--tan);
+  outline: 2px solid var(--border-focus);
   outline-offset: 2px;
 }
 
@@ -817,6 +850,12 @@
 }
 
 /* ── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .svc-container {
+    padding-inline: var(--space-5);
+  }
+}
+
 @media (max-width: 900px) {
   .svc-steps {
     grid-template-columns: 1fr;
@@ -871,7 +910,7 @@
   .svc-how-section,
   .svc-retainer-section,
   .svc-inquiry-section {
-    padding: 3.5rem 0;
+    padding: var(--space-12) 0;
   }
 }
 
@@ -906,16 +945,8 @@
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .svc-card,
-  .svc-hero-cta,
-  .svc-add-btn,
-  .svc-retainer-cta,
-  .svc-details-toggle,
-  .svc-chevron {
-    transition: none;
-  }
-
-  .svc-card-details {
-    animation: none;
+  .svc-page * {
+    animation: none !important;
+    transition: none !important;
   }
 }
