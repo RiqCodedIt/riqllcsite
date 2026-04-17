@@ -1,11 +1,11 @@
-* {
+*, *::before, *::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
 :root {
-  /* Core Palette — Warm Neutral Pastels */
+  /* ── Core Palette — Warm Neutral Pastels ───────────────────── */
   --cream: #F5F0EB;
   --almond: #E8DDD3;
   --pale-oak: #D4C5B0;
@@ -15,47 +15,119 @@
   --stone: #6B5B45;
   --dark-taupe: #4A3F30;
 
-  /* Functional Tokens */
+  /* ── Semantic Background Tokens ────────────────────────────── */
   --bg-primary: #F5F0EB;
   --bg-secondary: #FAFAF7;
   --bg-elevated: #FFFFFF;
+  --bg-sunken: #EDE8E2;
+
+  /* ── Semantic Text Tokens ──────────────────────────────────── */
   --text-primary: #4A3F30;
-  --text-heading: #6B5B45;
+  --text-heading: #3A3020;
   --text-secondary: #8B7355;
   --text-muted: #A68B6B;
+  --text-inverse: #FAFAF7;
+
+  /* ── Border Tokens ─────────────────────────────────────────── */
+  --border-subtle: #F0EBE4;
   --border-default: #E8DDD3;
   --border-strong: #D4C5B0;
+  --border-focus: #8B7355;
+
+  /* ── Accent Tokens ─────────────────────────────────────────── */
   --accent-primary: #8B7355;
   --accent-hover: #6B5B45;
+  --accent-active: #4A3F30;
   --accent-warm: #C4A882;
-  --accent-glow: rgba(196, 168, 130, 0.15);
+  --accent-glow: rgba(196, 168, 130, 0.18);
+  --accent-glow-strong: rgba(139, 115, 85, 0.12);
+
+  /* ── Status Tokens ─────────────────────────────────────────── */
   --success: #7A8B6F;
+  --success-bg: #F0F4EE;
   --error: #B85C5C;
+  --error-bg: #FAF0F0;
+  --warning: #A68B3A;
+  --warning-bg: #FAF6EC;
 
-  /* Shadows */
-  --shadow-sm: 0 1px 3px rgba(74, 63, 48, 0.08);
-  --shadow-md: 0 4px 12px rgba(74, 63, 48, 0.1);
-  --shadow-lg: 0 8px 24px rgba(74, 63, 48, 0.12);
+  /* ── Shadow Scale ──────────────────────────────────────────── */
+  --shadow-xs: 0 1px 2px rgba(74, 63, 48, 0.06);
+  --shadow-sm: 0 1px 3px rgba(74, 63, 48, 0.08), 0 1px 2px rgba(74, 63, 48, 0.05);
+  --shadow-md: 0 4px 12px rgba(74, 63, 48, 0.10), 0 2px 4px rgba(74, 63, 48, 0.06);
+  --shadow-lg: 0 8px 24px rgba(74, 63, 48, 0.12), 0 4px 8px rgba(74, 63, 48, 0.07);
+  --shadow-xl: 0 16px 40px rgba(74, 63, 48, 0.14), 0 8px 16px rgba(74, 63, 48, 0.08);
+  --shadow-inset: inset 0 1px 3px rgba(74, 63, 48, 0.08);
 
-  /* Radius */
+  /* ── Radius Scale ──────────────────────────────────────────── */
+  --radius-xs: 3px;
   --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-full: 50%;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-2xl: 32px;
+  --radius-full: 9999px;
 
-  /* Typography */
-  --font-display: 'Playfair Display', Georgia, serif;
+  /* ── Spacing Scale (8pt rhythm) ────────────────────────────── */
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.25rem;   /* 20px */
+  --space-6: 1.5rem;    /* 24px */
+  --space-8: 2rem;      /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+  --space-20: 5rem;     /* 80px */
+  --space-24: 6rem;     /* 96px */
+
+  /* ── Container Widths ──────────────────────────────────────── */
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1200px;
+  --container-prose: 680px;
+
+  /* ── Z-Index Scale ─────────────────────────────────────────── */
+  --z-base: 0;
+  --z-raised: 10;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-overlay: 300;
+  --z-modal: 400;
+  --z-toast: 500;
+
+  /* ── Typography ────────────────────────────────────────────── */
+  --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
 
-  /* Transitions */
-  --transition-fast: 0.15s ease;
-  --transition-default: 0.2s ease;
-  --transition-slow: 0.3s ease;
+  /* Type scale — clamp(min, fluid, max) */
+  --text-xs:   clamp(0.6875rem, 1.2vw, 0.75rem);    /* 11–12px */
+  --text-sm:   clamp(0.8125rem, 1.4vw, 0.875rem);   /* 13–14px */
+  --text-base: clamp(0.9375rem, 1.6vw, 1rem);       /* 15–16px */
+  --text-lg:   clamp(1rem, 1.8vw, 1.125rem);        /* 16–18px */
+  --text-xl:   clamp(1.125rem, 2vw, 1.25rem);       /* 18–20px */
+  --text-2xl:  clamp(1.25rem, 2.5vw, 1.5rem);       /* 20–24px */
+  --text-3xl:  clamp(1.5rem, 3vw, 1.875rem);        /* 24–30px */
+  --text-4xl:  clamp(1.875rem, 4vw, 2.5rem);        /* 30–40px */
+  --text-5xl:  clamp(2.5rem, 5.5vw, 3.5rem);        /* 40–56px */
+  --text-hero: clamp(2.75rem, 6vw, 4rem);            /* 44–64px */
 
-  /* ── Backward-compatibility aliases ──────────────────────────
-     Existing stylesheets still reference the old --color-* and
-     --text-* variables. Map them to the nearest new token so
-     pages that haven't been migrated yet don't break.         */
+  /* ── Easing ────────────────────────────────────────────────── */
+  --ease-out: cubic-bezier(0.0, 0.0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0.0, 1, 1);
+  --ease-in-out: cubic-bezier(0.4, 0.0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ── Transition Tokens ─────────────────────────────────────── */
+  --transition-fast: 0.12s var(--ease-out);
+  --transition-default: 0.2s var(--ease-out);
+  --transition-slow: 0.35s var(--ease-spring);
+  --transition-color: color var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast);
+
+  /* ── Backward-Compat Aliases (Cart.css — remove after Phase G) */
   --color-lightest: var(--tan);
   --color-light-2: var(--pale-oak);
   --color-light: var(--almond);
@@ -69,20 +141,15 @@
   --text-dark: var(--text-primary);
   --text-medium: var(--text-secondary);
   --text-light: var(--text-muted);
-  --button-primary-bg: var(--accent-primary);
-  --button-primary-text: #FFFFFF;
-  --button-secondary-bg: var(--almond);
-  --button-secondary-text: var(--text-primary);
-  --button-hover-bg: var(--accent-hover);
 
+  /* ── Global Defaults ───────────────────────────────────────── */
   font-family: var(--font-body);
-  line-height: 1.5;
+  font-size: var(--text-base);
+  line-height: 1.6;
   font-weight: 400;
-
   color-scheme: light;
   color: var(--text-primary);
   background-color: var(--bg-primary);
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -90,141 +157,193 @@
   -webkit-text-size-adjust: 100%;
 }
 
+/* ── Reset & Base ───────────────────────────────────────────── */
 html {
   scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
   margin: 0;
   min-width: 320px;
-  min-height: 100vh;
+  min-height: 100dvh;
   background-color: var(--bg-primary);
   color: var(--text-primary);
 }
 
 #root {
   width: 100%;
-  margin: 0;
-  padding: 0;
-  text-align: left;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
 }
 
+/* ── Headings ───────────────────────────────────────────────── */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
   color: var(--text-heading);
-  line-height: 1.2;
+  line-height: 1.15;
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
-h1 { font-size: 3.5rem; font-weight: 700; }
-h2 { font-size: 2.25rem; font-weight: 600; }
-h3 { font-family: var(--font-body); font-size: 1.25rem; font-weight: 600; }
-h4 { font-family: var(--font-body); font-size: 1.125rem; font-weight: 600; }
-h5 { font-family: var(--font-body); font-size: 1rem; font-weight: 600; }
-h6 { font-family: var(--font-body); font-size: 0.875rem; font-weight: 600; }
+h1 { font-size: var(--text-hero); }
+h2 { font-size: var(--text-5xl); }
+h3 { font-size: var(--text-3xl); font-family: var(--font-body); font-weight: 600; letter-spacing: 0; }
+h4 { font-size: var(--text-xl); font-family: var(--font-body); font-weight: 600; letter-spacing: 0; }
+h5 { font-size: var(--text-lg); font-family: var(--font-body); font-weight: 600; letter-spacing: 0; }
+h6 { font-size: var(--text-base); font-family: var(--font-body); font-weight: 600; letter-spacing: 0; }
 
+/* ── Body Copy ──────────────────────────────────────────────── */
 p {
-  line-height: 1.6;
-  margin-bottom: 1rem;
+  line-height: 1.7;
   color: var(--text-primary);
 }
 
+p + p {
+  margin-top: var(--space-4);
+}
+
+/* ── Links ──────────────────────────────────────────────────── */
 a {
   font-weight: 500;
   color: var(--text-primary);
   text-decoration: none;
-  transition: color var(--transition-default);
+  transition: var(--transition-color);
 }
 
 a:hover {
   color: var(--accent-primary);
 }
 
+/* ── Buttons ────────────────────────────────────────────────── */
 button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.625rem 1.25rem;
   border-radius: var(--radius-md);
   border: 1px solid var(--accent-primary);
-  padding: 0.625em 1.25em;
-  font-size: 0.9375rem;
-  font-weight: 600;
-  font-family: var(--font-body);
   background-color: var(--accent-primary);
   color: #FFFFFF;
+  font-size: var(--text-base);
+  font-weight: 600;
+  font-family: var(--font-body);
+  line-height: 1;
   cursor: pointer;
-  transition: all var(--transition-default);
+  transition: background-color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast), transform 0.1s var(--ease-spring);
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 button:hover {
   background-color: var(--accent-hover);
   border-color: var(--accent-hover);
   transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
 }
 
-button:focus,
+button:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: var(--shadow-xs);
+  transition-duration: 0.07s;
+}
+
 button:focus-visible {
-  outline: 2px solid var(--accent-warm);
-  outline-offset: 2px;
+  outline: 2px solid var(--border-focus);
+  outline-offset: 3px;
 }
 
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ── Form Elements ──────────────────────────────────────────── */
 input, select, textarea {
   background: var(--bg-elevated);
   border: 1px solid var(--border-default);
   color: var(--text-primary);
   border-radius: var(--radius-md);
   padding: 0.75rem 1rem;
-  font-size: 1rem;
+  font-size: var(--text-base);
   font-family: var(--font-body);
-  transition: border-color var(--transition-default), box-shadow var(--transition-default);
+  line-height: 1.5;
+  min-height: 44px;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 input:focus, select:focus, textarea:focus {
   outline: none;
-  border-color: var(--border-strong);
+  border-color: var(--border-focus);
   box-shadow: 0 0 0 3px var(--accent-glow);
 }
 
 input::placeholder, textarea::placeholder {
   color: var(--text-muted);
+  opacity: 1;
 }
 
-button:disabled, input:disabled, select:disabled, textarea:disabled {
-  opacity: 0.6;
+input:disabled, select:disabled, textarea:disabled {
+  opacity: 0.45;
   cursor: not-allowed;
+  background: var(--bg-sunken);
 }
 
-/* Scrollbar styling */
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: var(--almond); }
-::-webkit-scrollbar-thumb { background: var(--tan); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: var(--taupe); }
+/* ── Numeric / Tabular Figures ──────────────────────────────── */
+.tabular-nums,
+[data-price],
+[data-stat] {
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  font-variant-numeric: tabular-nums lining-nums;
+}
 
+/* ── Focus Ring ─────────────────────────────────────────────── */
+*:focus {
+  outline: none;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 3px;
+  border-radius: var(--radius-xs);
+}
+
+/* ── Selection ──────────────────────────────────────────────── */
 ::selection {
   background-color: var(--accent-warm);
   color: var(--bg-elevated);
 }
 
-*:focus {
-  outline: 2px solid var(--accent-warm);
-  outline-offset: 2px;
+/* ── Scrollbar ──────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 7px; }
+::-webkit-scrollbar-track { background: var(--almond); }
+::-webkit-scrollbar-thumb { background: var(--tan); border-radius: var(--radius-full); }
+::-webkit-scrollbar-thumb:hover { background: var(--taupe); }
+
+/* ── Reduced Motion ─────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
-/* Responsive typography */
-@media (max-width: 768px) {
-  h1 { font-size: 2.5rem; }
-  h2 { font-size: 1.75rem; }
-  h3 { font-size: 1.125rem; }
-}
-
-@media (max-width: 480px) {
-  h1 { font-size: 2rem; }
-  h2 { font-size: 1.5rem; }
-}
-
-/* Print styles */
+/* ── Print ──────────────────────────────────────────────────── */
 @media print {
-  * {
+  *, *::before, *::after {
     background: transparent !important;
-    color: black !important;
+    color: #000 !important;
     box-shadow: none !important;
   }
-  a[href]:after { content: " (" attr(href) ")"; }
+  a[href]::after { content: " (" attr(href) ")"; }
   .no-print { display: none !important; }
 }
