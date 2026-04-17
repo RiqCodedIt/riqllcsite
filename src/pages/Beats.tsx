@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import usePageMeta from '../hooks/usePageMeta';
 import '../styles/BeatsStyles.css';
 import BeatCard from '../components/beats/BeatCard';
@@ -7,12 +7,11 @@ import BeatFilters from '../components/beats/BeatFilters';
 import type { Beat, BeatFilters as BeatFiltersType } from '../types/beats';
 import beatsData from '../data/beats.json';
 
+const ALL_BEATS: Beat[] = beatsData.beats;
+
 const Beats: React.FC = () => {
-  const [beats, setBeats] = useState<Beat[]>([]);
-  const [filteredBeats, setFilteredBeats] = useState<Beat[]>([]);
   const [filters, setFilters] = useState<BeatFiltersType>({});
   const [view, setView] = useState<'list' | 'grid'>('list');
-  const [isLoading, setIsLoading] = useState(true);
 
   usePageMeta({
     title: 'Buy Beats | PRODBYRIQ',
@@ -20,145 +19,120 @@ const Beats: React.FC = () => {
     canonicalPath: '/beats',
   });
 
-  useEffect(() => {
-    setBeats(beatsData.beats);
-    setFilteredBeats(beatsData.beats);
-    setIsLoading(false);
-  }, []);
-
-  useEffect(() => {
-    let filtered = [...beats];
+  const filteredBeats = useMemo(() => {
+    let result = ALL_BEATS;
 
     if (filters.search) {
       const q = filters.search.toLowerCase();
-      filtered = filtered.filter(beat =>
-        beat.title.toLowerCase().includes(q) ||
-        beat.genres.some(g => g.toLowerCase().includes(q)) ||
-        beat.tags?.some(t => t.toLowerCase().includes(q)) ||
-        beat.mood?.some(m => m.toLowerCase().includes(q))
+      result = result.filter(b =>
+        b.title.toLowerCase().includes(q) ||
+        b.genres.some(g => g.toLowerCase().includes(q)) ||
+        b.tags?.some(t => t.toLowerCase().includes(q)) ||
+        b.mood?.some(m => m.toLowerCase().includes(q))
       );
     }
-
     if (filters.mood) {
-      filtered = filtered.filter(beat =>
-        beat.mood?.map(m => m.toLowerCase()).includes(filters.mood!.toLowerCase())
+      result = result.filter(b =>
+        b.mood?.map(m => m.toLowerCase()).includes(filters.mood!.toLowerCase())
       );
     }
-
     if (filters.genre) {
-      filtered = filtered.filter(beat => beat.genres.includes(filters.genre!));
+      result = result.filter(b => b.genres.includes(filters.genre!));
     }
-
     if (filters.key) {
-      filtered = filtered.filter(beat => beat.key === filters.key);
+      result = result.filter(b => b.key === filters.key);
     }
-
     if (filters.bpmMin !== undefined && !isNaN(filters.bpmMin)) {
-      filtered = filtered.filter(beat => beat.bpm >= filters.bpmMin!);
+      result = result.filter(b => b.bpm >= filters.bpmMin!);
     }
-
     if (filters.bpmMax !== undefined && !isNaN(filters.bpmMax)) {
-      filtered = filtered.filter(beat => beat.bpm <= filters.bpmMax!);
+      result = result.filter(b => b.bpm <= filters.bpmMax!);
     }
 
-    setFilteredBeats(filtered);
-  }, [beats, filters]);
-
-  const handleFiltersChange = (newFilters: BeatFiltersType) => setFilters(newFilters);
-  const handleClearFilters = () => setFilters({});
+    return result;
+  }, [filters]);
 
   const hasActiveFilters = Object.values(filters).some(v => v !== undefined && v !== '');
 
-  if (isLoading) {
-    return (
-      <div className="beats-page">
-        <div className="beats-loading">Loading beats…</div>
-      </div>
-    );
-  }
-
   return (
-    <div className="beats-page">
-      {/* Page header */}
-      <div className="beats-page-header">
-        <div className="beats-container">
-          <div className="beats-header-content">
+    <div className="bs-page">
+
+      {/* ── Page Header ──────────────────────────────────── */}
+      <header className="bs-header">
+        <div className="bs-container">
+          <div className="bs-header-row">
             <div>
               <h1>Beat Store</h1>
-              <p className="beats-header-sub">
-                {beats.length} beats &nbsp;·&nbsp; Instant download &nbsp;·&nbsp; WAV quality
+              <p className="bs-header-sub">
+                <span data-stat>{ALL_BEATS.length}</span> beats
+                &nbsp;·&nbsp; Instant download &nbsp;·&nbsp; WAV quality
               </p>
             </div>
-            {/* View toggle */}
-            <div className="beats-view-toggle" role="group" aria-label="View mode">
+            <div className="bs-view-toggle" role="group" aria-label="View mode">
               <button
-                className={`vtoggle-btn${view === 'list' ? ' active' : ''}`}
+                type="button"
+                className={`bs-vtoggle${view === 'list' ? ' bs-vtoggle--active' : ''}`}
                 onClick={() => setView('list')}
                 aria-pressed={view === 'list'}
-                title="List view"
+                aria-label="List view"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <line x1="8" y1="6" x2="21" y2="6"/>
-                  <line x1="8" y1="12" x2="21" y2="12"/>
-                  <line x1="8" y1="18" x2="21" y2="18"/>
-                  <line x1="3" y1="6" x2="3.01" y2="6"/>
-                  <line x1="3" y1="12" x2="3.01" y2="12"/>
-                  <line x1="3" y1="18" x2="3.01" y2="18"/>
+                  <line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="21" y2="12" /><line x1="8" y1="18" x2="21" y2="18" />
+                  <line x1="3" y1="6" x2="3.01" y2="6" /><line x1="3" y1="12" x2="3.01" y2="12" /><line x1="3" y1="18" x2="3.01" y2="18" />
                 </svg>
               </button>
               <button
-                className={`vtoggle-btn${view === 'grid' ? ' active' : ''}`}
+                type="button"
+                className={`bs-vtoggle${view === 'grid' ? ' bs-vtoggle--active' : ''}`}
                 onClick={() => setView('grid')}
                 aria-pressed={view === 'grid'}
-                title="Grid view"
+                aria-label="Grid view"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <rect x="3" y="3" width="7" height="7"/>
-                  <rect x="14" y="3" width="7" height="7"/>
-                  <rect x="3" y="14" width="7" height="7"/>
-                  <rect x="14" y="14" width="7" height="7"/>
+                  <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" />
+                  <rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="7" height="7" />
                 </svg>
               </button>
             </div>
           </div>
         </div>
-      </div>
+      </header>
 
-      {/* Filters */}
-      <div className="beats-filters-section">
-        <div className="beats-container">
+      {/* ── Filters ──────────────────────────────────────── */}
+      <div className="bs-filters-section">
+        <div className="bs-container">
           <BeatFilters
             filters={filters}
-            onFiltersChange={handleFiltersChange}
-            onClearFilters={handleClearFilters}
+            onFiltersChange={setFilters}
+            onClearFilters={() => setFilters({})}
           />
         </div>
       </div>
 
-      {/* Results */}
-      <div className="beats-results-section">
-        <div className="beats-container">
+      {/* ── Results ──────────────────────────────────────── */}
+      <div className="bs-results-section">
+        <div className="bs-container">
           {hasActiveFilters && (
-            <p className="beats-results-count">
-              {filteredBeats.length} result{filteredBeats.length !== 1 ? 's' : ''}
+            <p className="bs-results-count" aria-live="polite">
+              <span data-stat>{filteredBeats.length}</span> result{filteredBeats.length !== 1 ? 's' : ''}
             </p>
           )}
 
           {filteredBeats.length === 0 ? (
-            <div className="beats-empty">
+            <div className="bs-empty">
               <p>No beats match your filters.</p>
-              <button className="btn-secondary" onClick={handleClearFilters}>
+              <button type="button" className="btn-secondary" onClick={() => setFilters({})}>
                 Clear Filters
               </button>
             </div>
           ) : view === 'list' ? (
-            <div className="beats-list">
+            <div className="bs-list" role="list">
               {filteredBeats.map(beat => (
                 <BeatCard key={beat.beat_id} beat={beat} view="list" />
               ))}
             </div>
           ) : (
-            <div className="beats-grid">
+            <div className="bs-grid">
               {filteredBeats.map(beat => (
                 <BeatCard key={beat.beat_id} beat={beat} view="grid" />
               ))}
@@ -167,12 +141,13 @@ const Beats: React.FC = () => {
         </div>
       </div>
 
-      {/* Email capture */}
-      <div className="beats-email-section">
-        <div className="beats-container">
+      {/* ── Email Capture ─────────────────────────────────── */}
+      <div className="bs-email-section">
+        <div className="bs-container">
           <EmailCapture />
         </div>
       </div>
+
     </div>
   );
 };
