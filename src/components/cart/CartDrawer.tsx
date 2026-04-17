@@ -53,7 +53,7 @@ const CartDrawer: React.FC = () => {
   const renderCartItem = (item: CartItem, index: number) => {
     if (item.type === 'beat') {
       return (
-        <div key={index} className="cart-item beat-item">
+        <div className="cart-item beat-item">
           <div className="cart-item-image">
             <img src={item.cover_path} alt={item.beat_title} />
           </div>
@@ -74,7 +74,7 @@ const CartDrawer: React.FC = () => {
       );
     } else {
       return (
-        <div key={index} className="cart-item service-item">
+        <div className="cart-item service-item">
           <div className="cart-item-icon">
             <IconService />
           </div>
@@ -130,9 +130,11 @@ const CartDrawer: React.FC = () => {
             </div>
           ) : (
             <>
-              <div className="cart-items" role="list" aria-label="Cart items">
-                {cart.items.map((item, index) => renderCartItem(item, index))}
-              </div>
+              <ul className="cart-items" aria-label="Cart items">
+                {cart.items.map((item, index) => (
+                  <li key={index}>{renderCartItem(item, index)}</li>
+                ))}
+              </ul>
 
               <div className="cart-summary">
                 <div className="cart-total">

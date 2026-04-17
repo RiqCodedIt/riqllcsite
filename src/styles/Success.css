@@ -206,6 +206,7 @@
 .succ-home-btn:hover {
   background: var(--accent-hover);
   border-color: var(--accent-hover);
+  color: var(--cream);
   transform: translateY(-1px);
 }
 

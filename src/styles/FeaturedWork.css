@@ -102,6 +102,12 @@
   border-color: var(--accent-primary);
   color: var(--text-primary);
   background: var(--bg-elevated);
+  transform: none;
+  box-shadow: none;
+}
+
+.fw-filter-btn:active {
+  transform: none;
 }
 
 .fw-filter-btn:focus-visible {
