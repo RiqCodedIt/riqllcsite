@@ -8,7 +8,9 @@ interface Track {
   id: string;
   title: string;
   platform: 'spotify' | 'soundcloud';
-  embedCode: string;
+  embedSrc: string;
+  embedHeight: number;
+  embedAllow?: string;
   url: string;
   description?: string;
 }
@@ -18,7 +20,9 @@ const TRACKS: Track[] = [
     id: '1',
     title: 'Track 1',
     platform: 'spotify',
-    embedCode: `<iframe src="https://open.spotify.com/embed/track/3rlbQrNDUyIpF5QPjpFCkV?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`,
+    embedSrc: 'https://open.spotify.com/embed/track/3rlbQrNDUyIpF5QPjpFCkV?utm_source=generator&theme=0',
+    embedHeight: 152,
+    embedAllow: 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture',
     url: 'https://open.spotify.com/track/3rlbQrNDUyIpF5QPjpFCkV',
     description: 'Mixed & Mastered by RIQ',
   },
@@ -26,7 +30,9 @@ const TRACKS: Track[] = [
     id: '2',
     title: 'Track 2',
     platform: 'spotify',
-    embedCode: `<iframe src="https://open.spotify.com/embed/track/2hNLyPN3fM0Ds7LASznUkX?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`,
+    embedSrc: 'https://open.spotify.com/embed/track/2hNLyPN3fM0Ds7LASznUkX?utm_source=generator&theme=0',
+    embedHeight: 152,
+    embedAllow: 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture',
     url: 'https://open.spotify.com/track/2hNLyPN3fM0Ds7LASznUkX',
     description: 'Mixed & Mastered by RIQ',
   },
@@ -34,7 +40,9 @@ const TRACKS: Track[] = [
     id: '3',
     title: 'Track 3',
     platform: 'spotify',
-    embedCode: `<iframe src="https://open.spotify.com/embed/track/7ngZ2kMSW18SHZ7RG3QeOG?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`,
+    embedSrc: 'https://open.spotify.com/embed/track/7ngZ2kMSW18SHZ7RG3QeOG?utm_source=generator&theme=0',
+    embedHeight: 152,
+    embedAllow: 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture',
     url: 'https://open.spotify.com/track/7ngZ2kMSW18SHZ7RG3QeOG',
     description: 'Produced by RIQ',
   },
@@ -42,7 +50,9 @@ const TRACKS: Track[] = [
     id: '4',
     title: 'mvp w/ j dean + sophia [OUT ON ALL PLATS]',
     platform: 'soundcloud',
-    embedCode: `<iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/2065978932&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"></iframe>`,
+    embedSrc: 'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/2065978932&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true',
+    embedHeight: 166,
+    embedAllow: 'autoplay',
     url: 'https://soundcloud.com/prodbyriq/mvp-w-j-dean-sophia?si=c61117b0c94148f4a442668189746841&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing',
     description: 'Collaborative track featuring J Dean and Sophia',
   },
@@ -120,7 +130,15 @@ const FeaturedWork = () => {
                     <p className="fw-track-desc">{track.description}</p>
                   )}
                   <div className="fw-track-embed">
-                    <div dangerouslySetInnerHTML={{ __html: track.embedCode.replace('<iframe', `<iframe title="${track.title} on ${platformLabel(track.platform)}"`) }} />
+                    <iframe
+                      src={track.embedSrc}
+                      width="100%"
+                      height={track.embedHeight}
+                      title={`${track.title} on ${platformLabel(track.platform)}`}
+                      allow={track.embedAllow}
+                      loading="lazy"
+                      frameBorder="0"
+                    />
                   </div>
                   <div className="fw-track-actions">
                     <a
