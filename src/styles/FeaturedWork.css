@@ -265,9 +265,12 @@
   border: 1px solid var(--accent-primary);
 }
 
-.fw-cta-btn--primary:hover {
+.fw-cta-btn--primary:hover,
+.fw-cta-btn--primary:focus,
+.fw-cta-btn--primary:visited {
   background: var(--accent-hover);
   border-color: var(--accent-hover);
+  color: #fff;
 }
 
 .fw-cta-btn--secondary {
