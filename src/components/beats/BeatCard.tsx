@@ -99,6 +99,7 @@ const BeatCard: React.FC<BeatCardProps> = ({ beat, view = 'list' }) => {
       aria-label={beat.title}
     >
       <button
+        type="button"
         className="bcl-play-btn"
         onClick={handlePlayPause}
         disabled={!hasPreview}

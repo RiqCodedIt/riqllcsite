@@ -84,15 +84,20 @@ const BeatFiltersComponent: React.FC<BeatFiltersProps> = ({
         </div>
 
         <button
+          type="button"
           className={`bfb-more-btn${moreOpen ? ' open' : ''}`}
           onClick={() => setMoreOpen(prev => !prev)}
           aria-expanded={moreOpen}
+          aria-controls="bfb-more-panel"
         >
-          More Filters {moreOpen ? '▲' : '▼'}
+          More Filters
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ transform: moreOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s ease' }}>
+            <polyline points="2,4 6,8 10,4" />
+          </svg>
         </button>
 
         {hasActive && (
-          <button className="bfb-clear-btn" onClick={onClearFilters}>
+          <button type="button" className="bfb-clear-btn" onClick={onClearFilters}>
             Clear All
           </button>
         )}
@@ -100,7 +105,7 @@ const BeatFiltersComponent: React.FC<BeatFiltersProps> = ({
 
       {/* More Filters panel */}
       {moreOpen && (
-        <div className="bfb-more-panel">
+        <div id="bfb-more-panel" className="bfb-more-panel">
           <div className="bfb-more-group">
             <label htmlFor="bfb-key" className="bfb-label">Key</label>
             <select
