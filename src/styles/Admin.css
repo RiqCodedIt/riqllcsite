@@ -111,7 +111,6 @@
   background: var(--ad-error-bg);
   border-radius: var(--radius-sm);
   padding: 0.4rem 0.6rem;
-  role: alert;
 }
 
 .ad-gate-btn {
@@ -387,9 +386,22 @@
 
 .bu-checkbox-pill input[type="checkbox"] {
   position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
   opacity: 0;
-  width: 0;
-  height: 0;
+}
+
+.bu-checkbox-pill:focus-within {
+  border-color: var(--ad-accent);
+  box-shadow: 0 0 0 3px var(--ad-focus);
+  color: var(--ad-text-primary);
 }
 
 .bu-checkbox-pill--checked {

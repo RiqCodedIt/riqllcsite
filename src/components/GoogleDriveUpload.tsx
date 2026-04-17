@@ -85,8 +85,9 @@ const GoogleDriveUpload: React.FC<GoogleDriveUploadProps> = ({ onFileLinked }) =
             Connect Google Drive
           </button>
           <p className="gd-note">
-            Connecting Google Drive allows you to link audio files and cover art directly from your Drive.
-            OAuth authentication is required — you will be redirected to Google to authorize access.
+            This is a placeholder connection state — no OAuth redirect or Google authentication is
+            performed yet. Use this to prepare Drive file IDs for the upload form. Full OAuth integration
+            requires a server-side implementation.
           </p>
         </>
       ) : (

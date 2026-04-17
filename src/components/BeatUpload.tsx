@@ -80,6 +80,7 @@ const BeatUpload: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const [generatedJson, setGeneratedJson] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [copyError, setCopyError] = useState(false);
   const [tagInput, setTagInput] = useState('');
   const tagInputRef = useRef<HTMLInputElement>(null);
 
@@ -141,8 +142,8 @@ const BeatUpload: React.FC = () => {
       preview_path: form.preview_path.trim(),
       full_path: form.full_path.trim(),
       cover_path: form.cover_path.trim(),
-      lease_price: parseInt(form.lease_price) || 50,
-      exclusive_price: parseInt(form.exclusive_price) || 200,
+      lease_price: !isNaN(parseInt(form.lease_price)) ? parseInt(form.lease_price) : 50,
+      exclusive_price: !isNaN(parseInt(form.exclusive_price)) ? parseInt(form.exclusive_price) : 200,
       created_at: new Date().toISOString().split('T')[0],
       ...(form.tags.length > 0 && { tags: form.tags }),
       ...(form.mood.length > 0 && { mood: form.mood }),
@@ -156,9 +157,15 @@ const BeatUpload: React.FC = () => {
 
   const handleCopy = async () => {
     if (!generatedJson) return;
-    await navigator.clipboard.writeText(generatedJson);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setCopyError(false);
+    try {
+      await navigator.clipboard.writeText(generatedJson);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      setCopyError(true);
+      setTimeout(() => setCopyError(false), 3000);
+    }
   };
 
   const handleReset = () => {
@@ -459,9 +466,10 @@ const BeatUpload: React.FC = () => {
               type="button"
               className={`bu-copy-btn${copied ? ' bu-copy-btn--copied' : ''}`}
               onClick={handleCopy}
+              aria-label="Copy JSON to clipboard"
             >
               <IconCopy />
-              {copied ? 'Copied!' : 'Copy to clipboard'}
+              {copied ? 'Copied!' : copyError ? 'Copy failed — select manually' : 'Copy to clipboard'}
             </button>
           </div>
         </div>

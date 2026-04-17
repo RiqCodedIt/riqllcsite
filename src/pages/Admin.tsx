@@ -8,7 +8,7 @@ import beatsData from '../data/beats.json';
 
 const ALL_BEATS: Beat[] = beatsData.beats as Beat[];
 const SESSION_KEY = 'riq_admin_auth';
-const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD ?? 'prodbyriq2025';
+const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD as string | undefined;
 
 /* ── SVG Icons ───────────────────────────────────────────────── */
 const IconLock = () => (
@@ -40,7 +40,9 @@ const PasswordGate: React.FC<{ onAuth: () => void }> = ({ onAuth }) => {
     setError('');
     setSubmitting(true);
     await new Promise(r => setTimeout(r, 300));
-    if (password === ADMIN_PASSWORD) {
+    if (!ADMIN_PASSWORD) {
+      setError('Admin access is not configured. Set VITE_ADMIN_PASSWORD in your environment.');
+    } else if (password === ADMIN_PASSWORD) {
       sessionStorage.setItem(SESSION_KEY, '1');
       onAuth();
     } else {
@@ -196,6 +198,7 @@ const Admin: React.FC = () => {
     title: 'Beat Upload Portal | PRODBYRIQ Admin',
     description: 'Internal beat management portal for PRODBYRIQ.',
     canonicalPath: '/admin',
+    noIndex: true,
   });
 
   const handleLogout = () => {
