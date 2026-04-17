@@ -301,5 +301,5 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  * { transition: none !important; }
+  .fw-page * { transition: none !important; }
 }

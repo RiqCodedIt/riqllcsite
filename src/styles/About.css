@@ -212,5 +212,5 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  * { transition: none !important; }
+  .ab-page * { transition: none !important; }
 }

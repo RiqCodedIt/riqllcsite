@@ -189,5 +189,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  * { transition: none !important; }
+  .succ-page *,
+  .succ-center * { transition: none !important; }
 }

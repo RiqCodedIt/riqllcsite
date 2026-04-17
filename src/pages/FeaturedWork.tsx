@@ -120,7 +120,7 @@ const FeaturedWork = () => {
                     <p className="fw-track-desc">{track.description}</p>
                   )}
                   <div className="fw-track-embed">
-                    <div dangerouslySetInnerHTML={{ __html: track.embedCode }} />
+                    <div dangerouslySetInnerHTML={{ __html: track.embedCode.replace('<iframe', `<iframe title="${track.title} on ${platformLabel(track.platform)}"`) }} />
                   </div>
                   <div className="fw-track-actions">
                     <a
