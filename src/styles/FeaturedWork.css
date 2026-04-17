@@ -84,6 +84,7 @@
   border-color: var(--accent-primary);
   color: var(--text-primary);
   background: var(--bg-elevated);
+  transform: none;
 }
 
 .fw-filter-btn--active {
@@ -97,6 +98,7 @@
   background: var(--accent-hover);
   border-color: var(--accent-hover);
   color: #fff;
+  transform: none;
 }
 
 .fw-track-count {
