@@ -90,11 +90,13 @@
   border: 1px solid var(--accent-primary);
   border-radius: var(--radius-md);
   padding: 0.875rem 2rem;
+  min-height: 44px;
   font-size: 0.9375rem;
   font-weight: 600;
   font-family: var(--font-body);
   text-decoration: none;
   cursor: pointer;
+  touch-action: manipulation;
   transition: background var(--transition-default), border-color var(--transition-default), transform var(--transition-default);
   margin-bottom: 3rem;
 }
@@ -143,6 +145,15 @@
   line-height: 1;
   font-feature-settings: "tnum" 1;
   font-variant-numeric: tabular-nums;
+  animation: svcStatReveal 0.5s var(--ease-spring) both;
+}
+
+.svc-trust-stat:nth-child(2) .svc-trust-value { animation-delay: 0.08s; }
+.svc-trust-stat:nth-child(3) .svc-trust-value { animation-delay: 0.16s; }
+
+@keyframes svcStatReveal {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .svc-trust-label {
@@ -296,6 +307,7 @@
   font-weight: 600;
   font-family: var(--font-body);
   cursor: pointer;
+  touch-action: manipulation;
   transition:
     background-color var(--transition-fast),
     border-color var(--transition-fast),
@@ -331,10 +343,12 @@
   border: 1px solid var(--border-default);
   border-radius: var(--radius-md);
   padding: 0.5rem 1rem;
+  min-height: 44px;
   font-size: 0.875rem;
   font-weight: 500;
   font-family: var(--font-body);
   cursor: pointer;
+  touch-action: manipulation;
   width: 100%;
   transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
 }
@@ -652,7 +666,9 @@
 }
 
 .svc-retainer-cta {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
   padding: 0.75rem var(--space-4);
   min-height: 44px;
@@ -662,6 +678,7 @@
   font-family: var(--font-body);
   text-decoration: none;
   cursor: pointer;
+  touch-action: manipulation;
   transition:
     background-color var(--transition-fast),
     border-color var(--transition-fast),
@@ -780,6 +797,7 @@
   font-size: 0.9375rem;
   font-family: var(--font-body);
   cursor: pointer;
+  touch-action: manipulation;
   transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
   align-self: flex-start;
   min-height: 48px;
@@ -832,6 +850,12 @@
 }
 
 /* ── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .svc-container {
+    padding-inline: var(--space-5);
+  }
+}
+
 @media (max-width: 900px) {
   .svc-steps {
     grid-template-columns: 1fr;
