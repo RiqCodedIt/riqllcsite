@@ -136,6 +136,7 @@ const FeaturedWork = () => {
                       height={track.embedHeight}
                       title={`${track.title} on ${platformLabel(track.platform)}`}
                       allow={track.embedAllow}
+                      allowFullScreen
                       loading="lazy"
                       frameBorder="0"
                     />
