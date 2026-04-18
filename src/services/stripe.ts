@@ -1,7 +1,9 @@
 import { loadStripe } from '@stripe/stripe-js';
 import type { CartItem } from '../types/beats';
 
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
+const stripeKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY as string | undefined;
+if (!stripeKey) throw new Error('VITE_STRIPE_PUBLISHABLE_KEY is not configured');
+const stripePromise = loadStripe(stripeKey);
 
 export interface CheckoutData {
   items: CartItem[];
