@@ -1,9 +1,4 @@
-import { loadStripe } from '@stripe/stripe-js';
 import type { CartItem } from '../types/beats';
-
-const stripeKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY as string | undefined;
-if (!stripeKey) throw new Error('VITE_STRIPE_PUBLISHABLE_KEY is not configured');
-const stripePromise = loadStripe(stripeKey);
 
 export interface CheckoutData {
   items: CartItem[];
@@ -29,7 +24,7 @@ export const createCheckoutSession = async (checkoutData: CheckoutData): Promise
     }
 
     const data = await response.json();
-    
+
     if (data.url) {
       return data.url;
     } else {
@@ -50,5 +45,3 @@ export const redirectToCheckout = async (checkoutData: CheckoutData): Promise<vo
     throw error;
   }
 };
-
-export { stripePromise };
