@@ -8,7 +8,6 @@ import beatsData from '../data/beats.json';
 
 const ALL_BEATS: Beat[] = beatsData.beats as Beat[];
 const SESSION_KEY = 'riq_admin_auth';
-const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD as string | undefined;
 
 /* ── SVG Icons ───────────────────────────────────────────────── */
 const IconLock = () => (
@@ -39,14 +38,21 @@ const PasswordGate: React.FC<{ onAuth: () => void }> = ({ onAuth }) => {
     e.preventDefault();
     setError('');
     setSubmitting(true);
-    await new Promise(r => setTimeout(r, 300));
-    if (!ADMIN_PASSWORD) {
-      setError('Admin access is not configured. Set VITE_ADMIN_PASSWORD in your environment.');
-    } else if (password === ADMIN_PASSWORD) {
-      sessionStorage.setItem(SESSION_KEY, '1');
-      onAuth();
-    } else {
-      setError('Incorrect password. Try again.');
+    try {
+      const res = await fetch('/admin/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+      });
+      if (res.ok) {
+        sessionStorage.setItem(SESSION_KEY, '1');
+        onAuth();
+      } else {
+        const data = await res.json().catch(() => ({}));
+        setError(data.error ?? 'Incorrect password. Try again.');
+      }
+    } catch {
+      setError('Unable to reach server. Try again.');
     }
     setSubmitting(false);
   };

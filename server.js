@@ -2,6 +2,7 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { createRequire } from 'module';
+import { timingSafeEqual } from 'crypto';
 import Stripe from 'stripe';
 import { rateLimit } from 'express-rate-limit';
 
@@ -189,6 +190,38 @@ const formRateLimit = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'Too many requests, please try again later.' },
+});
+
+const adminAuthLimit = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many login attempts, please try again later.' },
+});
+
+// Admin password auth — password stays server-side only
+app.post('/admin/auth', adminAuthLimit, (req, res) => {
+  const adminPassword = process.env.ADMIN_PASSWORD;
+  if (!adminPassword) {
+    return res.status(503).json({ error: 'Admin access is not configured on the server.' });
+  }
+  const { password } = req.body;
+  if (typeof password !== 'string' || password.length === 0) {
+    return res.status(400).json({ error: 'Password is required.' });
+  }
+  try {
+    const expected = Buffer.from(adminPassword, 'utf8');
+    const provided = Buffer.from(password, 'utf8');
+    const match = expected.length === provided.length &&
+      timingSafeEqual(expected, provided);
+    if (match) {
+      return res.json({ success: true });
+    }
+    return res.status(401).json({ error: 'Incorrect password. Try again.' });
+  } catch {
+    return res.status(401).json({ error: 'Incorrect password. Try again.' });
+  }
 });
 
 // Inquiry form submission
