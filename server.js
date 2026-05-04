@@ -55,6 +55,7 @@ function toAbsoluteUrl(imagePath, baseUrl) {
   return /^https?:\/\//.test(imagePath) ? imagePath : `${baseUrl}${imagePath}`;
 }
 
+app.set('trust proxy', 1);
 app.use(express.json());
 
 // Serve static files from the dist directory

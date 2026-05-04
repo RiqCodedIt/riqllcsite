@@ -25,6 +25,7 @@ export default defineConfig({
     proxy: {
       '/submit-inquiry': 'http://localhost:4000',
       '/subscribe': 'http://localhost:4000',
+      '/admin/auth': 'http://localhost:4000',
     },
   },
   preview: {
