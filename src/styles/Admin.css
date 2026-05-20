@@ -215,12 +215,15 @@
   gap: 0;
 }
 
-.ad-tab {
+.ad-page .ad-tab {
   background: transparent;
+  background-color: transparent;
   color: var(--ad-text-muted);
   border: none;
   border-bottom: 2px solid transparent;
+  box-shadow: none;
   padding: var(--space-3) var(--space-5);
+  min-height: unset;
   font-size: var(--text-sm);
   font-weight: 600;
   font-family: var(--font-body);
@@ -228,18 +231,24 @@
   touch-action: manipulation;
   transition: color var(--transition-fast), border-color var(--transition-fast);
   margin-bottom: -1px;
+  transform: none;
 }
 
-.ad-tab:hover {
+.ad-page .ad-tab:hover {
+  background: transparent;
+  background-color: transparent;
   color: var(--ad-text-secondary);
+  border-color: transparent;
+  transform: none;
+  box-shadow: none;
 }
 
-.ad-tab--active {
+.ad-page .ad-tab--active {
   color: var(--ad-accent);
   border-bottom-color: var(--ad-accent);
 }
 
-.ad-tab:focus-visible {
+.ad-page .ad-tab:focus-visible {
   outline: 2px solid var(--ad-focus);
   outline-offset: -2px;
 }
